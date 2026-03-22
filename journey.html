@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSIM Lab - Our Journey</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --text: #1a1a2e;
+  --text-secondary: #6B6B7B;
+  --text-tertiary: #9B9BAB;
+  --accent: #534AB7;
+  --accent-light: #EEEDFE;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --border: rgba(0,0,0,0.08);
+  --radius: 16px;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Noto Sans KR', -apple-system, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav */
+nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; height:60px; }
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+.logo-mark { width:32px; height:32px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; font-weight:700; }
+.logo-text { font-weight:700; font-size:15px; letter-spacing:-0.3px; }
+.logo-sub { font-size:11px; color:var(--text-tertiary); font-weight:400; }
+.nav-links { display:flex; gap:4px; }
+.nav-links a { padding:8px 14px; font-size:13px; color:var(--text-secondary); text-decoration:none; border-radius:8px; font-weight:500; transition:all .2s; }
+.nav-links a:hover, .nav-links a.active { background:var(--accent-light); color:var(--accent); }
+.nav-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); color:var(--text-secondary); }
+.nav-badge .dot { width:6px; height:6px; border-radius:50%; background:#0F6E56; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* Page Header */
+.page-header { padding:48px 0 40px; }
+.page-header h1 { font-size:28px; font-weight:700; letter-spacing:-0.5px; line-height:1.3; }
+.page-header h1 span { color:var(--accent); }
+.page-header p { font-size:14px; color:var(--text-secondary); margin-top:6px; }
+
+/* Progress Bar */
+.progress-bar { display:flex; align-items:center; gap:0; margin-bottom:48px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 24px; }
+.progress-step { flex:1; text-align:center; position:relative; }
+.progress-step .step-dot { width:10px; height:10px; border-radius:50%; margin:0 auto 6px; }
+.progress-step.done .step-dot { background:var(--accent); }
+.progress-step.current .step-dot { background:var(--teal); box-shadow:0 0 0 4px var(--teal-light); }
+.progress-step.upcoming .step-dot { background:var(--border); }
+.progress-step .step-label { font-size:11px; font-weight:500; color:var(--text-tertiary); }
+.progress-step.done .step-label { color:var(--accent); }
+.progress-step.current .step-label { color:var(--teal); font-weight:700; }
+.progress-line { flex:0 0 1px; width:100%; height:2px; flex:1; max-width:80px; }
+.progress-line.done { background:var(--accent); }
+.progress-line.half { background:linear-gradient(90deg, var(--teal) 50%, var(--border) 50%); }
+.progress-line.upcoming { background:var(--border); }
+
+/* Timeline */
+.timeline { position:relative; padding-bottom:48px; }
+.timeline::before { content:''; position:absolute; left:31px; top:0; bottom:0; width:2px; background:linear-gradient(to bottom, var(--accent) 0%, var(--accent) 55%, var(--border) 55%, var(--border) 100%); }
+
+.tl-item { position:relative; padding-left:80px; margin-bottom:40px; }
+.tl-item:last-child { margin-bottom:0; }
+
+/* Dot on the line */
+.tl-dot { position:absolute; left:22px; top:24px; width:20px; height:20px; border-radius:50%; border:3px solid var(--accent); background:var(--surface); z-index:2; }
+.tl-item.current .tl-dot { border-color:var(--teal); background:var(--teal); box-shadow:0 0 0 5px var(--teal-light); }
+.tl-item.upcoming .tl-dot { border-color:var(--border); border-style:dashed; background:var(--bg); }
+
+/* Month label */
+.tl-month { position:absolute; left:22px; top:50px; width:20px; text-align:center; font-family:var(--mono); font-size:10px; font-weight:700; color:var(--accent); }
+.tl-item.current .tl-month { color:var(--teal); }
+.tl-item.upcoming .tl-month { color:var(--text-tertiary); }
+
+/* Card */
+.tl-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; transition:transform .2s; }
+.tl-card:hover { transform:translateX(4px); }
+.tl-item.upcoming .tl-card { border-style:dashed; opacity:.55; }
+
+.tl-card-top { height:4px; }
+.tl-card-top.c-accent { background:var(--accent); }
+.tl-card-top.c-coral { background:var(--coral); }
+.tl-card-top.c-teal { background:var(--teal); }
+.tl-card-top.c-amber { background:var(--amber); }
+.tl-card-top.c-blue { background:#185FA5; }
+
+.tl-card-body { padding:24px 28px; }
+
+.tl-date { font-family:var(--mono); font-size:12px; color:var(--text-tertiary); margin-bottom:4px; }
+.tl-title { font-size:18px; font-weight:700; line-height:1.3; margin-bottom:4px; }
+.tl-subtitle { font-size:13px; color:var(--text-secondary); margin-bottom:16px; }
+
+.tl-badges { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+.tl-badge { padding:4px 12px; border-radius:8px; font-size:11px; font-weight:600; }
+.tb-accent { background:var(--accent-light); color:var(--accent); }
+.tb-teal { background:var(--teal-light); color:var(--teal); }
+.tb-coral { background:var(--coral-light); color:var(--coral); }
+.tb-amber { background:var(--amber-light); color:var(--amber); }
+.tb-mono { font-family:var(--mono); }
+
+.tl-desc { font-size:14px; color:var(--text-secondary); line-height:1.7; margin-bottom:20px; }
+
+/* Highlights grid inside card */
+.tl-highlights { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; margin-bottom:20px; }
+.tl-hl { background:#F8F8F6; border-radius:10px; padding:14px; text-align:center; }
+.tl-hl-value { font-family:var(--mono); font-size:22px; font-weight:700; letter-spacing:-0.5px; }
+.tl-hl-value.purple { color:var(--accent); }
+.tl-hl-value.teal { color:var(--teal); }
+.tl-hl-value.coral { color:var(--coral); }
+.tl-hl-value.blue { color:#185FA5; }
+.tl-hl-label { font-size:11px; color:var(--text-tertiary); margin-top:2px; }
+
+/* Quote */
+.tl-quote { background:#F8F8F6; border-left:3px solid var(--accent); border-radius:0 10px 10px 0; padding:16px 20px; margin-top:4px; }
+.tl-item.current .tl-quote { border-left-color:var(--teal); }
+.tl-item.upcoming .tl-quote { border-left-color:var(--border); }
+.tl-quote p { font-size:14px; font-style:italic; line-height:1.6; color:var(--text); margin-bottom:6px; }
+.tl-quote cite { font-size:12px; color:var(--text-tertiary); font-style:normal; }
+
+/* Upcoming placeholder */
+.tl-upcoming-text { font-size:13px; color:var(--text-tertiary); line-height:1.6; }
+.tl-upcoming-text ul { list-style:none; margin-top:8px; }
+.tl-upcoming-text ul li { padding:4px 0; padding-left:16px; position:relative; }
+.tl-upcoming-text ul li::before { content:''; position:absolute; left:0; top:11px; width:6px; height:6px; border-radius:50%; background:var(--border); }
+
+/* Footer */
+footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
+.footer-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:6px; background:var(--accent-light); color:var(--accent); font-size:11px; font-weight:500; margin-bottom:8px; }
+
+@media (max-width:768px) {
+  .timeline::before { left:19px; }
+  .tl-item { padding-left:56px; }
+  .tl-dot { left:10px; width:18px; height:18px; }
+  .tl-month { left:10px; width:18px; font-size:9px; }
+  .tl-highlights { grid-template-columns:1fr 1fr; }
+  .progress-bar { flex-wrap:wrap; gap:4px; }
+  .progress-line { display:none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container nav-inner">
+  <a href="index.html" class="logo">
+    <div class="logo-mark">BL</div>
+    <div>
+      <div class="logo-text">BOSIM Lab</div>
+      <div class="logo-sub">AI-Driven Innovation</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="index.html#casebook">Casebook</a>
+    <a href="journey.html" class="active">Our Journey</a>
+    <a href="#">Security Guide</a>
+  </div>
+  <div class="nav-badge">
+    <span class="dot"></span>
+    5th month in progress
+  </div>
+</div>
+</nav>
+
+<div class="container">
+
+<div class="page-header">
+  <h1>Our <span>Journey</span></h1>
+  <p>2026년 3월~7월, BOSIM Lab 15명의 AI 혁신 여정을 기록합니다</p>
+</div>
+
+<!-- Progress Overview -->
+<div class="progress-bar">
+  <div class="progress-step done">
+    <div class="step-dot"></div>
+    <div class="step-label">3월</div>
+  </div>
+  <div class="progress-line done"></div>
+  <div class="progress-step done">
+    <div class="step-dot"></div>
+    <div class="step-label">4월</div>
+  </div>
+  <div class="progress-line done"></div>
+  <div class="progress-step current">
+    <div class="step-dot"></div>
+    <div class="step-label">5월</div>
+  </div>
+  <div class="progress-line half"></div>
+  <div class="progress-step upcoming">
+    <div class="step-dot"></div>
+    <div class="step-label">6월</div>
+  </div>
+  <div class="progress-line upcoming"></div>
+  <div class="progress-step upcoming">
+    <div class="step-dot"></div>
+    <div class="step-label">7월</div>
+  </div>
+</div>
+
+<!-- Timeline -->
+<div class="timeline">
+
+  <!-- 3월 -->
+  <div class="tl-item done">
+    <div class="tl-dot"></div>
+    <div class="tl-month">3</div>
+    <div class="tl-card">
+      <div class="tl-card-top c-accent"></div>
+      <div class="tl-card-body">
+        <div class="tl-date">2026.03.07 — 03.28</div>
+        <div class="tl-title">킥오프: AI, 뭔지도 모르고 시작했습니다</div>
+        <div class="tl-subtitle">사전 조사 · 팀 구성 · AI 인식 기초 측정</div>
+
+        <div class="tl-badges">
+          <span class="tl-badge tb-accent">Phase 1</span>
+          <span class="tl-badge tb-accent tb-mono">완료</span>
+          <span class="tl-badge tb-teal">15명 참여</span>
+        </div>
+
+        <div class="tl-desc">
+          보훈심사위원회 내 AI 활용 경험이 전무한 상태에서 출발했습니다. 15명 전원을 대상으로 AI 인식 사전조사를 실시하고, 업무 유형별(요건심의·부양심의·이의신청·공통) 4개 분과를 구성했습니다. ChatGPT, Claude 등 생성형 AI 기본 개념을 학습하고 각자의 업무에서 AI를 적용할 수 있는 영역을 탐색했습니다.
+        </div>
+
+        <div class="tl-highlights">
+          <div class="tl-hl">
+            <div class="tl-hl-value purple">2.8<span style="font-size:14px">/5.0</span></div>
+            <div class="tl-hl-label">AI 인식 점수 (사전)</div>
+          </div>
+          <div class="tl-hl">
+            <div class="tl-hl-value purple">15<span style="font-size:14px">명</span></div>
+            <div class="tl-hl-label">참여 인원</div>
+          </div>
+          <div class="tl-hl">
+            <div class="tl-hl-value purple">4<span style="font-size:14px">개</span></div>
+            <div class="tl-hl-label">업무 분과</div>
+          </div>
+          <div class="tl-hl">
+            <div class="tl-hl-value purple">0<span style="font-size:14px">건</span></div>
+            <div class="tl-hl-label">AI 활용 케이스</div>
+          </div>
+        </div>
+
+        <div class="tl-quote">
+          <p>"솔직히 AI가 뭔지도 잘 몰랐어요. ChatGPT 이름만 들어봤지, 제 업무에 쓸 수 있다는 건 상상도 못했습니다."</p>
+          <cite>— 손숙, 심사1과 (킥오프 설문 응답 중)</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4월 -->
+  <div class="tl-item done">
+    <div class="tl-dot"></div>
+    <div class="tl-month">4</div>
+    <div class="tl-card">
+      <div class="tl-card-top c-coral"></div>
+      <div class="tl-card-body">
+        <div class="tl-date">2026.04.01 — 04.30</div>
+        <div class="tl-title">프롬프트 실습: 처음으로 업무에 AI를 써봤습니다</div>
+        <div class="tl-subtitle">프롬프트 작성법 학습 · 업무 적용 첫 시도 · 케이스 측정 시작</div>
+
+        <div class="tl-badges">
+          <span class="tl-badge tb-coral">Phase 2</span>
+          <span class="tl-badge tb-coral tb-mono">완료</span>
+          <span class="tl-badge tb-teal">첫 케이스 8건</span>
+        </div>
+
+        <div class="tl-desc">
+          프롬프트 엔지니어링 기초를 학습하고, 각자의 업무에 AI를 직접 적용하기 시작했습니다. 케이스 측정 템플릿을 배포하여 Before/After 데이터를 체계적으로 수집하기 시작했고, 첫 달에 8건의 실무 적용 케이스가 등록되었습니다. 이의신청 검토, 판례 검색, 심사자료 요약 등 다양한 영역에서 성과가 나타났습니다.
+        </div>
+
+        <div class="tl-highlights">
+          <div class="tl-hl">
+            <div class="tl-hl-value coral">8<span style="font-size:14px">건</span></div>
+            <div class="tl-hl-label">첫 케이스 등록</div>
+          </div>
+          <div class="tl-hl">
+            <div class="tl-hl-value coral">3.5<span style="font-size:14px">/5.0</span></div>
+            <div class="tl-hl-label">AI 인식 점수 변화</div>
+          </div>
+          <div class="tl-hl">
+            <div class="tl-hl-value coral">-42<span style="font-size:14px">%</span></div>
+            <div class="tl-hl-label">평균 시간 절감</div>
+          </div>
+          <div class="tl-hl">
+            <div class="tl-hl-value coral">15<span style="font-size:14px">개</span></div>
+            <div class="tl-hl-label">프롬프트 템플릿</div>
+          </div>
+        </div>
+
+        <div class="tl-quote">
+          <p>"판례 찾는 데 1시간씩 걸리던 게 5분이면 되더라고요. 처음엔 반신반의했는데, 결과물 보고 소름 돋았습니다."</p>
+          <cite>— 유진아, 심사3과 (4월 회고 중)</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5월 (현재) -->
+  <div class="tl-item current">
+    <div class="tl-dot"></div>
+    <div class="tl-month">5</div>
+    <div class="tl-card">
+      <div class="tl-card-top c-teal"></div>
+      <div class="tl-card-body">
+        <div class="tl-date">2026.05.01 — 05.31</div>
+        <div class="tl-title">보안 + 심화: 보안 걱정 없이 쓸 수 있는 방법을 찾는 중</div>
+        <div class="tl-subtitle">AI 보안 가이드라인 · 타부처 협업 착수 · 심화 프롬프트</div>
+
+        <div class="tl-badges">
+          <span class="tl-badge tb-teal">Phase 3</span>
+          <span class="tl-badge tb-teal tb-mono">진행 중</span>
+          <span class="tl-badge tb-accent">타부처 협업</span>
+          <span class="tl-badge tb-coral">보안 가이드라인</span>
+        </div>
+
+        <div class="tl-desc">
+          AI 활용이 확산되면서 가장 큰 과제로 떠오른 보안 문제를 정면으로 다루고 있습니다. 기후환경에너지부 이미정 사무관과 AI 보안 표준화를, 한전 KDN 이창열 보안사업단장과 기술 멘토링을 시작했습니다. 동시에 프롬프트를 고도화하여 더 복잡한 업무에 AI를 적용하고 있습니다.
+        </div>
+
+        <div class="tl-highlights">
+          <div class="tl-hl">
+            <div class="tl-hl-value teal">23<span style="font-size:14px">건</span></div>
+            <div class="tl-hl-label">누적 케이스</div>
+          </div>
+          <div class="tl-hl">
+            <div class="tl-hl-value teal">4.2<span style="font-size:14px">/5.0</span></div>
+            <div class="tl-hl-label">AI 인식 점수</div>
+          </div>
+          <div class="tl-hl">
+            <div class="tl-hl-value teal">2<span style="font-size:14px">곳</span></div>
+            <div class="tl-hl-label">외부 협업 기관</div>
+          </div>
+          <div class="tl-hl">
+            <div class="tl-hl-value teal">-37<span style="font-size:14px">%</span></div>
+            <div class="tl-hl-label">평균 효율 개선</div>
+          </div>
+        </div>
+
+        <div class="tl-quote">
+          <p>"보안 문제만 해결되면 정말 적극적으로 쓸 수 있을 것 같아요. 이번 달 가이드라인 나오면 동료들한테도 자신 있게 권할 수 있습니다."</p>
+          <cite>— 하동석, 심사2과 (5월 중간 회고 중)</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6월 (예정) -->
+  <div class="tl-item upcoming">
+    <div class="tl-dot"></div>
+    <div class="tl-month">6</div>
+    <div class="tl-card">
+      <div class="tl-card-top c-amber"></div>
+      <div class="tl-card-body">
+        <div class="tl-date">2026.06.01 — 06.30</div>
+        <div class="tl-title">프로젝트 통합: 케이스북 완성을 향해</div>
+        <div class="tl-subtitle">케이스북 편집 · 학술 연구 데이터 정리 · 중간 성과 보고</div>
+
+        <div class="tl-badges">
+          <span class="tl-badge tb-amber">Phase 4</span>
+          <span class="tl-badge tb-amber tb-mono">예정</span>
+        </div>
+
+        <div class="tl-upcoming-text">
+          <p>계획된 주요 활동:</p>
+          <ul>
+            <li>누적 케이스 30건 이상 목표 달성</li>
+            <li>호서대 MOT 박승범 교수 — 기술수용모델(TAM) 기반 실증 데이터 분석</li>
+            <li>케이스북 초안 편집 및 내부 리뷰</li>
+            <li>AI 인식 변화 중간 보고서 작성</li>
+            <li>보안 가이드라인 최종본 확정</li>
+          </ul>
+        </div>
+
+        <div class="tl-quote">
+          <p>"6월이면 데이터가 충분히 쌓여서, 진짜 숫자로 말할 수 있게 될 겁니다."</p>
+          <cite>— 계획 중</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7월 (예정) -->
+  <div class="tl-item upcoming">
+    <div class="tl-dot"></div>
+    <div class="tl-month">7</div>
+    <div class="tl-card">
+      <div class="tl-card-top c-blue"></div>
+      <div class="tl-card-body">
+        <div class="tl-date">2026.07.01 — 07.31</div>
+        <div class="tl-title">최종 워크숍: 성과 발표와 확산</div>
+        <div class="tl-subtitle">최종 성과 발표 · 케이스북 발간 · 확산 계획 수립</div>
+
+        <div class="tl-badges">
+          <span class="tl-badge" style="background:#E8EEF8;color:#185FA5;">Phase 5</span>
+          <span class="tl-badge tb-mono" style="background:#E8EEF8;color:#185FA5;">예정</span>
+        </div>
+
+        <div class="tl-upcoming-text">
+          <p>최종 산출물 5종:</p>
+          <ul>
+            <li>AI 활용 케이스북 (30건 이상)</li>
+            <li>AI 보안 가이드라인 최종본</li>
+            <li>AI 인식 변화 보고서 (사전/사후 비교)</li>
+            <li>프롬프트 템플릿 모음집</li>
+            <li>BOSIM Lab 웹사이트 (성과 대시보드)</li>
+          </ul>
+        </div>
+
+        <div class="tl-quote">
+          <p>"5개월의 여정을 정리하고, 다음 단계를 설계하는 마무리 워크숍입니다."</p>
+          <cite>— 계획 중</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /timeline -->
+
+</div><!-- /container -->
+
+<footer>
+  <div class="container">
+    <div class="footer-badge">호서대학교 MOT 학술 연구 연계</div>
+    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
+    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  </div>
+</footer>
+
+</body>
+</html>

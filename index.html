@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSIM Lab - AI Casebook</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --text: #1a1a2e;
+  --text-secondary: #6B6B7B;
+  --text-tertiary: #9B9BAB;
+  --accent: #534AB7;
+  --accent-light: #EEEDFE;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --border: rgba(0,0,0,0.08);
+  --radius: 16px;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Noto Sans KR', -apple-system, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav */
+nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; height:60px; }
+.logo { display:flex; align-items:center; gap:10px; }
+.logo-mark { width:32px; height:32px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; font-weight:700; }
+.logo-text { font-weight:700; font-size:15px; letter-spacing:-0.3px; }
+.logo-sub { font-size:11px; color:var(--text-tertiary); font-weight:400; }
+.nav-links { display:flex; gap:4px; }
+.nav-links a { padding:8px 14px; font-size:13px; color:var(--text-secondary); text-decoration:none; border-radius:8px; font-weight:500; transition:all .2s; }
+.nav-links a:hover, .nav-links a.active { background:var(--accent-light); color:var(--accent); }
+.nav-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); color:var(--text-secondary); }
+.nav-badge .dot { width:6px; height:6px; border-radius:50%; background:#0F6E56; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* Hero Stats */
+.hero { padding: 48px 0 32px; }
+.hero-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px; }
+.hero-title { font-size:28px; font-weight:700; letter-spacing:-0.5px; line-height:1.3; }
+.hero-title span { color: var(--accent); }
+.hero-desc { font-size:14px; color:var(--text-secondary); margin-top:6px; }
+.tags { display:flex; gap:6px; }
+.tag { padding:6px 12px; border-radius:8px; font-size:11px; font-weight:500; }
+.tag-accent { background:var(--accent-light); color:var(--accent); }
+.tag-teal { background:var(--teal-light); color:var(--teal); }
+.tag-coral { background:var(--coral-light); color:var(--coral); }
+
+/* Metrics */
+.metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
+.metric { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; position:relative; overflow:hidden; }
+.metric::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.metric:nth-child(1)::before { background:var(--accent); }
+.metric:nth-child(2)::before { background:var(--teal); }
+.metric:nth-child(3)::before { background:#185FA5; }
+.metric:nth-child(4)::before { background:var(--coral); }
+.metric-label { font-size:12px; color:var(--text-tertiary); font-weight:500; margin-bottom:8px; }
+.metric-value { font-family:var(--mono); font-size:32px; font-weight:700; letter-spacing:-1px; }
+.metric-change { font-size:12px; margin-top:4px; font-weight:500; }
+.metric-change.up { color:var(--teal); }
+.metric-change.neutral { color:var(--text-tertiary); }
+.m-purple .metric-value { color:var(--accent); }
+.m-teal .metric-value { color:var(--teal); }
+.m-blue .metric-value { color:#185FA5; }
+.m-coral .metric-value { color:var(--coral); }
+
+/* Before/After Chart */
+.chart-section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:40px; }
+.chart-title { font-size:15px; font-weight:700; margin-bottom:20px; }
+.chart-bar-group { margin-bottom:16px; }
+.chart-bar-label { display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; }
+.chart-bar-label span:first-child { font-weight:500; color:var(--text); }
+.chart-bar-label span:last-child { font-family:var(--mono); color:var(--text-secondary); font-size:11px; }
+.chart-track { height:28px; background:#F5F5F2; border-radius:6px; position:relative; overflow:hidden; }
+.bar-before { position:absolute; left:0; top:0; height:100%; background:var(--coral-light); border-radius:6px 0 0 6px; transition: width 1s ease; }
+.bar-after { position:absolute; left:0; top:0; height:100%; background:var(--accent); border-radius:6px 0 0 6px; opacity:.85; transition: width 1.2s ease .2s; }
+.chart-legend { display:flex; gap:16px; margin-top:16px; font-size:12px; color:var(--text-secondary); }
+.chart-legend span::before { content:''; display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:-1px; }
+.legend-before::before { background:var(--coral-light); }
+.legend-after::before { background:var(--accent); opacity:.85; }
+
+/* Section Divider */
+.section-divider { display:flex; align-items:center; gap:16px; margin:40px 0 24px; }
+.section-divider h2 { font-size:20px; font-weight:700; white-space:nowrap; }
+.section-divider .line { flex:1; height:1px; background:var(--border); }
+.case-count { font-family:var(--mono); font-size:13px; color:var(--text-tertiary); }
+
+/* Filter */
+.filters { display:flex; gap:6px; margin-bottom:24px; flex-wrap:wrap; }
+.filter-btn { padding:7px 16px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); background:var(--surface); color:var(--text-secondary); cursor:pointer; transition:all .2s; }
+.filter-btn:hover { border-color:var(--accent); color:var(--accent); }
+.filter-btn.active { background:var(--text); color:#fff; border-color:var(--text); }
+
+/* Case Cards */
+.cases { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:48px; }
+.case-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; transition: opacity .3s ease, transform .3s ease, box-shadow .2s; cursor:pointer; }
+.case-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.06); }
+.case-card.fade-out { opacity:0; transform:scale(.96) translateY(8px); }
+.case-card.hidden { display:none; }
+.case-top { height:4px; }
+.case-top.cat-req { background:var(--accent); }
+.case-top.cat-dep { background:var(--coral); }
+.case-top.cat-appeal { background:var(--amber); }
+.case-top.cat-common { background:var(--teal); }
+.case-body { padding:20px; }
+.case-badges { display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+.case-badge { padding:3px 10px; border-radius:6px; font-size:10px; font-weight:700; letter-spacing:.3px; }
+.cb-req { background:var(--accent-light); color:var(--accent); }
+.cb-dep { background:var(--coral-light); color:var(--coral); }
+.cb-appeal { background:var(--amber-light); color:var(--amber); }
+.cb-common { background:var(--teal-light); color:var(--teal); }
+.cb-improve { background:var(--teal-light); color:var(--teal); font-family:var(--mono); }
+.case-title { font-size:15px; font-weight:700; line-height:1.4; margin-bottom:6px; }
+.case-desc { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:16px; }
+.case-footer { display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--border); }
+.case-author { display:flex; align-items:center; gap:8px; }
+.author-avatar { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; }
+.author-info { font-size:11px; color:var(--text-tertiary); }
+.case-time { font-family:var(--mono); font-size:11px; color:var(--text-tertiary); }
+
+/* Collaboration Section */
+.collab { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:32px; margin-bottom:48px; }
+.collab-title { font-size:18px; font-weight:700; margin-bottom:8px; }
+.collab-sub { font-size:13px; color:var(--text-secondary); margin-bottom:20px; }
+.collab-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.collab-card { border:1px dashed var(--border); border-radius:12px; padding:16px; text-align:center; }
+.collab-icon { font-size:20px; margin-bottom:8px; }
+.collab-name { font-size:13px; font-weight:700; margin-bottom:2px; }
+.collab-role { font-size:11px; color:var(--text-tertiary); line-height:1.4; }
+
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(10,10,30,.55); backdrop-filter:blur(4px); z-index:200; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s ease; }
+.modal-overlay.open { opacity:1; pointer-events:auto; }
+.modal { background:var(--surface); border-radius:20px; width:92%; max-width:640px; max-height:85vh; overflow-y:auto; transform:translateY(24px) scale(.97); transition:transform .3s ease; box-shadow:0 24px 64px rgba(0,0,0,.18); }
+.modal-overlay.open .modal { transform:translateY(0) scale(1); }
+.modal-top { height:5px; border-radius:20px 20px 0 0; }
+.modal-top.mt-req { background:var(--accent); }
+.modal-top.mt-dep { background:var(--coral); }
+.modal-top.mt-appeal { background:var(--amber); }
+.modal-top.mt-common { background:var(--teal); }
+.modal-header { padding:28px 32px 0; display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+.modal-header-left { flex:1; }
+.modal-title { font-size:20px; font-weight:700; line-height:1.3; margin-bottom:6px; }
+.modal-meta { display:flex; align-items:center; gap:10px; }
+.modal-avatar { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; }
+.modal-meta-text { font-size:13px; color:var(--text-secondary); }
+.modal-close { width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; color:var(--text-tertiary); transition:all .2s; flex-shrink:0; }
+.modal-close:hover { background:#f5f5f5; color:var(--text); }
+.modal-content { padding:24px 32px 32px; }
+.modal-badges { display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; }
+.modal-section { margin-bottom:22px; }
+.modal-section:last-child { margin-bottom:0; }
+.modal-section-title { font-size:12px; font-weight:700; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
+.modal-desc { font-size:14px; color:var(--text-secondary); line-height:1.7; }
+.modal-table { width:100%; border-collapse:separate; border-spacing:0; border:1px solid var(--border); border-radius:10px; overflow:hidden; font-size:13px; }
+.modal-table th { background:#F8F8F6; font-weight:600; padding:10px 14px; text-align:left; color:var(--text-secondary); font-size:12px; }
+.modal-table td { padding:10px 14px; border-top:1px solid var(--border); }
+.modal-table .val-before { color:var(--coral); font-family:var(--mono); font-weight:500; }
+.modal-table .val-after { color:var(--accent); font-family:var(--mono); font-weight:700; }
+.modal-table .val-change { color:var(--teal); font-family:var(--mono); font-size:12px; font-weight:600; }
+.modal-tool { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:8px; background:#F8F8F6; border:1px solid var(--border); font-size:13px; font-weight:500; margin-right:6px; margin-bottom:6px; }
+.modal-tool-icon { width:20px; height:20px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; }
+.modal-prompt { background:#F8F8F6; border:1px solid var(--border); border-radius:10px; padding:16px; font-size:13px; line-height:1.7; color:var(--text); font-family:var(--sans); white-space:pre-wrap; }
+.modal-insight { background:var(--accent-light); border-radius:10px; padding:16px; font-size:13px; line-height:1.7; color:var(--accent); }
+
+/* Footer */
+footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
+.footer-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:6px; background:var(--accent-light); color:var(--accent); font-size:11px; font-weight:500; margin-bottom:8px; }
+
+@media (max-width:768px) {
+  .metrics { grid-template-columns:repeat(2,1fr); }
+  .cases { grid-template-columns:1fr; }
+  .collab-grid { grid-template-columns:1fr; }
+  .hero-top { flex-direction:column; gap:16px; align-items:flex-start; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container nav-inner">
+  <div class="logo">
+    <div class="logo-mark">BL</div>
+    <div>
+      <div class="logo-text">BOSIM Lab</div>
+      <div class="logo-sub">AI-Driven Innovation</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Dashboard</a>
+    <a href="index.html#casebook">Casebook</a>
+    <a href="journey.html">Our Journey</a>
+    <a href="#">Security Guide</a>
+  </div>
+  <div class="nav-badge">
+    <span class="dot"></span>
+    5th month in progress
+  </div>
+</div>
+</nav>
+
+<div class="container">
+
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="hero-title">AI가 바꾼 <span>보훈심사</span> 현장</div>
+      <div class="hero-desc">15명의 실무자가 직접 만든 AI 활용 사례 아카이브</div>
+    </div>
+    <div class="tags">
+      <span class="tag tag-accent">보훈심사위원회</span>
+      <span class="tag tag-teal">타부처 협업</span>
+      <span class="tag tag-coral">학술 연구 연계</span>
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric m-purple">
+      <div class="metric-label">실무 적용 케이스</div>
+      <div class="metric-value">23</div>
+      <div class="metric-change up">+8 this month</div>
+    </div>
+    <div class="metric m-teal">
+      <div class="metric-label">평균 효율 개선</div>
+      <div class="metric-value">37%</div>
+      <div class="metric-change up">처리시간 기준</div>
+    </div>
+    <div class="metric m-blue">
+      <div class="metric-label">AI 인식 점수</div>
+      <div class="metric-value">4.2</div>
+      <div class="metric-change up">3월 2.8 → 현재</div>
+    </div>
+    <div class="metric m-coral">
+      <div class="metric-label">참여 기관</div>
+      <div class="metric-value">4</div>
+      <div class="metric-change neutral">보훈심사위 + 타부처 3곳</div>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-title">업무별 AI 적용 효과 — 처리시간(분) 전/후 비교</div>
+    <div class="chart-bar-group">
+      <div class="chart-bar-label"><span>요건심의 검토</span><span>40min → 22min (-45%)</span></div>
+      <div class="chart-track">
+        <div class="bar-before" style="width:75%"></div>
+        <div class="bar-after" style="width:41%"></div>
+      </div>
+    </div>
+    <div class="chart-bar-group">
+      <div class="chart-bar-label"><span>판례 유사도 분석</span><span>55min → 18min (-67%)</span></div>
+      <div class="chart-track">
+        <div class="bar-before" style="width:92%"></div>
+        <div class="bar-after" style="width:30%"></div>
+      </div>
+    </div>
+    <div class="chart-bar-group">
+      <div class="chart-bar-label"><span>보고서 초안 작성</span><span>90min → 35min (-61%)</span></div>
+      <div class="chart-track">
+        <div class="bar-before" style="width:100%"></div>
+        <div class="bar-after" style="width:39%"></div>
+      </div>
+    </div>
+    <div class="chart-bar-group">
+      <div class="chart-bar-label"><span>이의신청 쟁점 요약</span><span>30min → 12min (-60%)</span></div>
+      <div class="chart-track">
+        <div class="bar-before" style="width:56%"></div>
+        <div class="bar-after" style="width:22%"></div>
+      </div>
+    </div>
+    <div class="chart-legend">
+      <span class="legend-before">Before (AI 미적용)</span>
+      <span class="legend-after">After (AI 적용)</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider" id="casebook">
+  <h2>Casebook</h2>
+  <div class="line"></div>
+  <span class="case-count">23 cases</span>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" data-filter="all">전체</button>
+  <button class="filter-btn" data-filter="req">요건심의</button>
+  <button class="filter-btn" data-filter="dep">부양심의</button>
+  <button class="filter-btn" data-filter="appeal">이의신청</button>
+  <button class="filter-btn" data-filter="common">공통업무</button>
+</div>
+
+<div class="cases">
+  <div class="case-card" data-category="req" data-case-id="1">
+    <div class="case-top cat-req"></div>
+    <div class="case-body">
+      <div class="case-badges">
+        <span class="case-badge cb-req">요건심의</span>
+        <span class="case-badge cb-improve">-45%</span>
+      </div>
+      <div class="case-title">이의신청 검토 AI 보조</div>
+      <div class="case-desc">기각 이의신청 건의 쟁점을 AI로 요약하고 유사 판례를 자동 매칭하여 검토 시간 단축</div>
+      <div class="case-footer">
+        <div class="case-author">
+          <div class="author-avatar" style="background:var(--accent)">손</div>
+          <span class="author-info">손숙 · 심사1과</span>
+        </div>
+        <span class="case-time">40→22min</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card" data-category="common" data-case-id="2">
+    <div class="case-top cat-common"></div>
+    <div class="case-body">
+      <div class="case-badges">
+        <span class="case-badge cb-common">공통</span>
+        <span class="case-badge cb-improve">-67%</span>
+      </div>
+      <div class="case-title">유사 판례 검색 프롬프트</div>
+      <div class="case-desc">과거 심사 결정문에서 유사 사례를 AI로 5초 내 검색하는 맞춤 프롬프트 개발</div>
+      <div class="case-footer">
+        <div class="case-author">
+          <div class="author-avatar" style="background:var(--teal)">유</div>
+          <span class="author-info">유진아 · 심사3과</span>
+        </div>
+        <span class="case-time">55→18min</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card" data-category="dep" data-case-id="3">
+    <div class="case-top cat-dep"></div>
+    <div class="case-body">
+      <div class="case-badges">
+        <span class="case-badge cb-dep">부양심의</span>
+        <span class="case-badge cb-improve">-61%</span>
+      </div>
+      <div class="case-title">심사자료 요약 자동화</div>
+      <div class="case-desc">부양 관련 제출 서류를 AI로 핵심 쟁점 3줄 요약하여 심사 준비 시간 대폭 단축</div>
+      <div class="case-footer">
+        <div class="case-author">
+          <div class="author-avatar" style="background:var(--coral)">하</div>
+          <span class="author-info">하동석 · 심사2과</span>
+        </div>
+        <span class="case-time">90→35min</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card" data-category="appeal" data-case-id="4">
+    <div class="case-top cat-appeal"></div>
+    <div class="case-body">
+      <div class="case-badges">
+        <span class="case-badge cb-appeal">이의신청</span>
+        <span class="case-badge cb-improve">-60%</span>
+      </div>
+      <div class="case-title">이의신청 쟁점 자동 분류</div>
+      <div class="case-desc">이의신청서에서 핵심 쟁점을 AI로 자동 추출하고 유형별 분류하여 심사 효율화</div>
+      <div class="case-footer">
+        <div class="case-author">
+          <div class="author-avatar" style="background:var(--amber)">임</div>
+          <span class="author-info">임환기 · 심사3과</span>
+        </div>
+        <span class="case-time">30→12min</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card" data-category="common" data-case-id="5">
+    <div class="case-top cat-common"></div>
+    <div class="case-body">
+      <div class="case-badges">
+        <span class="case-badge cb-common">공통</span>
+        <span class="case-badge cb-improve">-38%</span>
+      </div>
+      <div class="case-title">회의록 자동 요약 시스템</div>
+      <div class="case-desc">심사위원회 회의 내용을 AI로 핵심 결정사항 중심으로 자동 요약 및 정리</div>
+      <div class="case-footer">
+        <div class="case-author">
+          <div class="author-avatar" style="background:#185FA5">김</div>
+          <span class="author-info">김민주 · 심사1과</span>
+        </div>
+        <span class="case-time">45→28min</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card" data-category="req" data-case-id="6">
+    <div class="case-top cat-req"></div>
+    <div class="case-body">
+      <div class="case-badges">
+        <span class="case-badge cb-req">요건심의</span>
+        <span class="case-badge cb-improve">-52%</span>
+      </div>
+      <div class="case-title">요건 검토 체크리스트 생성</div>
+      <div class="case-desc">유공자 요건 심의 시 필수 확인 항목을 AI로 자동 생성하여 누락 방지</div>
+      <div class="case-footer">
+        <div class="case-author">
+          <div class="author-avatar" style="background:#D4537E">최</div>
+          <span class="author-info">최혜진 · 심사1과</span>
+        </div>
+        <span class="case-time">25→12min</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="collab">
+  <div class="collab-title">외부 협력 네트워크</div>
+  <div class="collab-sub">BOSIM Lab은 보훈심사위원회 내부를 넘어 타부처·외부 전문기관과 함께 합니다</div>
+  <div class="collab-grid">
+    <div class="collab-card">
+      <div class="collab-icon" style="background:var(--teal-light);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:16px;color:var(--teal);font-weight:700;">AI</div>
+      <div class="collab-name">기후환경에너지부</div>
+      <div class="collab-role">이미정 (4급) · AI 보안 표준화 협업<br>보안 가이드라인 공동 제작</div>
+    </div>
+    <div class="collab-card">
+      <div class="collab-icon" style="background:var(--accent-light);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:16px;color:var(--accent);font-weight:700;">KD</div>
+      <div class="collab-name">한전 KDN</div>
+      <div class="collab-role">이창열 (보안사업단장) · 기술 멘토링<br>시스템 최적화 전문 자문</div>
+    </div>
+    <div class="collab-card">
+      <div class="collab-icon" style="background:var(--coral-light);width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:16px;color:var(--coral);font-weight:700;">학</div>
+      <div class="collab-name">호서대학교 MOT</div>
+      <div class="collab-role">박승범 교수 · 학술 연구 연계<br>기술수용모델 기반 실증 연구</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-badge">호서대학교 MOT 학술 연구 연계</div>
+    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
+    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  </div>
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-top" id="modalTop"></div>
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-meta">
+          <div class="modal-avatar" id="modalAvatar"></div>
+          <span class="modal-meta-text" id="modalMeta"></span>
+        </div>
+      </div>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div class="modal-content">
+      <div class="modal-badges" id="modalBadges"></div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">업무 설명</div>
+        <div class="modal-desc" id="modalDesc"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Before / After 비교</div>
+        <table class="modal-table">
+          <thead><tr><th>항목</th><th>Before</th><th>After</th><th>변화</th></tr></thead>
+          <tbody id="modalTable"></tbody>
+        </table>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">사용 AI 도구</div>
+        <div id="modalTools"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">프롬프트 예시</div>
+        <div class="modal-prompt" id="modalPrompt"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">시사점</div>
+        <div class="modal-insight" id="modalInsight"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  /* ── Filter ── */
+  const buttons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.case-card');
+  const countEl = document.querySelector('.case-count');
+  let isAnimating = false;
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      if (isAnimating) return;
+      const filter = this.dataset.filter;
+      buttons.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      isAnimating = true;
+
+      cards.forEach(card => {
+        const show = filter === 'all' || card.dataset.category === filter;
+        if (!show && !card.classList.contains('hidden')) card.classList.add('fade-out');
+        if (show && card.classList.contains('hidden')) { card.classList.remove('hidden'); card.classList.add('fade-out'); }
+      });
+
+      setTimeout(() => {
+        let visibleCount = 0;
+        cards.forEach(card => {
+          const show = filter === 'all' || card.dataset.category === filter;
+          if (show) { card.classList.remove('hidden'); visibleCount++; }
+          else card.classList.add('hidden');
+          card.classList.remove('fade-out');
+        });
+        countEl.textContent = visibleCount + ' cases';
+        requestAnimationFrame(() => { isAnimating = false; });
+      }, 300);
+    });
+  });
+
+  /* ── Case Data ── */
+  const caseData = {
+    '1': {
+      title: '이의신청 검토 AI 보조',
+      author: '손숙', dept: '심사1과', avatarColor: 'var(--accent)',
+      category: 'req', categoryLabel: '요건심의', badgeClass: 'cb-req',
+      improve: '-45%',
+      desc: '기각된 이의신청 건을 재검토할 때, 신청서의 핵심 쟁점을 AI가 자동으로 추출하고 과거 유사 판례와 매칭합니다. 기존에는 수작업으로 판례집을 넘기며 유사 사례를 찾았으나, AI 도입 후 쟁점별 관련 판례 3~5건을 즉시 제시받아 검토 품질과 속도가 동시에 향상되었습니다.',
+      table: [
+        ['처리시간', '40분', '22분', '-45%'],
+        ['정확도(판례 매칭)', '72%', '91%', '+19%p'],
+        ['담당자 만족도', '3.1/5', '4.5/5', '+1.4']
+      ],
+      tools: [
+        { name: 'Claude 3.5', color: 'var(--accent)' },
+        { name: 'HWP 연동 매크로', color: 'var(--teal)' }
+      ],
+      prompt: '다음은 보훈보상 이의신청서입니다.\n\n1. 신청인의 핵심 쟁점을 3가지 이내로 요약해주세요.\n2. 각 쟁점에 대해 국가보훈부 심사 결정례 중 유사한 사례를 찾아 [결정번호, 요지, 유사도%]로 정리해주세요.\n3. 기각 사유와 신청인 주장의 차이점을 표로 비교해주세요.\n\n[이의신청서 본문 붙여넣기]',
+      insight: '판례 매칭 정확도가 72%에서 91%로 크게 향상되었으며, 특히 신임 심사관의 검토 품질이 경력 심사관 수준에 근접했습니다. AI가 쟁점을 구조화해주면서 검토 누락이 현저히 줄었고, 이는 민원인 만족도 향상에도 기여할 것으로 기대됩니다.'
+    },
+    '2': {
+      title: '유사 판례 검색 프롬프트',
+      author: '유진아', dept: '심사3과', avatarColor: 'var(--teal)',
+      category: 'common', categoryLabel: '공통', badgeClass: 'cb-common',
+      improve: '-67%',
+      desc: '과거 10년간 축적된 심사 결정문 데이터베이스에서 현재 심사 건과 유사한 사례를 AI로 검색합니다. 키워드 기반 수동 검색 대비 의미 기반(semantic) 검색으로 전환하여, 표현이 달라도 쟁점이 동일한 판례를 정확하게 찾아냅니다. 검색 결과에 유사도 점수와 핵심 요지를 함께 제시합니다.',
+      table: [
+        ['처리시간', '55분', '18분', '-67%'],
+        ['정확도(검색 적합도)', '65%', '88%', '+23%p'],
+        ['담당자 만족도', '2.9/5', '4.6/5', '+1.7']
+      ],
+      tools: [
+        { name: 'Claude 3.5', color: 'var(--accent)' },
+        { name: 'Excel 정리 스크립트', color: '#185FA5' }
+      ],
+      prompt: '당신은 보훈심사 판례 검색 전문가입니다.\n\n아래 심사 건의 [상이등급, 상이부위, 신청 유형, 핵심 쟁점]을 분석한 뒤,\n유사한 과거 결정례를 5건 추천해주세요.\n\n출력 형식:\n| 순위 | 결정번호 | 유사도 | 쟁점 요지 | 결정 결과 |\n\n현재 심사 건:\n[심사 건 요약 붙여넣기]',
+      insight: '의미 기반 검색으로 전환하면서, 기존 키워드 검색에서 누락되던 "표현은 다르지만 쟁점은 동일한" 판례를 발굴할 수 있게 되었습니다. 이로 인해 심사 일관성이 향상되고, 특히 복잡한 사안에서 참고 판례의 질이 크게 개선되었습니다.'
+    },
+    '3': {
+      title: '심사자료 요약 자동화',
+      author: '하동석', dept: '심사2과', avatarColor: 'var(--coral)',
+      category: 'dep', categoryLabel: '부양심의', badgeClass: 'cb-dep',
+      improve: '-61%',
+      desc: '부양 심의 시 제출되는 대량의 서류(가족관계증명서, 소득증빙, 진단서 등)를 AI가 읽고 핵심 쟁점을 3줄로 요약합니다. 심사관은 원본 서류를 처음부터 읽는 대신 AI 요약본으로 전체 그림을 파악한 뒤, 쟁점 부분만 원본에서 확인하는 방식으로 전환하여 준비 시간이 대폭 단축되었습니다.',
+      table: [
+        ['처리시간', '90분', '35분', '-61%'],
+        ['정확도(쟁점 추출)', '70%', '89%', '+19%p'],
+        ['담당자 만족도', '2.8/5', '4.3/5', '+1.5']
+      ],
+      tools: [
+        { name: 'Claude 3.5', color: 'var(--accent)' },
+        { name: 'PDF 텍스트 추출', color: 'var(--coral)' }
+      ],
+      prompt: '다음은 부양심의 관련 제출 서류입니다.\n\n1단계: 서류 유형별로 분류해주세요 (가족관계, 소득, 의료, 기타)\n2단계: 각 서류에서 심의에 핵심적인 사실관계를 추출해주세요\n3단계: 전체 쟁점을 3줄 이내로 요약해주세요\n4단계: 추가 확인이 필요한 사항이 있다면 표시해주세요\n\n[제출 서류 텍스트 붙여넣기]',
+      insight: '서류가 10건 이상인 복잡한 부양심의 건에서 효과가 극대화됩니다. 다만 AI 요약만으로 심사를 완결하지 않고, 반드시 원본 대조 확인을 거치는 프로세스를 병행해야 합니다. 요약 정확도 89%는 높은 수치이나, 나머지 11%에 중요한 쟁점이 포함될 수 있으므로 "보조 도구"로서의 역할을 명확히 해야 합니다.'
+    },
+    '4': {
+      title: '이의신청 쟁점 자동 분류',
+      author: '임환기', dept: '심사3과', avatarColor: 'var(--amber)',
+      category: 'appeal', categoryLabel: '이의신청', badgeClass: 'cb-appeal',
+      improve: '-60%',
+      desc: '이의신청서 접수 시 AI가 신청서 본문을 분석하여 쟁점을 자동으로 추출하고, 유형별(사실 관계 다툼, 등급 이의, 절차 하자, 새로운 증거 제출 등)로 분류합니다. 분류 결과를 바탕으로 담당 심사관에게 자동 배정하고, 관련 법령과 선례를 함께 제시하여 초기 검토 속도를 높였습니다.',
+      table: [
+        ['처리시간', '30분', '12분', '-60%'],
+        ['정확도(분류 정확도)', '75%', '93%', '+18%p'],
+        ['담당자 만족도', '3.0/5', '4.4/5', '+1.4']
+      ],
+      tools: [
+        { name: 'Claude 3.5', color: 'var(--accent)' },
+        { name: '내부 분류 체계 DB', color: 'var(--amber)' }
+      ],
+      prompt: '당신은 보훈심사 이의신청 분류 전문가입니다.\n\n다음 이의신청서를 분석하여:\n\n1. 핵심 쟁점을 추출하세요 (최대 3개)\n2. 각 쟁점을 다음 유형으로 분류하세요:\n   - A: 사실관계 다툼\n   - B: 상이등급 이의\n   - C: 절차상 하자\n   - D: 새로운 증거 제출\n   - E: 기타\n3. 관련 법령 조항을 명시하세요\n4. 유사 선례 결정 2건을 제시하세요\n\n[이의신청서 붙여넣기]',
+      insight: '자동 분류 정확도 93%는 수작업 분류(75%) 대비 크게 향상된 수치입니다. 특히 복합 쟁점(2개 이상 유형이 혼재된 경우)의 식별 능력이 뛰어나, 배정 오류로 인한 재배정 건수가 월 평균 8건에서 2건으로 감소했습니다.'
+    },
+    '5': {
+      title: '회의록 자동 요약 시스템',
+      author: '김민주', dept: '심사1과', avatarColor: '#185FA5',
+      category: 'common', categoryLabel: '공통', badgeClass: 'cb-common',
+      improve: '-38%',
+      desc: '심사위원회 회의 후 작성하는 회의록을 AI가 핵심 결정사항 중심으로 자동 요약합니다. 회의 중 기록된 원문(메모, 녹취 텍스트)을 입력하면, 안건별 결정사항·위원 의견·후속조치를 구조화된 형식으로 정리합니다. 기존 수작업 대비 형식 일관성도 크게 향상되었습니다.',
+      table: [
+        ['처리시간', '45분', '28분', '-38%'],
+        ['정확도(결정사항 반영)', '82%', '94%', '+12%p'],
+        ['담당자 만족도', '3.2/5', '4.1/5', '+0.9']
+      ],
+      tools: [
+        { name: 'Claude 3.5', color: 'var(--accent)' },
+        { name: 'Clova Note (녹취)', color: '#185FA5' }
+      ],
+      prompt: '다음은 보훈심사위원회 회의 기록입니다.\n\n아래 형식으로 회의록을 작성해주세요:\n\n## 회의 개요\n- 일시 / 참석자 / 안건 수\n\n## 안건별 요약\n각 안건마다:\n- 안건명\n- 핵심 논의 내용 (3줄 이내)\n- 위원 주요 의견\n- 결정사항\n- 후속조치 및 담당자\n\n## 종합 정리\n- 주요 결정사항 목록\n- 다음 회의 예정 안건\n\n[회의 기록 붙여넣기]',
+      insight: '회의록의 형식 일관성이 확보되면서 후속조치 추적이 용이해졌습니다. 다만 녹취 텍스트의 품질에 따라 요약 정확도가 달라지므로, 핵심 결정사항은 회의 중 별도로 메모하여 AI 입력에 포함시키는 것이 권장됩니다. 회의록 작성 시간 단축보다 "누락 방지"가 더 큰 성과입니다.'
+    },
+    '6': {
+      title: '요건 검토 체크리스트 생성',
+      author: '최혜진', dept: '심사1과', avatarColor: '#D4537E',
+      category: 'req', categoryLabel: '요건심의', badgeClass: 'cb-req',
+      improve: '-52%',
+      desc: '유공자 요건 심의 시 확인해야 할 법적·절차적 항목을 AI가 자동 생성합니다. 신청 유형(참전, 공상, 보훈보상 등)에 따라 맞춤형 체크리스트를 만들어, 심사관이 항목을 하나씩 확인하며 진행합니다. 누락 방지 효과가 가장 큰 케이스입니다.',
+      table: [
+        ['처리시간', '25분', '12분', '-52%'],
+        ['정확도(항목 완전성)', '78%', '96%', '+18%p'],
+        ['담당자 만족도', '3.3/5', '4.7/5', '+1.4']
+      ],
+      tools: [
+        { name: 'Claude 3.5', color: 'var(--accent)' },
+        { name: '법령 DB 참조', color: '#D4537E' }
+      ],
+      prompt: '당신은 국가보훈부 요건심의 전문가입니다.\n\n다음 신청 건에 대한 요건 검토 체크리스트를 생성해주세요.\n\n신청 유형: [참전/공상/보훈보상/기타]\n\n체크리스트 형식:\n□ 항목명 — 확인 내용 — 근거 법령\n\n카테고리:\n1. 신청 자격 요건\n2. 구비서류 완전성\n3. 기간·절차 적법성\n4. 사실관계 확인 사항\n5. 특이사항 점검\n\n각 항목에 관련 법령(국가유공자법, 보훈보상법 등) 조항을 반드시 명시해주세요.\n\n[신청서 기본 정보 붙여넣기]',
+      insight: '체크리스트 자동 생성으로 항목 완전성이 78%에서 96%로 향상되었습니다. 특히 신임 심사관의 경우, 경험 부족으로 놓치기 쉬운 특수 요건(예: 참전 기간 산정, 해외 파병 특례)을 AI가 빠짐없이 포함시켜줍니다. 체크리스트가 표준화되면서 심사관 간 검토 품질 편차도 줄었습니다.'
+    }
+  };
+
+  /* ── Modal ── */
+  const overlay = document.getElementById('modalOverlay');
+  const modal = document.getElementById('modal');
+  const modalTop = document.getElementById('modalTop');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalAvatar = document.getElementById('modalAvatar');
+  const modalMeta = document.getElementById('modalMeta');
+  const modalBadges = document.getElementById('modalBadges');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalTable = document.getElementById('modalTable');
+  const modalTools = document.getElementById('modalTools');
+  const modalPrompt = document.getElementById('modalPrompt');
+  const modalInsight = document.getElementById('modalInsight');
+
+  const topClassMap = { req:'mt-req', dep:'mt-dep', appeal:'mt-appeal', common:'mt-common' };
+
+  function openModal(id) {
+    const d = caseData[id];
+    if (!d) return;
+
+    modalTop.className = 'modal-top ' + (topClassMap[d.category] || '');
+    modalTitle.textContent = d.title;
+    modalAvatar.textContent = d.author.charAt(0);
+    modalAvatar.style.background = d.avatarColor;
+    modalMeta.textContent = d.author + ' · ' + d.dept;
+
+    modalBadges.innerHTML =
+      '<span class="case-badge ' + d.badgeClass + '">' + d.categoryLabel + '</span>' +
+      '<span class="case-badge cb-improve">' + d.improve + '</span>';
+
+    modalDesc.textContent = d.desc;
+
+    modalTable.innerHTML = d.table.map(function(r) {
+      return '<tr><td>' + r[0] + '</td><td class="val-before">' + r[1] + '</td><td class="val-after">' + r[2] + '</td><td class="val-change">' + r[3] + '</td></tr>';
+    }).join('');
+
+    modalTools.innerHTML = d.tools.map(function(t) {
+      return '<span class="modal-tool"><span class="modal-tool-icon" style="background:' + t.color + '">' + t.name.charAt(0) + '</span>' + t.name + '</span>';
+    }).join('');
+
+    modalPrompt.textContent = d.prompt;
+    modalInsight.textContent = d.insight;
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  cards.forEach(function(card) {
+    card.addEventListener('click', function() {
+      openModal(this.dataset.caseId);
+    });
+  });
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+  });
+})();
+</script>
+
+</body>
+</html>
