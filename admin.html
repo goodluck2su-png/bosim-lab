@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSIM Lab - Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --text: #1a1a2e;
+  --text-secondary: #6B6B7B;
+  --text-tertiary: #9B9BAB;
+  --accent: #534AB7;
+  --accent-light: #EEEDFE;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --border: rgba(0,0,0,0.08);
+  --radius: 16px;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Noto Sans KR', -apple-system, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav */
+nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; height:60px; }
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+.logo-mark { width:32px; height:32px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; font-weight:700; }
+.logo-text { font-weight:700; font-size:15px; letter-spacing:-0.3px; }
+.logo-sub { font-size:11px; color:var(--text-tertiary); font-weight:400; }
+.nav-toggle { display:none; width:36px; height:36px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; align-items:center; justify-content:center; font-size:18px; color:var(--text-secondary); }
+.nav-links { display:flex; gap:4px; }
+.nav-links a { padding:8px 14px; font-size:13px; color:var(--text-secondary); text-decoration:none; border-radius:8px; font-weight:500; transition:all .2s; }
+.nav-links a:hover, .nav-links a.active { background:var(--accent-light); color:var(--accent); }
+.nav-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); color:var(--text-secondary); }
+.nav-badge .dot { width:6px; height:6px; border-radius:50%; background:#0F6E56; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* Page Header */
+.page-header { padding:48px 0 32px; }
+.page-header h1 { font-size:28px; font-weight:700; letter-spacing:-0.5px; }
+.page-header h1 span { color:var(--accent); }
+.page-header p { font-size:14px; color:var(--text-secondary); margin-top:6px; }
+
+/* Metrics */
+.metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
+.metric { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; position:relative; overflow:hidden; }
+.metric::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.metric:nth-child(1)::before { background:var(--accent); }
+.metric:nth-child(2)::before { background:var(--teal); }
+.metric:nth-child(3)::before { background:#185FA5; }
+.metric:nth-child(4)::before { background:var(--coral); }
+.metric-label { font-size:12px; color:var(--text-tertiary); font-weight:500; margin-bottom:8px; }
+.metric-value { font-family:var(--mono); font-size:32px; font-weight:700; letter-spacing:-1px; }
+.metric-change { font-size:12px; margin-top:4px; font-weight:500; color:var(--text-tertiary); }
+.m-purple .metric-value { color:var(--accent); }
+.m-teal .metric-value { color:var(--teal); }
+.m-blue .metric-value { color:#185FA5; }
+.m-coral .metric-value { color:var(--coral); }
+
+/* Section */
+.section-header { display:flex; align-items:center; gap:16px; margin:40px 0 20px; }
+.section-header h2 { font-size:20px; font-weight:700; white-space:nowrap; }
+.section-header .line { flex:1; height:1px; background:var(--border); }
+.section-count { font-family:var(--mono); font-size:13px; color:var(--text-tertiary); }
+
+/* Tables */
+.table-wrap { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:40px; }
+.table-wrap table { width:100%; border-collapse:collapse; font-size:13px; }
+.table-wrap th { background:#F8F8F6; font-weight:600; padding:12px 16px; text-align:left; color:var(--text-secondary); font-size:12px; border-bottom:1px solid var(--border); white-space:nowrap; }
+.table-wrap td { padding:12px 16px; border-bottom:1px solid var(--border); color:var(--text); }
+.table-wrap tr:last-child td { border-bottom:none; }
+.table-wrap tr:hover td { background:#FAFAF8; }
+.td-mono { font-family:var(--mono); font-size:12px; }
+.td-muted { color:var(--text-tertiary); }
+.td-prompt { max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.td-nick { font-weight:600; color:var(--accent); }
+
+/* Download Buttons */
+.download-section { display:flex; gap:12px; margin-bottom:48px; }
+.btn-download { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:10px; font-size:14px; font-weight:600; border:none; cursor:pointer; transition:all .2s; font-family:var(--sans); }
+.btn-download:hover { transform:translateY(-1px); }
+.btn-dl-primary { background:var(--accent); color:#fff; }
+.btn-dl-primary:hover { background:#4340A0; }
+.btn-dl-secondary { background:var(--teal); color:#fff; }
+.btn-dl-secondary:hover { background:#0B5A47; }
+
+/* Loading */
+.loading-text { text-align:center; padding:40px; font-size:14px; color:var(--text-tertiary); }
+
+/* Password Modal */
+.pw-modal-overlay { position:fixed; inset:0; background:rgba(10,10,30,.7); backdrop-filter:blur(6px); z-index:300; display:flex; align-items:center; justify-content:center; }
+.pw-modal-overlay.hidden { display:none; }
+.pw-modal { background:var(--surface); border-radius:20px; width:92%; max-width:400px; padding:36px; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,.18); }
+.pw-modal h2 { font-size:20px; font-weight:700; margin-bottom:8px; }
+.pw-modal p { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:20px; }
+.pw-modal input { width:100%; padding:12px 16px; border:1px solid var(--border); border-radius:10px; font-size:15px; font-family:var(--sans); background:var(--bg); color:var(--text); outline:none; margin-bottom:4px; text-align:center; }
+.pw-modal input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.pw-error { font-size:12px; color:var(--coral); height:20px; margin-bottom:8px; }
+.pw-modal .btn-confirm { width:100%; padding:12px; border-radius:10px; font-size:14px; font-weight:600; border:none; cursor:pointer; background:var(--accent); color:#fff; font-family:var(--sans); transition:all .2s; }
+.pw-modal .btn-confirm:hover { background:#4340A0; }
+
+/* Main content hidden until auth */
+.main-content { display:none; }
+.main-content.show { display:block; }
+
+/* Footer */
+footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
+
+@media (max-width:768px) {
+  .nav-inner { flex-wrap:wrap; height:auto; padding:10px 0; }
+  .nav-links { display:none; width:100%; flex-direction:column; gap:2px; padding-top:8px; }
+  .nav-links.open { display:flex; }
+  .nav-toggle { display:flex; }
+  .nav-badge { display:none; }
+  .metrics { grid-template-columns:repeat(2,1fr); }
+  .metric-value { font-size:24px; }
+  .page-header h1 { font-size:22px; }
+  .download-section { flex-direction:column; }
+  .table-wrap { overflow-x:auto; }
+  .pw-modal { padding:24px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container nav-inner">
+  <a href="index.html" class="logo">
+    <div class="logo-mark">BL</div>
+    <div>
+      <div class="logo-text">BOSIM Lab</div>
+      <div class="logo-sub">AI-Driven Innovation</div>
+    </div>
+  </a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="index.html#casebook">Casebook</a>
+    <a href="journey.html">Our Journey</a>
+    <a href="security-guide.html">Security Guide</a>
+    <a href="practice.html">실습하기</a>
+    <a href="case-submit.html">케이스 등록</a>
+  </div>
+  <div class="nav-badge">
+    <span class="dot"></span>
+    Admin
+  </div>
+</div>
+</nav>
+
+<!-- Password Modal -->
+<div class="pw-modal-overlay" id="pwModal">
+  <div class="pw-modal">
+    <h2>관리자 인증</h2>
+    <p>관리자 비밀번호를 입력해주세요.</p>
+    <input type="password" id="pwInput" placeholder="비밀번호" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="pw-error" id="pwError"></div>
+    <button class="btn-confirm" onclick="checkPassword()">확인</button>
+  </div>
+</div>
+
+<!-- Main Content (hidden until auth) -->
+<div class="main-content" id="mainContent">
+<div class="container">
+
+<div class="page-header">
+  <h1>Admin <span>Dashboard</span></h1>
+  <p>실습 참여 현황 및 대화 로그를 관리합니다</p>
+</div>
+
+<!-- Section 1: Metrics -->
+<div class="metrics">
+  <div class="metric m-purple">
+    <div class="metric-label">총 대화 수</div>
+    <div class="metric-value" id="metricTotal">-</div>
+    <div class="metric-change">chat_logs 전체</div>
+  </div>
+  <div class="metric m-teal">
+    <div class="metric-label">참여 닉네임 수</div>
+    <div class="metric-value" id="metricUsers">-</div>
+    <div class="metric-change">distinct nickname</div>
+  </div>
+  <div class="metric m-blue">
+    <div class="metric-label">평균 응답시간</div>
+    <div class="metric-value" id="metricAvgTime">-</div>
+    <div class="metric-change">ms 단위</div>
+  </div>
+  <div class="metric m-coral">
+    <div class="metric-label">오늘 대화 수</div>
+    <div class="metric-value" id="metricToday">-</div>
+    <div class="metric-change" id="metricTodayDate">-</div>
+  </div>
+</div>
+
+<!-- Section 2: Nickname Stats -->
+<div class="section-header">
+  <h2>닉네임별 참여 현황</h2>
+  <div class="line"></div>
+  <span class="section-count" id="nickCount">-</span>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>닉네임</th>
+        <th>총 대화수</th>
+        <th>마지막 접속일</th>
+        <th>실습1</th>
+        <th>실습2</th>
+        <th>실습3</th>
+      </tr>
+    </thead>
+    <tbody id="nickTable">
+      <tr><td colspan="6" class="loading-text">로딩 중...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Section 3: Recent Logs -->
+<div class="section-header">
+  <h2>최근 대화 로그</h2>
+  <div class="line"></div>
+  <span class="section-count">최신 50건</span>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>시간</th>
+        <th>닉네임</th>
+        <th>실습단계</th>
+        <th>프롬프트</th>
+        <th>응답시간</th>
+      </tr>
+    </thead>
+    <tbody id="logTable">
+      <tr><td colspan="5" class="loading-text">로딩 중...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Section 4: CSV Download -->
+<div class="section-header">
+  <h2>데이터 다운로드</h2>
+  <div class="line"></div>
+</div>
+<div class="download-section">
+  <button class="btn-download btn-dl-primary" onclick="downloadCSV('chat_logs')">대화 로그 CSV 다운로드</button>
+  <button class="btn-download btn-dl-secondary" onclick="downloadCSV('reflections')">소감 데이터 CSV 다운로드</button>
+</div>
+
+</div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
+    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  var adminPassword = null;
+
+  /* ── Proxy helper: all queries go through /api/admin-query ── */
+  async function query(table, opts) {
+    opts = opts || {};
+    var res = await fetch('/api/admin-query', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password: adminPassword,
+        table: table,
+        select: opts.select || '*',
+        order: opts.order || null,
+        limit: opts.limit || null,
+        filters: opts.filters || null
+      })
+    });
+    if (!res.ok) throw new Error('Query failed: ' + res.status);
+    return await res.json();
+  }
+
+  /* ── Password check ── */
+  window.checkPassword = function() {
+    var input = document.getElementById('pwInput').value;
+    if (input === 'bosim2026') {
+      adminPassword = input;
+      document.getElementById('pwModal').classList.add('hidden');
+      document.getElementById('mainContent').classList.add('show');
+      loadDashboard();
+    } else {
+      document.getElementById('pwError').textContent = '비밀번호가 틀렸습니다.';
+      document.getElementById('pwInput').value = '';
+      document.getElementById('pwInput').focus();
+    }
+  };
+
+  /* ── Load all data ── */
+  async function loadDashboard() {
+    await Promise.all([loadMetrics(), loadNickStats(), loadRecentLogs()]);
+  }
+
+  /* ── Section 1: Metrics ── */
+  async function loadMetrics() {
+    var result = await query('chat_logs', { select: 'nickname,response_time_ms,created_at' });
+    var data = result.data || [];
+
+    // Total chats
+    document.getElementById('metricTotal').textContent = data.length;
+
+    // Distinct nicknames
+    var uniqueNicks = new Set(data.map(function(r) { return r.nickname; }));
+    document.getElementById('metricUsers').textContent = uniqueNicks.size;
+
+    // Average response time
+    if (data.length > 0) {
+      var sum = data.reduce(function(a, r) { return a + (r.response_time_ms || 0); }, 0);
+      document.getElementById('metricAvgTime').textContent = Math.round(sum / data.length);
+    } else {
+      document.getElementById('metricAvgTime').textContent = '0';
+    }
+
+    // Today's chats
+    var today = new Date().toISOString().slice(0, 10);
+    var todayCount = data.filter(function(r) { return r.created_at && r.created_at.startsWith(today); }).length;
+    document.getElementById('metricToday').textContent = todayCount;
+    document.getElementById('metricTodayDate').textContent = today;
+  }
+
+  /* ── Section 2: Nickname stats ── */
+  async function loadNickStats() {
+    var result = await query('chat_logs', { select: 'nickname,created_at,practice_step', order: 'created_at.desc' });
+    var logs = result.data || [];
+    if (logs.length === 0) {
+      document.getElementById('nickTable').innerHTML = '<tr><td colspan="6" class="loading-text">데이터가 없습니다</td></tr>';
+      document.getElementById('nickCount').textContent = '0명';
+      return;
+    }
+
+    var stats = {};
+    logs.forEach(function(r) {
+      if (!stats[r.nickname]) {
+        stats[r.nickname] = { total: 0, lastDate: r.created_at, p1: 0, p2: 0, p3: 0 };
+      }
+      stats[r.nickname].total++;
+      var step = r.practice_step;
+      if (step >= 10 && step < 20) stats[r.nickname].p1++;
+      else if (step >= 20 && step < 30) stats[r.nickname].p2++;
+      else if (step >= 30 && step < 40) stats[r.nickname].p3++;
+    });
+
+    var nicknames = Object.keys(stats).sort();
+    document.getElementById('nickCount').textContent = nicknames.length + '명';
+
+    document.getElementById('nickTable').innerHTML = nicknames.map(function(nick) {
+      var s = stats[nick];
+      var lastDate = new Date(s.lastDate).toLocaleDateString('ko-KR');
+      return '<tr>' +
+        '<td class="td-nick">' + nick + '</td>' +
+        '<td class="td-mono">' + s.total + '</td>' +
+        '<td class="td-muted">' + lastDate + '</td>' +
+        '<td class="td-mono">' + s.p1 + '</td>' +
+        '<td class="td-mono">' + s.p2 + '</td>' +
+        '<td class="td-mono">' + s.p3 + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  /* ── Section 3: Recent logs ── */
+  async function loadRecentLogs() {
+    var result = await query('chat_logs', {
+      select: 'created_at,nickname,practice_step,user_prompt,response_time_ms',
+      order: 'created_at.desc',
+      limit: 50
+    });
+    var logs = result.data || [];
+
+    if (logs.length === 0) {
+      document.getElementById('logTable').innerHTML = '<tr><td colspan="5" class="loading-text">데이터가 없습니다</td></tr>';
+      return;
+    }
+
+    document.getElementById('logTable').innerHTML = logs.map(function(r) {
+      var time = new Date(r.created_at).toLocaleString('ko-KR', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+      var prompt = (r.user_prompt || '').substring(0, 50);
+      if ((r.user_prompt || '').length > 50) prompt += '...';
+      var stepLabel = 'P' + Math.floor(r.practice_step / 10) + '-' + (r.practice_step % 10);
+      return '<tr>' +
+        '<td class="td-mono td-muted">' + time + '</td>' +
+        '<td class="td-nick">' + (r.nickname || '-') + '</td>' +
+        '<td class="td-mono">' + stepLabel + '</td>' +
+        '<td class="td-prompt">' + escapeHtml(prompt) + '</td>' +
+        '<td class="td-mono">' + (r.response_time_ms || '-') + 'ms</td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  /* ── Section 4: CSV download ── */
+  window.downloadCSV = async function(tableName) {
+    var result = await query(tableName, { select: '*', order: 'created_at.desc' });
+    var data = result.data || [];
+    if (data.length === 0) { alert('데이터가 없습니다.'); return; }
+
+    var headers = Object.keys(data[0]);
+    var csvRows = [headers.join(',')];
+    data.forEach(function(row) {
+      csvRows.push(headers.map(function(h) {
+        var val = (row[h] === null || row[h] === undefined) ? '' : String(row[h]);
+        // Escape quotes and wrap in quotes
+        return '"' + val.replace(/"/g, '""') + '"';
+      }).join(','));
+    });
+
+    var blob = new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = tableName + '_' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  function escapeHtml(text) {
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+})();
+</script>
+
+</body>
+</html>
