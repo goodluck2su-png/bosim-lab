@@ -131,6 +131,17 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .link-btn { display:inline-flex; align-items:center; gap:6px; padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; color:var(--accent); background:var(--accent-light); transition:all .2s; margin:0 28px 20px; }
 .link-btn:hover { background:#DDDCFE; }
 
+/* Nickname Modal */
+.nick-modal-overlay { position:fixed; inset:0; background:rgba(10,10,30,.55); backdrop-filter:blur(4px); z-index:300; display:flex; align-items:center; justify-content:center; }
+.nick-modal-overlay.hidden { display:none; }
+.nick-modal { background:var(--surface); border-radius:20px; width:92%; max-width:400px; padding:36px; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,.18); }
+.nick-modal h2 { font-size:20px; font-weight:700; margin-bottom:8px; }
+.nick-modal p { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:20px; }
+.nick-modal select { width:100%; padding:12px 16px; border:1px solid var(--border); border-radius:10px; font-size:15px; font-family:var(--sans); background:var(--bg); color:var(--text); outline:none; margin-bottom:16px; cursor:pointer; }
+.nick-modal select:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.nick-modal .btn-confirm { width:100%; padding:12px; border-radius:10px; font-size:14px; font-weight:600; border:none; cursor:pointer; background:var(--accent); color:#fff; font-family:var(--sans); transition:all .2s; }
+.nick-modal .btn-confirm:hover { background:#4340A0; }
+
 /* Toast */
 .toast { position:fixed; top:80px; right:24px; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; z-index:400; transform:translateX(120%); transition:transform .3s ease; background:var(--teal-light); color:var(--teal); border:1px solid rgba(15,110,86,.2); }
 .toast.show { transform:translateX(0); }
@@ -498,18 +509,73 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
 </footer>
 
 
+<!-- Nickname Modal -->
+<div class="nick-modal-overlay" id="nickModal">
+  <div class="nick-modal">
+    <h2>닉네임을 선택해주세요</h2>
+    <p>실습 기록에 사용됩니다. 한 번 선택하면 다음 방문 시 자동 적용됩니다.</p>
+    <select id="nickSelect">
+      <option value="">선택해주세요</option>
+      <option value="보훈1호">보훈1호</option>
+      <option value="보훈2호">보훈2호</option>
+      <option value="보훈3호">보훈3호</option>
+      <option value="보훈4호">보훈4호</option>
+      <option value="보훈5호">보훈5호</option>
+      <option value="보훈6호">보훈6호</option>
+      <option value="보훈7호">보훈7호</option>
+      <option value="보훈8호">보훈8호</option>
+      <option value="보훈9호">보훈9호</option>
+      <option value="보훈10호">보훈10호</option>
+      <option value="보훈11호">보훈11호</option>
+      <option value="보훈12호">보훈12호</option>
+      <option value="보훈13호">보훈13호</option>
+      <option value="보훈14호">보훈14호</option>
+      <option value="보훈15호">보훈15호</option>
+    </select>
+    <button class="btn-confirm" onclick="saveNickname()">확인</button>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function() {
   /* ── Config ── */
   var SYSTEM_PROMPT = '당신은 대한민국 보훈심사위원회 실무자를 돕는 AI 어시스턴트입니다. 보훈심사, 국가유공자 요건 심의, 행정 문서 작성 등의 업무를 지원합니다. 친절하고 명확하게 답변하며, 전문 용어는 쉽게 풀어 설명합니다. 개인정보나 기밀 정보를 요구하지 않습니다.';
-
-  /* ── Step config: practice id → total steps ── */
   var stepCounts = { p1: 3, p2: 4, p3: 3 };
+  var SESSION_ID = crypto.randomUUID();
 
-  /* ── API: Vercel serverless proxy ── */
+  /* ── Supabase ── */
+  var supabase = window.supabase.createClient(
+    'https://dorocsjhtamcjxwhlqbl.supabase.co',
+    'sb_publishable_p1LTrTrBX3XX6NMK7e4Fig_tdQ4Fm2v'
+  );
+
+  /* ── Nickname ── */
+  function getNickname() { return localStorage.getItem('bosim_nickname'); }
+
+  window.saveNickname = function() {
+    var val = document.getElementById('nickSelect').value;
+    if (!val) { showToast('닉네임을 선택해주세요'); return; }
+    localStorage.setItem('bosim_nickname', val);
+    document.getElementById('nickModal').classList.add('hidden');
+    showToast(val + '님 환영합니다!');
+  };
+
+  if (!getNickname()) {
+    document.getElementById('nickModal').classList.remove('hidden');
+  } else {
+    document.getElementById('nickModal').classList.add('hidden');
+  }
+
+  /* ── Practice step number from stepId ── */
+  function practiceStepNum(stepId) {
+    // p1-1 → 11, p2-3 → 23, p3-2 → 32
+    var parts = stepId.split('-');
+    return parseInt(parts[0].replace('p','')) * 10 + parseInt(parts[1]);
+  }
 
   /* ── Tab switching ── */
   window.switchTab = function(tabId) {
@@ -523,25 +589,21 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
 
   /* ── Step switching ── */
   window.switchStep = function(practiceId, stepNum) {
-    var total = stepCounts[practiceId];
     var contentEl = document.getElementById('content-' + practiceId);
     var progressItems = contentEl.querySelectorAll('.step-item');
     var stepCards = contentEl.querySelectorAll('.step-card');
-
     progressItems.forEach(function(item, i) {
       item.classList.remove('active', 'done');
       if (i + 1 < stepNum) item.classList.add('done');
       if (i + 1 === stepNum) item.classList.add('active');
     });
-
     stepCards.forEach(function(card, i) {
       card.classList.toggle('active', i + 1 === stepNum);
     });
   };
 
   function advanceStep(practiceId, currentStep) {
-    var total = stepCounts[practiceId];
-    if (currentStep < total) {
+    if (currentStep < stepCounts[practiceId]) {
       switchStep(practiceId, currentStep + 1);
     }
   }
@@ -553,10 +615,25 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: userMessage, systemPrompt: SYSTEM_PROMPT })
     });
-
     if (!res.ok) throw new Error('API error: ' + res.status);
     var data = await res.json();
     return data.text;
+  }
+
+  /* ── Save chat log to Supabase ── */
+  async function saveChatLog(stepId, userPrompt, aiResponse, responseTimeMs) {
+    var nickname = getNickname();
+    if (!nickname) return;
+    try {
+      await supabase.from('chat_logs').insert({
+        nickname: nickname,
+        session_id: SESSION_ID,
+        practice_step: practiceStepNum(stepId),
+        user_prompt: userPrompt,
+        ai_response: aiResponse,
+        response_time_ms: responseTimeMs
+      });
+    } catch (e) { /* silent fail */ }
   }
 
   /* ── Send message ── */
@@ -567,30 +644,32 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
     var userText = inputEl.value.trim();
     if (!userText) return;
 
-    // Disable
     sendBtn.disabled = true;
     sendBtn.textContent = '전송 중...';
 
-    // Show loading
     var loadingDiv = document.createElement('div');
     loadingDiv.className = 'message ai';
     loadingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
     messagesEl.appendChild(loadingDiv);
 
+    var startTime = Date.now();
+
     try {
       var answer = await callGemini(userText);
+      var elapsed = Date.now() - startTime;
+
       loadingDiv.innerHTML =
         '<div class="ai-badge">AI 답변</div>' +
         '<div class="ai-content">' + escapeHtml(answer) + '</div>' +
-        '<div class="ai-meta">Gemini 2.0 Flash</div>';
+        '<div class="ai-meta">Gemini 2.0 Flash · ' + (elapsed / 1000).toFixed(1) + '초</div>';
 
-      // Parse step id → advance
+      // Save to Supabase
+      saveChatLog(stepId, userText, answer, elapsed);
+
       var parts = stepId.split('-');
-      var practiceId = parts[0];
-      var stepNum = parseInt(parts[1]);
-      setTimeout(function() { advanceStep(practiceId, stepNum); }, 800);
+      setTimeout(function() { advanceStep(parts[0], parseInt(parts[1])); }, 800);
     } catch (err) {
-      loadingDiv.innerHTML = '<div class="ai-badge" style="color:var(--coral)">오류</div><div class="ai-content" style="color:var(--coral)">API 호출에 실패했습니다. API 키를 확인해주세요.</div>';
+      loadingDiv.innerHTML = '<div class="ai-badge" style="color:var(--coral)">오류</div><div class="ai-content" style="color:var(--coral)">API 호출에 실패했습니다. 잠시 후 다시 시도해주세요.</div>';
     }
 
     sendBtn.disabled = false;
@@ -610,12 +689,25 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
     showToast('프롬프트가 복사되었습니다');
   };
 
-  /* ── Feedback ── */
-  window.saveFeedback = function(practiceId) {
+  /* ── Feedback → Supabase reflections ── */
+  window.saveFeedback = async function(practiceId) {
     var textEl = document.getElementById('feedback-' + practiceId);
     var text = textEl.value.trim();
     if (!text) { showToast('소감을 입력해주세요'); return; }
 
+    var nickname = getNickname();
+    if (!nickname) { showToast('닉네임을 먼저 선택해주세요'); return; }
+
+    // Save to Supabase
+    try {
+      await supabase.from('reflections').insert({
+        nickname: nickname,
+        practice_step: parseInt(practiceId.replace('p', '')),
+        reflection_text: text
+      });
+    } catch (e) { /* silent fail */ }
+
+    // Also keep localStorage for offline badge
     var feedbacks = JSON.parse(localStorage.getItem('bosim_feedbacks') || '[]');
     feedbacks.push({ practice: practiceId, text: text, timestamp: new Date().toISOString() });
     localStorage.setItem('bosim_feedbacks', JSON.stringify(feedbacks));
@@ -629,7 +721,6 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
     badge.textContent = '실습 완료!';
     badge.classList.add('show');
     localStorage.setItem('bosim_complete_' + practiceId, 'true');
-
     var tabBadge = document.getElementById('tab-badge-' + practiceId);
     tabBadge.textContent = '완료';
     tabBadge.classList.add('show');
