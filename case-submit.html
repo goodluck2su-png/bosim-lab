@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSIM Lab - 케이스 등록</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --text: #1a1a2e;
+  --text-secondary: #6B6B7B;
+  --text-tertiary: #9B9BAB;
+  --accent: #534AB7;
+  --accent-light: #EEEDFE;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --border: rgba(0,0,0,0.08);
+  --radius: 16px;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Noto Sans KR', -apple-system, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav */
+nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; height:60px; }
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+.logo-mark { width:32px; height:32px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; font-weight:700; }
+.logo-text { font-weight:700; font-size:15px; letter-spacing:-0.3px; }
+.logo-sub { font-size:11px; color:var(--text-tertiary); font-weight:400; }
+.nav-links { display:flex; gap:4px; }
+.nav-links a { padding:8px 14px; font-size:13px; color:var(--text-secondary); text-decoration:none; border-radius:8px; font-weight:500; transition:all .2s; }
+.nav-links a:hover, .nav-links a.active { background:var(--accent-light); color:var(--accent); }
+.nav-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); color:var(--text-secondary); }
+.nav-badge .dot { width:6px; height:6px; border-radius:50%; background:#0F6E56; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* Page Header */
+.page-header { padding:48px 0 32px; }
+.page-header h1 { font-size:28px; font-weight:700; letter-spacing:-0.5px; line-height:1.3; }
+.page-header h1 span { color:var(--accent); }
+.page-header p { font-size:14px; color:var(--text-secondary); margin-top:6px; }
+
+/* Form */
+.form-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:32px; margin-bottom:40px; }
+.form-section { margin-bottom:28px; }
+.form-section:last-child { margin-bottom:0; }
+.form-section-title { font-size:16px; font-weight:700; margin-bottom:16px; padding-bottom:8px; border-bottom:2px solid var(--accent-light); display:flex; align-items:center; gap:8px; }
+.form-section-num { width:24px; height:24px; border-radius:8px; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; font-family:var(--mono); }
+
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.form-row.full { grid-template-columns:1fr; }
+.form-group { display:flex; flex-direction:column; gap:6px; }
+.form-label { font-size:13px; font-weight:600; color:var(--text); }
+.form-label .required { color:var(--coral); margin-left:2px; }
+.form-hint { font-size:11px; color:var(--text-tertiary); }
+
+input, select, textarea {
+  font-family: var(--sans);
+  font-size:14px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--bg);
+  color:var(--text);
+  outline:none;
+  transition:border-color .2s;
+}
+input:focus, select:focus, textarea:focus {
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-light);
+}
+textarea { resize:vertical; min-height:100px; }
+select { cursor:pointer; }
+
+/* Before/After Table */
+.ba-table { width:100%; border-collapse:separate; border-spacing:0; border:1px solid var(--border); border-radius:10px; overflow:hidden; font-size:13px; }
+.ba-table th { background:#F8F8F6; font-weight:600; padding:10px 14px; text-align:left; color:var(--text-secondary); font-size:12px; }
+.ba-table td { padding:6px 10px; border-top:1px solid var(--border); }
+.ba-table input { width:100%; padding:8px 10px; font-size:13px; }
+.ba-label { font-weight:500; padding-left:14px !important; }
+
+/* Submit Button */
+.submit-row { display:flex; justify-content:flex-end; gap:12px; margin-top:24px; }
+.btn { padding:12px 32px; border-radius:10px; font-size:14px; font-weight:600; border:none; cursor:pointer; transition:all .2s; font-family:var(--sans); }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:#4340A0; transform:translateY(-1px); }
+.btn-primary:disabled { background:var(--text-tertiary); cursor:not-allowed; transform:none; }
+.btn-secondary { background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); }
+.btn-secondary:hover { border-color:var(--text-secondary); }
+
+/* Success/Error */
+.toast { position:fixed; top:80px; right:24px; padding:16px 24px; border-radius:12px; font-size:14px; font-weight:500; z-index:200; transform:translateX(120%); transition:transform .3s ease; }
+.toast.show { transform:translateX(0); }
+.toast-success { background:var(--teal-light); color:var(--teal); border:1px solid rgba(15,110,86,.2); }
+.toast-error { background:var(--coral-light); color:var(--coral); border:1px solid rgba(216,90,48,.2); }
+
+/* Footer */
+footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
+
+@media (max-width:768px) {
+  .form-row { grid-template-columns:1fr; }
+  .nav-links { display:none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container nav-inner">
+  <a href="index.html" class="logo">
+    <div class="logo-mark">BL</div>
+    <div>
+      <div class="logo-text">BOSIM Lab</div>
+      <div class="logo-sub">AI-Driven Innovation</div>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="index.html#casebook">Casebook</a>
+    <a href="journey.html">Our Journey</a>
+    <a href="security-guide.html">Security Guide</a>
+    <a href="case-submit.html" class="active">케이스 등록</a>
+  </div>
+  <div class="nav-badge">
+    <span class="dot"></span>
+    5th month in progress
+  </div>
+</div>
+</nav>
+
+<div class="container">
+
+<div class="page-header">
+  <h1>AI 활용 <span>케이스 등록</span></h1>
+  <p>AI를 업무에 적용한 사례를 등록해주세요. 승인 후 Casebook에 게시됩니다.</p>
+</div>
+
+<form id="caseForm" class="form-card">
+
+  <!-- Section 1: 기본 정보 -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <span class="form-section-num">1</span>
+      기본 정보
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">담당자 이름 <span class="required">*</span></label>
+        <input type="text" id="authorName" placeholder="예: 홍길동" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">소속 <span class="required">*</span></label>
+        <select id="department" required>
+          <option value="">선택해주세요</option>
+          <option value="심사1과">심사1과</option>
+          <option value="심사2과">심사2과</option>
+          <option value="심사3과">심사3과</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">업무 분류 <span class="required">*</span></label>
+        <select id="category" required>
+          <option value="">선택해주세요</option>
+          <option value="req">요건심의</option>
+          <option value="dep">부양심의</option>
+          <option value="appeal">이의신청</option>
+          <option value="common">공통업무</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">사용한 AI 도구 <span class="required">*</span></label>
+        <input type="text" id="aiTools" placeholder="예: Claude 3.5, ChatGPT" required>
+      </div>
+    </div>
+    <div class="form-row full">
+      <div class="form-group">
+        <label class="form-label">케이스 제목 <span class="required">*</span></label>
+        <input type="text" id="title" placeholder="예: 이의신청 쟁점 자동 분류" required>
+      </div>
+    </div>
+    <div class="form-row full">
+      <div class="form-group">
+        <label class="form-label">업무 설명 <span class="required">*</span></label>
+        <textarea id="description" placeholder="AI를 어떤 업무에, 어떻게 적용했는지 구체적으로 설명해주세요 (2~3문장)" required></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Before/After 측정 -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <span class="form-section-num">2</span>
+      Before / After 측정
+    </div>
+    <table class="ba-table">
+      <thead>
+        <tr>
+          <th style="width:25%">항목</th>
+          <th style="width:30%">Before (AI 미적용)</th>
+          <th style="width:30%">After (AI 적용)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ba-label">처리시간 (분) <span style="color:var(--coral)">*</span></td>
+          <td><input type="number" id="timeBefore" placeholder="예: 40" min="1" required></td>
+          <td><input type="number" id="timeAfter" placeholder="예: 22" min="1" required></td>
+        </tr>
+        <tr>
+          <td class="ba-label">정확도</td>
+          <td><input type="text" id="accuracyBefore" placeholder="예: 72%"></td>
+          <td><input type="text" id="accuracyAfter" placeholder="예: 91%"></td>
+        </tr>
+        <tr>
+          <td class="ba-label">만족도</td>
+          <td><input type="text" id="satisfactionBefore" placeholder="예: 3.1/5"></td>
+          <td><input type="text" id="satisfactionAfter" placeholder="예: 4.5/5"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 3: AI 활용 상세 -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <span class="form-section-num">3</span>
+      AI 활용 상세
+    </div>
+    <div class="form-row full">
+      <div class="form-group">
+        <label class="form-label">사용한 프롬프트 예시</label>
+        <textarea id="promptExample" placeholder="실제 사용한 프롬프트를 붙여넣어 주세요 (민감 정보는 비식별화)"></textarea>
+        <span class="form-hint">개인정보, 내부 시스템 정보는 반드시 제거 후 입력하세요</span>
+      </div>
+    </div>
+    <div class="form-row full">
+      <div class="form-group">
+        <label class="form-label">시사점 / 느낀 점</label>
+        <textarea id="insight" placeholder="AI 적용 후 느낀 점, 개선 효과, 주의사항 등을 자유롭게 작성해주세요"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <div class="submit-row">
+    <button type="button" class="btn btn-secondary" onclick="document.getElementById('caseForm').reset()">초기화</button>
+    <button type="submit" class="btn btn-primary" id="submitBtn">케이스 등록</button>
+  </div>
+
+</form>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
+    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast toast-success" id="toastSuccess">케이스가 등록되었습니다! 승인 후 Casebook에 게시됩니다.</div>
+<div class="toast toast-error" id="toastError">등록에 실패했습니다. 다시 시도해주세요.</div>
+
+<script>
+(function() {
+  const SUPABASE_URL = 'https://dorocsjhtamcjxwhlqbl.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_p1LTrTrBX3XX6NMK7e4Fig_tdQ4Fm2v';
+
+  function showToast(type) {
+    const el = document.getElementById(type === 'success' ? 'toastSuccess' : 'toastError');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 4000);
+  }
+
+  document.getElementById('caseForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '등록 중...';
+
+    const data = {
+      author_name: document.getElementById('authorName').value.trim(),
+      department: document.getElementById('department').value,
+      category: document.getElementById('category').value,
+      title: document.getElementById('title').value.trim(),
+      description: document.getElementById('description').value.trim(),
+      time_before: parseInt(document.getElementById('timeBefore').value),
+      time_after: parseInt(document.getElementById('timeAfter').value),
+      accuracy_before: document.getElementById('accuracyBefore').value.trim() || null,
+      accuracy_after: document.getElementById('accuracyAfter').value.trim() || null,
+      satisfaction_before: document.getElementById('satisfactionBefore').value.trim() || null,
+      satisfaction_after: document.getElementById('satisfactionAfter').value.trim() || null,
+      ai_tools: document.getElementById('aiTools').value.trim(),
+      prompt_example: document.getElementById('promptExample').value.trim() || null,
+      insight: document.getElementById('insight').value.trim() || null
+    };
+
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/cases', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        showToast('success');
+        document.getElementById('caseForm').reset();
+      } else {
+        throw new Error('HTTP ' + res.status);
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('error');
+    }
+
+    btn.disabled = false;
+    btn.textContent = '케이스 등록';
+  });
+})();
+</script>
+
+</body>
+</html>
