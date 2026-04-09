@@ -136,14 +136,28 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
 .footer-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:6px; background:var(--accent-light); color:var(--accent); font-size:11px; font-weight:500; margin-bottom:8px; }
 
+.nav-toggle { display:none; width:36px; height:36px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; align-items:center; justify-content:center; font-size:18px; color:var(--text-secondary); }
+
 @media (max-width:768px) {
+  .nav-inner { flex-wrap:wrap; height:auto; padding:10px 0; }
+  .nav-links { display:none; width:100%; flex-direction:column; gap:2px; padding-top:8px; }
+  .nav-links.open { display:flex; }
+  .nav-toggle { display:flex; }
+  .nav-badge { display:none; }
+
+  .page-header h1 { font-size:22px; }
   .timeline::before { left:19px; }
   .tl-item { padding-left:56px; }
   .tl-dot { left:10px; width:18px; height:18px; }
   .tl-month { left:10px; width:18px; font-size:9px; }
-  .tl-highlights { grid-template-columns:1fr 1fr; }
-  .progress-bar { flex-wrap:wrap; gap:4px; }
+  .tl-card-body { padding:18px 20px; }
+  .tl-title { font-size:16px; }
+  .tl-highlights { grid-template-columns:1fr 1fr; gap:8px; }
+  .tl-hl-value { font-size:18px; }
+  .progress-bar { flex-wrap:wrap; gap:4px; padding:12px 16px; }
   .progress-line { display:none; }
+  .tl-quote { padding:12px 16px; }
+  .tl-quote p { font-size:13px; }
 }
 </style>
 </head>
@@ -158,6 +172,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
       <div class="logo-sub">AI-Driven Innovation</div>
     </div>
   </a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
   <div class="nav-links">
     <a href="index.html">Dashboard</a>
     <a href="index.html#casebook">Casebook</a>

@@ -106,9 +106,22 @@ select { cursor:pointer; }
 /* Footer */
 footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
 
+.nav-toggle { display:none; width:36px; height:36px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; align-items:center; justify-content:center; font-size:18px; color:var(--text-secondary); }
+
 @media (max-width:768px) {
+  .nav-inner { flex-wrap:wrap; height:auto; padding:10px 0; }
+  .nav-links { display:none; width:100%; flex-direction:column; gap:2px; padding-top:8px; }
+  .nav-links.open { display:flex; }
+  .nav-toggle { display:flex; }
+  .nav-badge { display:none; }
+
+  .page-header h1 { font-size:22px; }
   .form-row { grid-template-columns:1fr; }
-  .nav-links { display:none; }
+  .form-card { padding:20px; }
+  .ba-table { font-size:12px; }
+  .ba-table input { font-size:12px; padding:6px 8px; }
+  .submit-row { flex-direction:column; }
+  .btn { width:100%; text-align:center; }
 }
 </style>
 </head>
@@ -123,6 +136,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
       <div class="logo-sub">AI-Driven Innovation</div>
     </div>
   </a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
   <div class="nav-links">
     <a href="index.html">Dashboard</a>
     <a href="index.html#casebook">Casebook</a>
