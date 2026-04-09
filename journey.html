@@ -126,6 +126,19 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .tl-quote p { font-size:14px; font-style:italic; line-height:1.6; color:var(--text); margin-bottom:6px; }
 .tl-quote cite { font-size:12px; color:var(--text-tertiary); font-style:normal; }
 
+/* Before/After Pain Points */
+.tl-ba { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0; }
+.tl-ba-col { border-radius:10px; padding:12px 14px; }
+.tl-ba-before { background:#FEF2F2; border:1px solid rgba(232,72,85,.12); }
+.tl-ba-after { background:#ECFDF5; border:1px solid rgba(2,195,154,.12); }
+.tl-ba-label { font-size:10px; font-weight:700; letter-spacing:.3px; margin-bottom:6px; }
+.tl-ba-before .tl-ba-label { color:#E84855; }
+.tl-ba-after .tl-ba-label { color:#02C39A; }
+.tl-ba-tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600; margin:2px 2px 2px 0; }
+.tl-ba-before .tl-ba-tag { background:rgba(232,72,85,.1); color:#E84855; }
+.tl-ba-after .tl-ba-tag { background:rgba(2,195,154,.1); color:#02C39A; }
+.tl-ba-after .tl-ba-pending { background:rgba(0,0,0,.04); color:var(--text-tertiary); }
+
 /* Upcoming placeholder */
 .tl-upcoming-text { font-size:13px; color:var(--text-tertiary); line-height:1.6; }
 .tl-upcoming-text ul { list-style:none; margin-top:8px; }
@@ -178,6 +191,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     <a href="index.html#casebook">Casebook</a>
     <a href="journey.html" class="active">Our Journey</a>
     <a href="security-guide.html">Security Guide</a>
+    <a href="painpoints.html">Pain Points</a>
     <a href="practice.html">실습하기</a>
     <a href="case-submit.html">케이스 등록</a>
   </div>
@@ -266,6 +280,17 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
           </div>
         </div>
 
+        <div class="tl-ba">
+          <div class="tl-ba-col tl-ba-before">
+            <div class="tl-ba-label">BEFORE — 페인 포인트 수집</div>
+            <span class="tl-ba-tag">현장 인터뷰 시작</span>
+          </div>
+          <div class="tl-ba-col tl-ba-after">
+            <div class="tl-ba-label">AFTER</div>
+            <span class="tl-ba-tag">7개 페인 포인트 발굴</span>
+          </div>
+        </div>
+
         <div class="tl-quote">
           <p>"솔직히 AI가 뭔지도 잘 몰랐어요. ChatGPT 이름만 들어봤지, 제 업무에 쓸 수 있다는 건 상상도 못했습니다."</p>
           <cite>— 손숙, 심사1과 (킥오프 설문 응답 중)</cite>
@@ -311,6 +336,17 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
           <div class="tl-hl">
             <div class="tl-hl-value coral">15<span style="font-size:14px">개</span></div>
             <div class="tl-hl-label">프롬프트 템플릿</div>
+          </div>
+        </div>
+
+        <div class="tl-ba">
+          <div class="tl-ba-col tl-ba-before">
+            <div class="tl-ba-label">BEFORE — 페인 포인트</div>
+            <span class="tl-ba-tag">P6 한문 읽기 어려움</span>
+          </div>
+          <div class="tl-ba-col tl-ba-after">
+            <div class="tl-ba-label">AFTER</div>
+            <span class="tl-ba-tag">AI 한자 해석 데모</span>
           </div>
         </div>
 
@@ -363,6 +399,20 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
           </div>
         </div>
 
+        <div class="tl-ba">
+          <div class="tl-ba-col tl-ba-before">
+            <div class="tl-ba-label">BEFORE — 페인 포인트</div>
+            <span class="tl-ba-tag">P3 정보 공유 느림</span>
+            <span class="tl-ba-tag">P1 법령 조항 구전</span>
+            <span class="tl-ba-tag">P6 한문 읽기</span>
+            <span class="tl-ba-tag">P7 오타 문제</span>
+          </div>
+          <div class="tl-ba-col tl-ba-after">
+            <div class="tl-ba-label">AFTER</div>
+            <span class="tl-ba-tag tl-ba-pending">예정</span>
+          </div>
+        </div>
+
         <div class="tl-quote">
           <p>"보안 문제만 해결되면 정말 적극적으로 쓸 수 있을 것 같아요. 이번 달 가이드라인 나오면 동료들한테도 자신 있게 권할 수 있습니다."</p>
           <cite>— 하동석, 심사2과 (5월 중간 회고 중)</cite>
@@ -398,6 +448,19 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
           </ul>
         </div>
 
+        <div class="tl-ba">
+          <div class="tl-ba-col tl-ba-before">
+            <div class="tl-ba-label">BEFORE — 페인 포인트</div>
+            <span class="tl-ba-tag">P2 업무 인계 어려움</span>
+            <span class="tl-ba-tag">P4 암묵지 전달</span>
+            <span class="tl-ba-tag">P5 업무 플로우 차이</span>
+          </div>
+          <div class="tl-ba-col tl-ba-after">
+            <div class="tl-ba-label">AFTER</div>
+            <span class="tl-ba-tag tl-ba-pending">예정</span>
+          </div>
+        </div>
+
         <div class="tl-quote">
           <p>"6월이면 데이터가 충분히 쌓여서, 진짜 숫자로 말할 수 있게 될 겁니다."</p>
           <cite>— 계획 중</cite>
@@ -431,6 +494,17 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
             <li>프롬프트 템플릿 모음집</li>
             <li>BOSIM Lab 웹사이트 (성과 대시보드)</li>
           </ul>
+        </div>
+
+        <div class="tl-ba">
+          <div class="tl-ba-col tl-ba-before">
+            <div class="tl-ba-label">BEFORE — 전체 페인 포인트</div>
+            <span class="tl-ba-tag">P1~P7 전체</span>
+          </div>
+          <div class="tl-ba-col tl-ba-after">
+            <div class="tl-ba-label">AFTER — 최종 성과</div>
+            <span class="tl-ba-tag tl-ba-pending">예정</span>
+          </div>
         </div>
 
         <div class="tl-quote">

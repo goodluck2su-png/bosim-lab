@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSIM Lab - Pain Points</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --text: #1a1a2e;
+  --text-secondary: #6B6B7B;
+  --text-tertiary: #9B9BAB;
+  --accent: #534AB7;
+  --accent-light: #EEEDFE;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --border: rgba(0,0,0,0.08);
+  --radius: 16px;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Noto Sans KR', -apple-system, sans-serif;
+  --red: #E84855;
+  --red-light: #FEF2F2;
+  --yellow: #F9A826;
+  --yellow-light: #FFFBEB;
+  --green: #02C39A;
+  --green-light: #ECFDF5;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav */
+nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; height:60px; }
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+.logo-mark { width:32px; height:32px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; font-weight:700; }
+.logo-text { font-weight:700; font-size:15px; letter-spacing:-0.3px; }
+.logo-sub { font-size:11px; color:var(--text-tertiary); font-weight:400; }
+.nav-links { display:flex; gap:4px; }
+.nav-links a { padding:8px 14px; font-size:13px; color:var(--text-secondary); text-decoration:none; border-radius:8px; font-weight:500; transition:all .2s; }
+.nav-links a:hover, .nav-links a.active { background:var(--accent-light); color:var(--accent); }
+.nav-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); color:var(--text-secondary); }
+.nav-badge .dot { width:6px; height:6px; border-radius:50%; background:#0F6E56; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.nav-toggle { display:none; width:36px; height:36px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; align-items:center; justify-content:center; font-size:18px; color:var(--text-secondary); }
+
+/* Page Header */
+.page-header { padding:48px 0 16px; }
+.page-header h1 { font-size:28px; font-weight:700; letter-spacing:-0.5px; }
+.page-header h1 span { color:var(--accent); }
+.page-header p { font-size:14px; color:var(--text-secondary); margin-top:6px; line-height:1.6; }
+
+/* Summary Stats */
+.pp-stats { display:flex; gap:12px; margin:20px 0 28px; }
+.pp-stat { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:10px; font-size:13px; font-weight:600; }
+.pp-stat-red { background:var(--red-light); color:var(--red); }
+.pp-stat-yellow { background:var(--yellow-light); color:var(--yellow); }
+.pp-stat-green { background:var(--green-light); color:var(--green); }
+.pp-stat-count { font-family:var(--mono); font-size:16px; }
+
+/* Filters */
+.pp-filters { display:flex; gap:6px; margin-bottom:24px; flex-wrap:wrap; }
+.pp-filter { padding:7px 16px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); background:var(--surface); color:var(--text-secondary); cursor:pointer; transition:all .2s; }
+.pp-filter:hover { border-color:var(--accent); color:var(--accent); }
+.pp-filter.active { background:var(--text); color:#fff; border-color:var(--text); }
+
+/* Kanban Board */
+.kanban { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:48px; }
+.kanban-col { min-height:200px; }
+.col-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-radius:12px 12px 0 0; margin-bottom:12px; }
+.col-header h3 { font-size:14px; font-weight:700; }
+.col-count { font-family:var(--mono); font-size:12px; padding:2px 8px; border-radius:6px; }
+.col-discovered .col-header { background:var(--red-light); color:var(--red); }
+.col-discovered .col-count { background:rgba(232,72,85,.15); color:var(--red); }
+.col-experimenting .col-header { background:var(--yellow-light); color:var(--yellow); }
+.col-experimenting .col-count { background:rgba(249,168,38,.15); color:var(--yellow); }
+.col-solved .col-header { background:var(--green-light); color:var(--green); }
+.col-solved .col-count { background:rgba(2,195,154,.15); color:var(--green); }
+
+/* Cards */
+.pp-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:10px; cursor:pointer; transition:all .2s; }
+.pp-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.06); }
+.pp-card-icon { font-size:24px; margin-bottom:10px; }
+.pp-card-title { font-size:14px; font-weight:700; margin-bottom:6px; line-height:1.4; }
+.pp-card-desc { font-size:12px; color:var(--text-secondary); line-height:1.6; margin-bottom:10px; }
+.pp-card-footer { display:flex; justify-content:space-between; align-items:center; }
+.pp-card-cat { padding:3px 10px; border-radius:6px; font-size:10px; font-weight:600; background:var(--accent-light); color:var(--accent); }
+.pp-card-session { font-size:10px; color:var(--text-tertiary); font-family:var(--mono); }
+
+/* Status dot on card */
+.pp-card-status { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:middle; }
+.status-discovered { background:var(--red); }
+.status-experimenting { background:var(--yellow); }
+.status-solved { background:var(--green); }
+
+/* Modal */
+.pp-modal-overlay { position:fixed; inset:0; background:rgba(10,10,30,.55); backdrop-filter:blur(4px); z-index:200; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s ease; }
+.pp-modal-overlay.open { opacity:1; pointer-events:auto; }
+.pp-modal { background:var(--surface); border-radius:20px; width:92%; max-width:560px; max-height:85vh; overflow-y:auto; transform:translateY(24px) scale(.97); transition:transform .3s ease; box-shadow:0 24px 64px rgba(0,0,0,.18); }
+.pp-modal-overlay.open .pp-modal { transform:translateY(0) scale(1); }
+.pp-modal-header { padding:28px 28px 0; display:flex; justify-content:space-between; align-items:flex-start; }
+.pp-modal-icon { font-size:32px; }
+.pp-modal-close { width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; color:var(--text-tertiary); transition:all .2s; }
+.pp-modal-close:hover { background:#f5f5f5; color:var(--text); }
+.pp-modal-body { padding:16px 28px 28px; }
+.pp-modal-title { font-size:20px; font-weight:700; margin-bottom:6px; }
+.pp-modal-badges { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+.pp-modal-badge { padding:4px 12px; border-radius:6px; font-size:11px; font-weight:600; }
+.pp-modal-section { margin-bottom:18px; }
+.pp-modal-section:last-child { margin-bottom:0; }
+.pp-modal-label { font-size:11px; font-weight:700; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+.pp-modal-text { font-size:14px; color:var(--text-secondary); line-height:1.7; }
+.pp-modal-solution { background:var(--accent-light); border-radius:10px; padding:16px; font-size:14px; line-height:1.7; color:var(--accent); }
+
+/* Footer */
+footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
+
+@media (max-width:768px) {
+  .nav-inner { flex-wrap:wrap; height:auto; padding:10px 0; }
+  .nav-links { display:none; width:100%; flex-direction:column; gap:2px; padding-top:8px; }
+  .nav-links.open { display:flex; }
+  .nav-toggle { display:flex; }
+  .nav-badge { display:none; }
+  .page-header h1 { font-size:22px; }
+  .kanban { grid-template-columns:1fr; }
+  .pp-stats { flex-wrap:wrap; }
+  .pp-modal { width:96%; border-radius:14px; }
+  .pp-modal-header { padding:20px 20px 0; }
+  .pp-modal-body { padding:12px 20px 24px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container nav-inner">
+  <a href="index.html" class="logo">
+    <div class="logo-mark">BL</div>
+    <div>
+      <div class="logo-text">BOSIM Lab</div>
+      <div class="logo-sub">AI-Driven Innovation</div>
+    </div>
+  </a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="index.html#casebook">Casebook</a>
+    <a href="journey.html">Our Journey</a>
+    <a href="security-guide.html">Security Guide</a>
+    <a href="painpoints.html" class="active">Pain Points</a>
+    <a href="practice.html">실습하기</a>
+    <a href="case-submit.html">케이스 등록</a>
+  </div>
+  <div class="nav-badge">
+    <span class="dot"></span>
+    5th month in progress
+  </div>
+</div>
+</nav>
+
+<div class="container">
+
+<div class="page-header">
+  <h1>업무 <span>Pain Points</span> 칸반 보드</h1>
+  <p>보훈심사 현장에서 발굴한 페인 포인트와 AI 솔루션 진행 상황을 추적합니다</p>
+</div>
+
+<!-- Summary Stats -->
+<div class="pp-stats">
+  <div class="pp-stat pp-stat-red"><span class="pp-stat-count" id="countDiscovered">0</span> 발견됨</div>
+  <div class="pp-stat pp-stat-yellow"><span class="pp-stat-count" id="countExperimenting">0</span> AI 실험 중</div>
+  <div class="pp-stat pp-stat-green"><span class="pp-stat-count" id="countSolved">0</span> 해결됨</div>
+</div>
+
+<!-- Filters -->
+<div class="pp-filters">
+  <button class="pp-filter active" data-filter="all">전체</button>
+  <button class="pp-filter" data-filter="지식 문서화 부재">지식 문서화 부재</button>
+  <button class="pp-filter" data-filter="프로세스 비표준화">프로세스 비표준화</button>
+  <button class="pp-filter" data-filter="문서 난이도">문서 난이도</button>
+  <button class="pp-filter" data-filter="문서 품질">문서 품질</button>
+</div>
+
+<!-- Kanban Board -->
+<div class="kanban">
+  <div class="kanban-col col-discovered">
+    <div class="col-header">
+      <h3>발견됨</h3>
+      <span class="col-count" id="colCountDiscovered">0</span>
+    </div>
+    <div id="colDiscovered"></div>
+  </div>
+  <div class="kanban-col col-experimenting">
+    <div class="col-header">
+      <h3>AI 실험 중</h3>
+      <span class="col-count" id="colCountExperimenting">0</span>
+    </div>
+    <div id="colExperimenting"></div>
+  </div>
+  <div class="kanban-col col-solved">
+    <div class="col-header">
+      <h3>해결됨</h3>
+      <span class="col-count" id="colCountSolved">0</span>
+    </div>
+    <div id="colSolved"></div>
+  </div>
+</div>
+
+</div>
+
+<!-- Modal -->
+<div class="pp-modal-overlay" id="ppModalOverlay">
+  <div class="pp-modal">
+    <div class="pp-modal-header">
+      <div class="pp-modal-icon" id="ppModalIcon"></div>
+      <button class="pp-modal-close" id="ppModalClose">&times;</button>
+    </div>
+    <div class="pp-modal-body">
+      <div class="pp-modal-title" id="ppModalTitle"></div>
+      <div class="pp-modal-badges" id="ppModalBadges"></div>
+
+      <div class="pp-modal-section">
+        <div class="pp-modal-label">문제 설명</div>
+        <div class="pp-modal-text" id="ppModalDesc"></div>
+      </div>
+
+      <div class="pp-modal-section">
+        <div class="pp-modal-label">연결 세션</div>
+        <div class="pp-modal-text" id="ppModalSession"></div>
+      </div>
+
+      <div class="pp-modal-section">
+        <div class="pp-modal-label">AI 솔루션 방향</div>
+        <div class="pp-modal-solution" id="ppModalSolution"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
+    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  /* ── Pain Point Data ── */
+  var painpoints = [
+    {
+      id: 'P1', title: '법배심 조항 구전 학습',
+      description: '법령·고시 개정 사항이 공식 매뉴얼이 아닌 구전으로 전달됨',
+      category: '지식 문서화 부재', status: 'discovered',
+      session: '4차 (프롬프트 II)',
+      aiSolution: '법령 변경 자동 추적 + 요약 알림 (Custom GPT / RAG)',
+      icon: '\uD83D\uDCDA'
+    },
+    {
+      id: 'P2', title: '업무 인계 어려움',
+      description: '담당자 교체 시 맥락과 노하우가 함께 사라짐',
+      category: '지식 문서화 부재', status: 'discovered',
+      session: '6차 (프로젝트)',
+      aiSolution: 'AI 기반 업무 매뉴얼 자동 생성',
+      icon: '\uD83D\uDCC1'
+    },
+    {
+      id: 'P3', title: '정보 공유 느림',
+      description: '변경사항·노하우가 팀 내 퍼지는 속도가 느림',
+      category: '지식 문서화 부재', status: 'discovered',
+      session: '3차 (AI 보안)',
+      aiSolution: 'AI 지식베이스 구축 (내부 챗봇)',
+      icon: '\uD83D\uDCE2'
+    },
+    {
+      id: 'P4', title: '암묵지 전달 불가',
+      description: "신규자에게 '해봐야 아는' 지식이 너무 많음",
+      category: '지식 문서화 부재', status: 'discovered',
+      session: '6차 (프로젝트)',
+      aiSolution: 'FAQ 챗봇 / 사례 기반 학습 시스템',
+      icon: '\uD83E\uDDE0'
+    },
+    {
+      id: 'P5', title: '업무 플로우 차이',
+      description: '같은 심사 업무인데 사람마다 순서·방식이 제각각',
+      category: '프로세스 비표준화', status: 'discovered',
+      session: '6차 (프로젝트)',
+      aiSolution: '표준 워크플로우 문서화 + AI 체크리스트',
+      icon: '\uD83D\uDD00'
+    },
+    {
+      id: 'P6', title: '한문 읽기 어려움',
+      description: '과거 서류·진단서의 한자 해독이 힘듦',
+      category: '문서 난이도', status: 'discovered',
+      session: '2차 (내일 맛보기) → 4차 본격',
+      aiSolution: '한자 자동 변환·해석 도구',
+      icon: '\uD83D\uDCB2'
+    },
+    {
+      id: 'P7', title: '오타 문제',
+      description: '서류 작성 반복 오타 및 원본 서류 오타로 인한 혼선',
+      category: '문서 품질', status: 'discovered',
+      session: '4차 (프롬프트 II)',
+      aiSolution: 'AI 기반 문서 교정·검수',
+      icon: '\u270F\uFE0F'
+    }
+  ];
+
+  var statusConfig = {
+    discovered: { label: '발견됨', color: '#E84855', bgColor: '#FEF2F2' },
+    experimenting: { label: 'AI 실험 중', color: '#F9A826', bgColor: '#FFFBEB' },
+    solved: { label: '해결됨', color: '#02C39A', bgColor: '#ECFDF5' }
+  };
+
+  var currentFilter = 'all';
+
+  /* ── Render board ── */
+  function render() {
+    var filtered = currentFilter === 'all'
+      ? painpoints
+      : painpoints.filter(function(p) { return p.category === currentFilter; });
+
+    var discovered = filtered.filter(function(p) { return p.status === 'discovered'; });
+    var experimenting = filtered.filter(function(p) { return p.status === 'experimenting'; });
+    var solved = filtered.filter(function(p) { return p.status === 'solved'; });
+
+    document.getElementById('colDiscovered').innerHTML = discovered.map(cardHtml).join('');
+    document.getElementById('colExperimenting').innerHTML = experimenting.map(cardHtml).join('');
+    document.getElementById('colSolved').innerHTML = solved.map(cardHtml).join('');
+
+    document.getElementById('colCountDiscovered').textContent = discovered.length;
+    document.getElementById('colCountExperimenting').textContent = experimenting.length;
+    document.getElementById('colCountSolved').textContent = solved.length;
+
+    // Global counts (unfiltered)
+    document.getElementById('countDiscovered').textContent = painpoints.filter(function(p) { return p.status === 'discovered'; }).length;
+    document.getElementById('countExperimenting').textContent = painpoints.filter(function(p) { return p.status === 'experimenting'; }).length;
+    document.getElementById('countSolved').textContent = painpoints.filter(function(p) { return p.status === 'solved'; }).length;
+
+    // Attach click events
+    document.querySelectorAll('.pp-card').forEach(function(card) {
+      card.addEventListener('click', function() { openModal(this.dataset.id); });
+    });
+  }
+
+  function cardHtml(p) {
+    var cfg = statusConfig[p.status];
+    return '<div class="pp-card" data-id="' + p.id + '">' +
+      '<div class="pp-card-icon">' + p.icon + '</div>' +
+      '<div class="pp-card-title">' + p.title + '</div>' +
+      '<div class="pp-card-desc">' + p.description + '</div>' +
+      '<div class="pp-card-footer">' +
+        '<span class="pp-card-cat">' + p.category + '</span>' +
+        '<span class="pp-card-session">' + p.id + '</span>' +
+      '</div>' +
+    '</div>';
+  }
+
+  /* ── Filters ── */
+  document.querySelectorAll('.pp-filter').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.pp-filter').forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      currentFilter = this.dataset.filter;
+      render();
+    });
+  });
+
+  /* ── Modal ── */
+  var overlay = document.getElementById('ppModalOverlay');
+
+  function openModal(id) {
+    var p = painpoints.find(function(pp) { return pp.id === id; });
+    if (!p) return;
+    var cfg = statusConfig[p.status];
+
+    document.getElementById('ppModalIcon').textContent = p.icon;
+    document.getElementById('ppModalTitle').textContent = p.title;
+    document.getElementById('ppModalBadges').innerHTML =
+      '<span class="pp-modal-badge" style="background:' + cfg.bgColor + ';color:' + cfg.color + '">' + cfg.label + '</span>' +
+      '<span class="pp-modal-badge" style="background:var(--accent-light);color:var(--accent)">' + p.category + '</span>' +
+      '<span class="pp-modal-badge" style="background:#F5F5F2;color:var(--text-secondary)">' + p.id + '</span>';
+    document.getElementById('ppModalDesc').textContent = p.description;
+    document.getElementById('ppModalSession').textContent = p.session;
+    document.getElementById('ppModalSolution').textContent = p.aiSolution;
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('ppModalClose').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+  /* ── Init ── */
+  render();
+})();
+</script>
+
+</body>
+</html>
