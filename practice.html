@@ -131,18 +131,6 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .link-btn { display:inline-flex; align-items:center; gap:6px; padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; color:var(--accent); background:var(--accent-light); transition:all .2s; margin:0 28px 20px; }
 .link-btn:hover { background:#DDDCFE; }
 
-/* API Key Modal */
-.api-modal-overlay { position:fixed; inset:0; background:rgba(10,10,30,.55); backdrop-filter:blur(4px); z-index:300; display:flex; align-items:center; justify-content:center; }
-.api-modal-overlay.hidden { display:none; }
-.api-modal { background:var(--surface); border-radius:20px; width:92%; max-width:480px; padding:36px; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,.18); }
-.api-modal h2 { font-size:20px; font-weight:700; margin-bottom:8px; }
-.api-modal p { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:20px; }
-.api-modal input { width:100%; padding:12px 16px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:var(--mono); background:var(--bg); color:var(--text); outline:none; margin-bottom:12px; }
-.api-modal input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
-.api-modal .btn-confirm { width:100%; padding:12px; border-radius:10px; font-size:14px; font-weight:600; border:none; cursor:pointer; background:var(--accent); color:#fff; font-family:var(--sans); transition:all .2s; }
-.api-modal .btn-confirm:hover { background:#4340A0; }
-.api-modal .hint { font-size:11px; color:var(--text-tertiary); margin-top:12px; line-height:1.5; }
-
 /* Toast */
 .toast { position:fixed; top:80px; right:24px; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; z-index:400; transform:translateX(120%); transition:transform .3s ease; background:var(--teal-light); color:var(--teal); border:1px solid rgba(15,110,86,.2); }
 .toast.show { transform:translateX(0); }
@@ -509,16 +497,6 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
   </div>
 </footer>
 
-<!-- API Key Modal -->
-<div class="api-modal-overlay" id="apiModal">
-  <div class="api-modal">
-    <h2>Gemini API 키 입력</h2>
-    <p>실습을 진행하려면 Gemini API 키가 필요합니다.<br>키는 이 브라우저 세션에만 저장되며 서버로 전송되지 않습니다.</p>
-    <input type="password" id="apiKeyInput" placeholder="Gemini API 키를 붙여넣으세요">
-    <button class="btn-confirm" onclick="saveApiKey()">확인</button>
-    <div class="hint">Google AI Studio(aistudio.google.com)에서 무료로 발급받을 수 있습니다.</div>
-  </div>
-</div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
@@ -531,23 +509,7 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
   /* ── Step config: practice id → total steps ── */
   var stepCounts = { p1: 3, p2: 4, p3: 3 };
 
-  /* ── API Key ── */
-  function getApiKey() { return sessionStorage.getItem('gemini_key'); }
-
-  window.saveApiKey = function() {
-    var key = document.getElementById('apiKeyInput').value.trim();
-    if (!key) return;
-    sessionStorage.setItem('gemini_key', key);
-    document.getElementById('apiModal').classList.add('hidden');
-    showToast('API 키가 저장되었습니다');
-  };
-
-  // Show modal if no key
-  if (!getApiKey()) {
-    document.getElementById('apiModal').classList.remove('hidden');
-  } else {
-    document.getElementById('apiModal').classList.add('hidden');
-  }
+  /* ── API: Vercel serverless proxy ── */
 
   /* ── Tab switching ── */
   window.switchTab = function(tabId) {
@@ -584,27 +546,17 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
     }
   }
 
-  /* ── Gemini API call ── */
+  /* ── Gemini API call (via Vercel proxy) ── */
   async function callGemini(userMessage) {
-    var key = getApiKey();
-    if (!key) {
-      document.getElementById('apiModal').classList.remove('hidden');
-      throw new Error('No API key');
-    }
-
-    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + key;
-    var res = await fetch(url, {
+    var res = await fetch('/api/gemini', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: SYSTEM_PROMPT + '\n\n' + userMessage }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
-      })
+      body: JSON.stringify({ message: userMessage, systemPrompt: SYSTEM_PROMPT })
     });
 
     if (!res.ok) throw new Error('API error: ' + res.status);
     var data = await res.json();
-    return data.candidates[0].content.parts[0].text;
+    return data.text;
   }
 
   /* ── Send message ── */
