@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSIM Lab - AI 실습하기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --text: #1a1a2e;
+  --text-secondary: #6B6B7B;
+  --text-tertiary: #9B9BAB;
+  --accent: #534AB7;
+  --accent-light: #EEEDFE;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --border: rgba(0,0,0,0.08);
+  --radius: 16px;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Noto Sans KR', -apple-system, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav */
+nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; height:60px; }
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+.logo-mark { width:32px; height:32px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; font-weight:700; }
+.logo-text { font-weight:700; font-size:15px; letter-spacing:-0.3px; }
+.logo-sub { font-size:11px; color:var(--text-tertiary); font-weight:400; }
+.nav-links { display:flex; gap:4px; }
+.nav-links a { padding:8px 14px; font-size:13px; color:var(--text-secondary); text-decoration:none; border-radius:8px; font-weight:500; transition:all .2s; }
+.nav-links a:hover, .nav-links a.active { background:var(--accent-light); color:var(--accent); }
+.nav-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); color:var(--text-secondary); }
+.nav-badge .dot { width:6px; height:6px; border-radius:50%; background:#0F6E56; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.nav-toggle { display:none; width:36px; height:36px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; align-items:center; justify-content:center; font-size:18px; color:var(--text-secondary); }
+
+/* Hero */
+.practice-hero { padding:48px 0 32px; text-align:center; }
+.practice-hero .badge { display:inline-block; padding:6px 16px; border-radius:20px; background:var(--accent-light); color:var(--accent); font-size:12px; font-weight:600; margin-bottom:12px; }
+.practice-hero h1 { font-size:32px; font-weight:700; letter-spacing:-0.5px; margin-bottom:8px; }
+.practice-hero h1 span { color:var(--accent); }
+.practice-hero p { font-size:14px; color:var(--text-secondary); margin-bottom:16px; }
+.practice-meta { display:flex; justify-content:center; gap:20px; font-size:13px; color:var(--text-tertiary); }
+
+/* Tabs */
+.practice-tabs { display:flex; gap:12px; margin-bottom:32px; }
+.practice-tab { flex:1; background:var(--surface); border:2px solid var(--border); border-radius:var(--radius); padding:20px; cursor:pointer; transition:all .2s; position:relative; overflow:hidden; }
+.practice-tab::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--border); transition:background .2s; }
+.practice-tab:hover { border-color:var(--accent); transform:translateY(-2px); }
+.practice-tab.active { border-color:var(--accent); box-shadow:0 4px 16px rgba(83,74,183,.12); }
+.practice-tab.active::before { background:var(--accent); }
+.tab-num { font-family:var(--mono); font-size:11px; color:var(--text-tertiary); margin-bottom:4px; }
+.tab-title { font-size:15px; font-weight:700; margin-bottom:4px; }
+.tab-desc { font-size:12px; color:var(--text-secondary); }
+.tab-badges { display:flex; gap:4px; margin-top:8px; }
+.tab-badge { padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600; }
+.tb-level { background:var(--teal-light); color:var(--teal); }
+.tb-steps { background:var(--accent-light); color:var(--accent); }
+.tb-time { background:var(--amber-light); color:var(--amber); }
+.tab-complete { position:absolute; top:12px; right:12px; font-size:12px; display:none; }
+.tab-complete.show { display:block; }
+
+/* Practice Content */
+.practice-content { display:none; }
+.practice-content.active { display:block; }
+
+/* Step Progress */
+.step-progress { display:flex; align-items:center; gap:8px; margin-bottom:24px; padding:14px 20px; background:var(--surface); border:1px solid var(--border); border-radius:12px; }
+.step-item { padding:6px 16px; border-radius:8px; font-size:13px; font-weight:600; color:var(--text-tertiary); background:#F5F5F2; cursor:pointer; transition:all .2s; }
+.step-item.active { background:var(--accent); color:#fff; }
+.step-item.done { background:var(--teal-light); color:var(--teal); }
+.step-divider { color:var(--text-tertiary); font-size:12px; }
+
+/* Step Card */
+.step-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:20px; overflow:hidden; display:none; }
+.step-card.active { display:block; }
+.step-card-header { padding:24px 28px 0; }
+.step-label { font-family:var(--mono); font-size:11px; color:var(--accent); font-weight:700; margin-bottom:6px; }
+.step-title { font-size:18px; font-weight:700; margin-bottom:8px; }
+.step-desc { font-size:14px; color:var(--text-secondary); line-height:1.7; margin-bottom:20px; }
+
+/* Warning Box */
+.warning-box { background:var(--coral-light); border:1px solid rgba(216,90,48,.15); border-radius:10px; padding:14px 18px; font-size:13px; color:var(--coral); line-height:1.6; margin:16px 28px; }
+
+/* Chat Box */
+.chat-box { padding:0 28px 24px; }
+.chat-messages { min-height:40px; margin-bottom:14px; }
+.message { padding:16px; border-radius:12px; margin-bottom:10px; }
+.message.ai { background:#F8F8F6; border:1px solid var(--border); }
+.ai-badge { font-size:11px; font-weight:700; color:var(--accent); margin-bottom:8px; }
+.ai-content { font-size:14px; line-height:1.8; color:var(--text); white-space:pre-wrap; }
+.ai-content p { margin-bottom:8px; }
+.ai-meta { font-size:11px; color:var(--text-tertiary); margin-top:10px; font-family:var(--mono); }
+.typing-dots { display:flex; gap:4px; padding:8px 0; }
+.typing-dots span { width:8px; height:8px; border-radius:50%; background:var(--accent); animation:typing .8s infinite; }
+.typing-dots span:nth-child(2) { animation-delay:.15s; }
+.typing-dots span:nth-child(3) { animation-delay:.3s; }
+@keyframes typing { 0%,100%{opacity:.3;transform:scale(.8)} 50%{opacity:1;transform:scale(1)} }
+
+.chat-input-area { border:1px solid var(--border); border-radius:12px; overflow:hidden; background:var(--bg); }
+.chat-input-area textarea { width:100%; border:none; padding:14px 16px; font-size:14px; line-height:1.6; resize:none; background:transparent; color:var(--text); font-family:var(--sans); outline:none; }
+.chat-actions { display:flex; justify-content:flex-end; gap:8px; padding:8px 12px; border-top:1px solid var(--border); background:var(--surface); }
+.btn-copy, .btn-send { padding:8px 18px; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; transition:all .2s; font-family:var(--sans); }
+.btn-copy { background:#F5F5F2; color:var(--text-secondary); }
+.btn-copy:hover { background:#EAEAE8; }
+.btn-send { background:var(--accent); color:#fff; }
+.btn-send:hover { background:#4340A0; }
+.btn-send:disabled { background:var(--text-tertiary); cursor:not-allowed; }
+
+/* Feedback Section */
+.feedback-section { padding:0 28px 28px; }
+.feedback-section textarea { width:100%; border:1px solid var(--border); border-radius:10px; padding:12px 16px; font-size:14px; line-height:1.6; resize:none; background:var(--bg); color:var(--text); font-family:var(--sans); outline:none; min-height:60px; }
+.feedback-section textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.feedback-actions { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+.btn-feedback { padding:10px 24px; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; background:var(--teal); color:#fff; transition:all .2s; font-family:var(--sans); }
+.btn-feedback:hover { background:#0B5A47; }
+.complete-badge { font-size:14px; font-weight:700; color:var(--teal); opacity:0; transition:opacity .3s; }
+.complete-badge.show { opacity:1; }
+
+/* Link Button */
+.link-btn { display:inline-flex; align-items:center; gap:6px; padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; color:var(--accent); background:var(--accent-light); transition:all .2s; margin:0 28px 20px; }
+.link-btn:hover { background:#DDDCFE; }
+
+/* API Key Modal */
+.api-modal-overlay { position:fixed; inset:0; background:rgba(10,10,30,.55); backdrop-filter:blur(4px); z-index:300; display:flex; align-items:center; justify-content:center; }
+.api-modal-overlay.hidden { display:none; }
+.api-modal { background:var(--surface); border-radius:20px; width:92%; max-width:480px; padding:36px; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,.18); }
+.api-modal h2 { font-size:20px; font-weight:700; margin-bottom:8px; }
+.api-modal p { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:20px; }
+.api-modal input { width:100%; padding:12px 16px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:var(--mono); background:var(--bg); color:var(--text); outline:none; margin-bottom:12px; }
+.api-modal input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.api-modal .btn-confirm { width:100%; padding:12px; border-radius:10px; font-size:14px; font-weight:600; border:none; cursor:pointer; background:var(--accent); color:#fff; font-family:var(--sans); transition:all .2s; }
+.api-modal .btn-confirm:hover { background:#4340A0; }
+.api-modal .hint { font-size:11px; color:var(--text-tertiary); margin-top:12px; line-height:1.5; }
+
+/* Toast */
+.toast { position:fixed; top:80px; right:24px; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; z-index:400; transform:translateX(120%); transition:transform .3s ease; background:var(--teal-light); color:var(--teal); border:1px solid rgba(15,110,86,.2); }
+.toast.show { transform:translateX(0); }
+
+/* Footer */
+footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
+
+@media (max-width:768px) {
+  .nav-inner { flex-wrap:wrap; height:auto; padding:10px 0; }
+  .nav-links { display:none; width:100%; flex-direction:column; gap:2px; padding-top:8px; }
+  .nav-links.open { display:flex; }
+  .nav-toggle { display:flex; }
+  .nav-badge { display:none; }
+
+  .practice-hero h1 { font-size:24px; }
+  .practice-meta { flex-direction:column; gap:6px; }
+  .practice-tabs { flex-direction:column; gap:8px; }
+  .step-progress { flex-wrap:wrap; gap:6px; }
+  .step-divider { display:none; }
+  .step-card-header { padding:20px 20px 0; }
+  .chat-box { padding:0 20px 20px; }
+  .feedback-section { padding:0 20px 20px; }
+  .warning-box { margin:16px 20px; }
+  .link-btn { margin:0 20px 16px; }
+  .step-title { font-size:16px; }
+  .api-modal { padding:24px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container nav-inner">
+  <a href="index.html" class="logo">
+    <div class="logo-mark">BL</div>
+    <div>
+      <div class="logo-text">BOSIM Lab</div>
+      <div class="logo-sub">AI-Driven Innovation</div>
+    </div>
+  </a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="index.html#casebook">Casebook</a>
+    <a href="journey.html">Our Journey</a>
+    <a href="security-guide.html">Security Guide</a>
+    <a href="practice.html" class="active">실습하기</a>
+    <a href="case-submit.html">케이스 등록</a>
+  </div>
+  <div class="nav-badge">
+    <span class="dot"></span>
+    5th month in progress
+  </div>
+</div>
+</nav>
+
+<div class="container">
+
+<!-- Hero -->
+<div class="practice-hero">
+  <span class="badge">AI 실습 체험</span>
+  <h1>보심랩 AI <span>따라하기</span></h1>
+  <p>단계별로 AI와 직접 대화하며 보훈심사 실무에 AI를 적용하는 방법을 익힙니다</p>
+  <div class="practice-meta">
+    <span>총 3개 실습</span>
+    <span>실습당 15~30분</span>
+    <span>Gemini AI 연동</span>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="practice-tabs">
+  <div class="practice-tab active" onclick="switchTab('p1')">
+    <span class="tab-complete" id="tab-badge-p1"></span>
+    <div class="tab-num">실습 1</div>
+    <div class="tab-title">AI 기초 체험</div>
+    <div class="tab-desc">AI가 무엇인지 직접 물어보고 대화 방식을 익힙니다</div>
+    <div class="tab-badges">
+      <span class="tab-badge tb-level">초급</span>
+      <span class="tab-badge tb-steps">3단계</span>
+      <span class="tab-badge tb-time">15분</span>
+    </div>
+  </div>
+  <div class="practice-tab" onclick="switchTab('p2')">
+    <span class="tab-complete" id="tab-badge-p2"></span>
+    <div class="tab-num">실습 2</div>
+    <div class="tab-title">보훈심사 프롬프트 작성</div>
+    <div class="tab-desc">실무에 바로 쓸 수 있는 프롬프트를 직접 만들어봅니다</div>
+    <div class="tab-badges">
+      <span class="tab-badge tb-level">초급</span>
+      <span class="tab-badge tb-steps">4단계</span>
+      <span class="tab-badge tb-time">25분</span>
+    </div>
+  </div>
+  <div class="practice-tab" onclick="switchTab('p3')">
+    <span class="tab-complete" id="tab-badge-p3"></span>
+    <div class="tab-num">실습 3</div>
+    <div class="tab-title">AI 보안 점검 실습</div>
+    <div class="tab-desc">보안 가이드라인을 실제로 적용하며 안전한 사용법을 익힙니다</div>
+    <div class="tab-badges">
+      <span class="tab-badge tb-level">초급</span>
+      <span class="tab-badge tb-steps">3단계</span>
+      <span class="tab-badge tb-time">20분</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 실습 1: AI 기초 체험 ==================== -->
+<div class="practice-content active" id="content-p1">
+
+  <div class="step-progress">
+    <div class="step-item active" onclick="switchStep('p1',1)">1단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p1',2)">2단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p1',3)">3단계</div>
+  </div>
+
+  <!-- Step 1-1 -->
+  <div class="step-card active" id="step-p1-1">
+    <div class="step-card-header">
+      <div class="step-label">STEP 1</div>
+      <div class="step-title">AI에게 자기소개 시키기</div>
+      <div class="step-desc">AI에게 처음으로 말을 걸어봅니다. 아래 입력창에 그대로 입력하고 전송 버튼을 눌러보세요. 내용을 수정해도 괜찮습니다.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p1-1"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p1-1" rows="3">안녕하세요. 당신은 무엇을 할 수 있나요? 보훈심사 업무에 어떻게 도움이 될 수 있는지 간단히 설명해주세요.</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p1-1')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p1-1')">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 1-2 -->
+  <div class="step-card" id="step-p1-2">
+    <div class="step-card-header">
+      <div class="step-label">STEP 2</div>
+      <div class="step-title">간단한 질문 던져보기</div>
+      <div class="step-desc">이번엔 업무 관련 질문을 해봅니다. AI가 어떤 수준으로 답변하는지 확인해보세요.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p1-2"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p1-2" rows="3">국가유공자 요건심의에서 가장 중요하게 검토해야 할 항목 3가지를 간단히 알려주세요.</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p1-2')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p1-2')">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 1-3: Feedback -->
+  <div class="step-card" id="step-p1-3">
+    <div class="step-card-header">
+      <div class="step-label">STEP 3</div>
+      <div class="step-title">실습 완료 소감 남기기</div>
+      <div class="step-desc">실습 1을 완료했습니다! 한 줄 소감을 남겨주세요.</div>
+    </div>
+    <div class="feedback-section">
+      <textarea id="feedback-p1" placeholder="예: AI가 생각보다 쉽게 답변해줘서 놀랐어요"></textarea>
+      <div class="feedback-actions">
+        <button class="btn-feedback" onclick="saveFeedback('p1')">소감 제출</button>
+        <span class="complete-badge" id="badge-p1"></span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== 실습 2: 보훈심사 프롬프트 작성 ==================== -->
+<div class="practice-content" id="content-p2">
+
+  <div class="step-progress">
+    <div class="step-item active" onclick="switchStep('p2',1)">1단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p2',2)">2단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p2',3)">3단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p2',4)">4단계</div>
+  </div>
+
+  <!-- Step 2-1 -->
+  <div class="step-card active" id="step-p2-1">
+    <div class="step-card-header">
+      <div class="step-label">STEP 1</div>
+      <div class="step-title">역할 부여 프롬프트</div>
+      <div class="step-desc">AI에게 역할을 부여하면 훨씬 전문적인 답변을 받을 수 있습니다. "당신은 ~입니다" 형식으로 시작해보세요.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p2-1"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p2-1" rows="3">당신은 대한민국 보훈심사 전문가입니다. 공무상 상이 인정 요건에 대해 핵심 기준 3가지를 법적 근거와 함께 정리해주세요.</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p2-1')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p2-1')">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2-2 -->
+  <div class="step-card" id="step-p2-2">
+    <div class="step-card-header">
+      <div class="step-label">STEP 2</div>
+      <div class="step-title">비식별화 실습</div>
+      <div class="step-desc">실제 업무에서는 개인정보를 절대 입력하면 안 됩니다. 아래처럼 비식별화된 형태로 질문하는 방법을 익혀보세요.</div>
+    </div>
+    <div class="warning-box">절대 입력 금지: 실명, 주민등록번호, 사건번호, 내부 시스템 정보</div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p2-2"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p2-2" rows="3">심사 대상자 A는 군 복무 중 허리 부상(비식별)을 입었고, 전역 후 10년이 지나 신청했습니다. 공무상 상이 인정 가능성과 검토 포인트를 정리해주세요.</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p2-2')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p2-2')">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2-3 -->
+  <div class="step-card" id="step-p2-3">
+    <div class="step-card-header">
+      <div class="step-label">STEP 3</div>
+      <div class="step-title">문서 초안 요청</div>
+      <div class="step-desc">AI로 문서 초안을 만들고, 사람이 검토 및 수정하는 방식을 익혀봅니다.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p2-3"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p2-3" rows="5">다음 상황에 대한 심사 검토 의견서 초안을 작성해주세요.
+상황: 신청인 A는 군 훈련 중 발생한 무릎 부상으로 수술을 받았으며, 관련 의무기록을 제출함.
+형식: 제목, 검토 배경, 핵심 쟁점, 검토 의견, 결론 순서로 작성</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p2-3')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p2-3')">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2-4 -->
+  <div class="step-card" id="step-p2-4">
+    <div class="step-card-header">
+      <div class="step-label">STEP 4</div>
+      <div class="step-title">나만의 프롬프트 만들기</div>
+      <div class="step-desc">이번엔 직접 작성해보세요. 본인 업무에 맞는 프롬프트를 자유롭게 입력하세요.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p2-4"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p2-4" rows="3" placeholder="직접 프롬프트를 작성해보세요..."></textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p2-4')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p2-4')">전송</button>
+        </div>
+      </div>
+    </div>
+    <div class="feedback-section">
+      <textarea id="feedback-p2" placeholder="실습 2에 대한 소감을 남겨주세요"></textarea>
+      <div class="feedback-actions">
+        <button class="btn-feedback" onclick="saveFeedback('p2')">소감 제출</button>
+        <span class="complete-badge" id="badge-p2"></span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== 실습 3: AI 보안 점검 ==================== -->
+<div class="practice-content" id="content-p3">
+
+  <div class="step-progress">
+    <div class="step-item active" onclick="switchStep('p3',1)">1단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p3',2)">2단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p3',3)">3단계</div>
+  </div>
+
+  <!-- Step 3-1 -->
+  <div class="step-card active" id="step-p3-1">
+    <div class="step-card-header">
+      <div class="step-label">STEP 1</div>
+      <div class="step-title">위험한 입력 vs 안전한 입력 구분</div>
+      <div class="step-desc">다음 두 가지 입력 중 어떤 것이 안전한지 AI에게 판별 요청해봅니다.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p3-1"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p3-1" rows="5">다음 두 프롬프트 중 공공기관 AI 보안 가이드라인에 위반되는 것을 골라 이유를 설명해주세요.
+
+A: '홍길동(780101-1xxxxxx)의 요건심의 건에 대해 검토해주세요'
+B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p3-1')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p3-1')">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3-2 -->
+  <div class="step-card" id="step-p3-2">
+    <div class="step-card-header">
+      <div class="step-label">STEP 2</div>
+      <div class="step-title">비식별화 변환 실습</div>
+      <div class="step-desc">AI에게 비식별화를 도와달라고 요청해봅니다.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p3-2"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p3-2" rows="3">다음 문장에서 개인정보를 비식별화 처리해주세요.
+원문: '2026-심사-0142 건의 김철수(남, 68세) PTSD 진단 관련 심사 요청'</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p3-2')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p3-2')">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3-3 -->
+  <div class="step-card" id="step-p3-3">
+    <div class="step-card-header">
+      <div class="step-label">STEP 3</div>
+      <div class="step-title">보안 체크리스트 자가진단</div>
+      <div class="step-desc">Security Guide의 체크리스트를 AI와 함께 점검해봅니다.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p3-3"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p3-3" rows="3">내가 AI를 업무에 활용할 때 지켜야 할 보안 체크리스트 5가지를 만들어주세요. 공공기관 실무자 기준으로, 각 항목에 간단한 설명을 포함해주세요.</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p3-3')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p3-3')">전송</button>
+        </div>
+      </div>
+    </div>
+    <a href="security-guide.html" class="link-btn">Security Guide 바로가기 &rarr;</a>
+    <div class="feedback-section">
+      <textarea id="feedback-p3" placeholder="실습 3에 대한 소감을 남겨주세요"></textarea>
+      <div class="feedback-actions">
+        <button class="btn-feedback" onclick="saveFeedback('p3')">소감 제출</button>
+        <span class="complete-badge" id="badge-p3"></span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
+    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  </div>
+</footer>
+
+<!-- API Key Modal -->
+<div class="api-modal-overlay" id="apiModal">
+  <div class="api-modal">
+    <h2>Gemini API 키 입력</h2>
+    <p>실습을 진행하려면 Gemini API 키가 필요합니다.<br>키는 이 브라우저 세션에만 저장되며 서버로 전송되지 않습니다.</p>
+    <input type="password" id="apiKeyInput" placeholder="Gemini API 키를 붙여넣으세요">
+    <button class="btn-confirm" onclick="saveApiKey()">확인</button>
+    <div class="hint">Google AI Studio(aistudio.google.com)에서 무료로 발급받을 수 있습니다.</div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+  /* ── Config ── */
+  var SYSTEM_PROMPT = '당신은 대한민국 보훈심사위원회 실무자를 돕는 AI 어시스턴트입니다. 보훈심사, 국가유공자 요건 심의, 행정 문서 작성 등의 업무를 지원합니다. 친절하고 명확하게 답변하며, 전문 용어는 쉽게 풀어 설명합니다. 개인정보나 기밀 정보를 요구하지 않습니다.';
+
+  /* ── Step config: practice id → total steps ── */
+  var stepCounts = { p1: 3, p2: 4, p3: 3 };
+
+  /* ── API Key ── */
+  function getApiKey() { return sessionStorage.getItem('gemini_key'); }
+
+  window.saveApiKey = function() {
+    var key = document.getElementById('apiKeyInput').value.trim();
+    if (!key) return;
+    sessionStorage.setItem('gemini_key', key);
+    document.getElementById('apiModal').classList.add('hidden');
+    showToast('API 키가 저장되었습니다');
+  };
+
+  // Show modal if no key
+  if (!getApiKey()) {
+    document.getElementById('apiModal').classList.remove('hidden');
+  } else {
+    document.getElementById('apiModal').classList.add('hidden');
+  }
+
+  /* ── Tab switching ── */
+  window.switchTab = function(tabId) {
+    document.querySelectorAll('.practice-tab').forEach(function(t, i) {
+      t.classList.toggle('active', t === document.querySelectorAll('.practice-tab')[['p1','p2','p3'].indexOf(tabId)]);
+    });
+    document.querySelectorAll('.practice-content').forEach(function(c) {
+      c.classList.toggle('active', c.id === 'content-' + tabId);
+    });
+  };
+
+  /* ── Step switching ── */
+  window.switchStep = function(practiceId, stepNum) {
+    var total = stepCounts[practiceId];
+    var contentEl = document.getElementById('content-' + practiceId);
+    var progressItems = contentEl.querySelectorAll('.step-item');
+    var stepCards = contentEl.querySelectorAll('.step-card');
+
+    progressItems.forEach(function(item, i) {
+      item.classList.remove('active', 'done');
+      if (i + 1 < stepNum) item.classList.add('done');
+      if (i + 1 === stepNum) item.classList.add('active');
+    });
+
+    stepCards.forEach(function(card, i) {
+      card.classList.toggle('active', i + 1 === stepNum);
+    });
+  };
+
+  function advanceStep(practiceId, currentStep) {
+    var total = stepCounts[practiceId];
+    if (currentStep < total) {
+      switchStep(practiceId, currentStep + 1);
+    }
+  }
+
+  /* ── Gemini API call ── */
+  async function callGemini(userMessage) {
+    var key = getApiKey();
+    if (!key) {
+      document.getElementById('apiModal').classList.remove('hidden');
+      throw new Error('No API key');
+    }
+
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + key;
+    var res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: SYSTEM_PROMPT + '\n\n' + userMessage }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
+      })
+    });
+
+    if (!res.ok) throw new Error('API error: ' + res.status);
+    var data = await res.json();
+    return data.candidates[0].content.parts[0].text;
+  }
+
+  /* ── Send message ── */
+  window.sendMessage = async function(stepId) {
+    var inputEl = document.getElementById('input-' + stepId);
+    var messagesEl = document.getElementById('messages-' + stepId);
+    var sendBtn = inputEl.closest('.step-card').querySelector('.btn-send');
+    var userText = inputEl.value.trim();
+    if (!userText) return;
+
+    // Disable
+    sendBtn.disabled = true;
+    sendBtn.textContent = '전송 중...';
+
+    // Show loading
+    var loadingDiv = document.createElement('div');
+    loadingDiv.className = 'message ai';
+    loadingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    messagesEl.appendChild(loadingDiv);
+
+    try {
+      var answer = await callGemini(userText);
+      loadingDiv.innerHTML =
+        '<div class="ai-badge">AI 답변</div>' +
+        '<div class="ai-content">' + escapeHtml(answer) + '</div>' +
+        '<div class="ai-meta">Gemini 2.0 Flash</div>';
+
+      // Parse step id → advance
+      var parts = stepId.split('-');
+      var practiceId = parts[0];
+      var stepNum = parseInt(parts[1]);
+      setTimeout(function() { advanceStep(practiceId, stepNum); }, 800);
+    } catch (err) {
+      loadingDiv.innerHTML = '<div class="ai-badge" style="color:var(--coral)">오류</div><div class="ai-content" style="color:var(--coral)">API 호출에 실패했습니다. API 키를 확인해주세요.</div>';
+    }
+
+    sendBtn.disabled = false;
+    sendBtn.textContent = '전송';
+  };
+
+  function escapeHtml(text) {
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML.replace(/\n/g, '<br>');
+  }
+
+  /* ── Copy prompt ── */
+  window.copyPrompt = function(inputId) {
+    var text = document.getElementById(inputId).value;
+    navigator.clipboard.writeText(text);
+    showToast('프롬프트가 복사되었습니다');
+  };
+
+  /* ── Feedback ── */
+  window.saveFeedback = function(practiceId) {
+    var textEl = document.getElementById('feedback-' + practiceId);
+    var text = textEl.value.trim();
+    if (!text) { showToast('소감을 입력해주세요'); return; }
+
+    var feedbacks = JSON.parse(localStorage.getItem('bosim_feedbacks') || '[]');
+    feedbacks.push({ practice: practiceId, text: text, timestamp: new Date().toISOString() });
+    localStorage.setItem('bosim_feedbacks', JSON.stringify(feedbacks));
+
+    showCompleteBadge(practiceId);
+    showToast('소감이 저장되었습니다!');
+  };
+
+  function showCompleteBadge(practiceId) {
+    var badge = document.getElementById('badge-' + practiceId);
+    badge.textContent = '실습 완료!';
+    badge.classList.add('show');
+    localStorage.setItem('bosim_complete_' + practiceId, 'true');
+
+    var tabBadge = document.getElementById('tab-badge-' + practiceId);
+    tabBadge.textContent = '완료';
+    tabBadge.classList.add('show');
+  }
+
+  /* ── Restore completion state ── */
+  ['p1', 'p2', 'p3'].forEach(function(id) {
+    if (localStorage.getItem('bosim_complete_' + id) === 'true') {
+      showCompleteBadge(id);
+    }
+  });
+
+  /* ── Toast ── */
+  function showToast(msg) {
+    var el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(function() { el.classList.remove('show'); }, 2500);
+  }
+  window.showToast = showToast;
+
+})();
+</script>
+
+</body>
+</html>
