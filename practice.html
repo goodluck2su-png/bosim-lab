@@ -662,7 +662,7 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
       loadingDiv.innerHTML =
         '<div class="ai-badge">AI 답변</div>' +
         '<div class="ai-content">' + escapeHtml(answer) + '</div>' +
-        '<div class="ai-meta">Gemini 2.0 Flash · ' + (elapsed / 1000).toFixed(1) + '초</div>';
+        '<div class="ai-meta">Gemini 2.5 Flash · ' + (elapsed / 1000).toFixed(1) + '초</div>';
 
       // Save to Supabase
       saveChatLog(stepId, userText, answer, elapsed);
