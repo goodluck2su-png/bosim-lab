@@ -207,7 +207,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   <h1>보심랩 AI <span>따라하기</span></h1>
   <p>단계별로 AI와 직접 대화하며 보훈심사 실무에 AI를 적용하는 방법을 익힙니다</p>
   <div class="practice-meta">
-    <span>총 3개 실습</span>
+    <span>총 5개 실습</span>
     <span>실습당 15~30분</span>
     <span>Gemini AI 연동</span>
   </div>
@@ -246,6 +246,28 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
       <span class="tab-badge tb-level">초급</span>
       <span class="tab-badge tb-steps">3단계</span>
       <span class="tab-badge tb-time">20분</span>
+    </div>
+  </div>
+  <div class="practice-tab" onclick="switchTab('p4')">
+    <span class="tab-complete" id="tab-badge-p4"></span>
+    <div class="tab-num">실습 4</div>
+    <div class="tab-title">AI 카드뉴스 만들기</div>
+    <div class="tab-desc">AI로 홍보용 카드뉴스 기획부터 이미지 프롬프트까지 만들어봅니다</div>
+    <div class="tab-badges">
+      <span class="tab-badge tb-level">초급</span>
+      <span class="tab-badge tb-steps">4단계</span>
+      <span class="tab-badge tb-time">20분</span>
+    </div>
+  </div>
+  <div class="practice-tab" onclick="switchTab('p5')">
+    <span class="tab-complete" id="tab-badge-p5"></span>
+    <div class="tab-num">실습 5</div>
+    <div class="tab-title">AI 음악 만들기</div>
+    <div class="tab-desc">AI로 배경음악 컨셉을 기획하고 직접 음악을 생성해봅니다</div>
+    <div class="tab-badges">
+      <span class="tab-badge tb-level">초급</span>
+      <span class="tab-badge tb-steps">3단계</span>
+      <span class="tab-badge tb-time">15분</span>
     </div>
   </div>
 </div>
@@ -500,6 +522,208 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
 
 </div>
 
+<!-- ==================== 실습 4: AI 카드뉴스 만들기 ==================== -->
+<div class="practice-content" id="content-p4">
+
+  <div class="step-progress">
+    <div class="step-item active" onclick="switchStep('p4',1)">1단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p4',2)">2단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p4',3)">3단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p4',4)">4단계</div>
+  </div>
+
+  <!-- Step 4-1 -->
+  <div class="step-card active" id="step-p4-1">
+    <div class="step-card-header">
+      <div class="step-label">STEP 1</div>
+      <div class="step-title">카드뉴스 주제 기획하기</div>
+      <div class="step-desc">AI에게 보훈 관련 카드뉴스 주제를 기획해달라고 요청해봅니다. 어떤 주제가 좋을지 AI와 함께 고민해보세요.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p4-1"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p4-1" rows="4">보훈심사위원회에서 국민들에게 알리고 싶은 내용으로 카드뉴스를 만들려고 합니다.
+주제 3가지를 추천해주세요. 각 주제마다:
+1. 제목
+2. 대상 독자
+3. 카드 5장 구성안 (각 장의 핵심 메시지 한 줄)
+형식으로 정리해주세요.</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p4-1')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p4-1')">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4-2 -->
+  <div class="step-card" id="step-p4-2">
+    <div class="step-card-header">
+      <div class="step-label">STEP 2</div>
+      <div class="step-title">카드별 문구 작성하기</div>
+      <div class="step-desc">선택한 주제로 각 카드의 제목과 본문을 AI에게 작성해달라고 요청합니다. 카드뉴스에 적합한 짧고 임팩트 있는 문구를 만들어봅니다.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p4-2"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p4-2" rows="5">"국가유공자 지원 제도 한눈에 보기" 주제로 카드뉴스 5장을 만들어주세요.
+
+각 카드마다:
+- 큰 제목 (10자 이내, 임팩트 있게)
+- 본문 (2~3줄, 쉬운 말로)
+- 추천 배경 색상
+
+1장은 표지, 5장은 마무리(연락처/QR코드 안내)로 구성해주세요.</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p4-2')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p4-2')">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4-3 -->
+  <div class="step-card" id="step-p4-3">
+    <div class="step-card-header">
+      <div class="step-label">STEP 3</div>
+      <div class="step-title">이미지 프롬프트 만들기</div>
+      <div class="step-desc">카드뉴스에 넣을 이미지를 AI로 생성하기 위한 영문 프롬프트를 만들어봅니다. AI가 한글 설명을 영문 이미지 프롬프트로 변환해줍니다.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p4-3"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p4-3" rows="5">카드뉴스 표지에 쓸 이미지를 AI로 생성하려고 합니다.
+
+아래 조건에 맞는 영문 이미지 생성 프롬프트를 3개 만들어주세요:
+- 주제: 국가유공자를 위한 따뜻한 지원
+- 스타일: 깔끔한 일러스트, 파스텔 톤
+- 분위기: 신뢰감, 따뜻함, 희망
+- 비율: 정사각형 (1:1)
+
+각 프롬프트는 영문으로, 50단어 이내로 작성해주세요.</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p4-3')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p4-3')">전송</button>
+        </div>
+      </div>
+    </div>
+    <div style="padding:0 28px 12px;">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;">AI 이미지 생성 도구에 프롬프트를 붙여넣어 보세요:</div>
+      <a href="https://www.bing.com/images/create" target="_blank" class="link-btn">Bing Image Creator (무료) &rarr;</a>
+      <a href="https://aistudio.google.com" target="_blank" class="link-btn">Google AI Studio (Gemini) &rarr;</a>
+      <a href="https://designer.microsoft.com/image-creator" target="_blank" class="link-btn">Microsoft Designer &rarr;</a>
+    </div>
+  </div>
+
+  <!-- Step 4-4: Feedback -->
+  <div class="step-card" id="step-p4-4">
+    <div class="step-card-header">
+      <div class="step-label">STEP 4</div>
+      <div class="step-title">실습 완료 소감</div>
+      <div class="step-desc">AI로 카드뉴스를 기획해본 소감을 남겨주세요. 실무에서 활용할 수 있을 것 같나요?</div>
+    </div>
+    <div class="feedback-section">
+      <textarea id="feedback-p4" placeholder="예: 이미지 프롬프트를 영어로 바꿔주니 훨씬 결과가 좋았어요"></textarea>
+      <div class="feedback-actions">
+        <button class="btn-feedback" onclick="saveFeedback('p4')">소감 제출</button>
+        <span class="complete-badge" id="badge-p4"></span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== 실습 5: AI 음악 만들기 ==================== -->
+<div class="practice-content" id="content-p5">
+
+  <div class="step-progress">
+    <div class="step-item active" onclick="switchStep('p5',1)">1단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p5',2)">2단계</div>
+    <div class="step-divider">&rarr;</div>
+    <div class="step-item" onclick="switchStep('p5',3)">3단계</div>
+  </div>
+
+  <!-- Step 5-1 -->
+  <div class="step-card active" id="step-p5-1">
+    <div class="step-card-header">
+      <div class="step-label">STEP 1</div>
+      <div class="step-title">음악 컨셉 기획하기</div>
+      <div class="step-desc">보훈 관련 행사나 영상에 쓸 배경음악의 컨셉을 AI와 함께 기획해봅니다. 어떤 분위기의 음악이 어울릴지 물어보세요.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p5-1"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p5-1" rows="4">보훈심사위원회 소개 영상에 쓸 배경음악을 만들려고 합니다.
+아래 조건에 맞는 음악 컨셉 3가지를 제안해주세요:
+
+- 용도: 기관 소개 영상 (2분)
+- 분위기: 신뢰감, 희망, 따뜻함
+- 대상: 국민, 유공자 및 가족
+
+각 컨셉마다 장르, 템포(BPM), 주요 악기, 분위기 키워드를 정리해주세요.</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p5-1')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p5-1')">전송</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5-2 -->
+  <div class="step-card" id="step-p5-2">
+    <div class="step-card-header">
+      <div class="step-label">STEP 2</div>
+      <div class="step-title">음악 생성 프롬프트 만들기</div>
+      <div class="step-desc">AI 음악 생성 도구에 넣을 프롬프트를 만들어봅니다. 장르, 분위기, 악기를 조합한 프롬프트를 AI가 작성해줍니다.</div>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="messages-p5-2"></div>
+      <div class="chat-input-area">
+        <textarea id="input-p5-2" rows="5">선택한 컨셉을 바탕으로 AI 음악 생성 도구(Suno)에 넣을 프롬프트를 만들어주세요.
+
+조건:
+- 장르: 어쿠스틱 팝 + 오케스트라
+- 분위기: 따뜻하고 희망적, 잔잔하게 시작해서 점점 웅장해지는 구조
+- 길이: 약 2분
+- 악기: 피아노, 어쿠스틱 기타, 현악기
+
+영문 프롬프트 1개와 한글 설명을 함께 작성해주세요.
+Suno의 Style 칸에 넣을 태그도 5개 추천해주세요.</textarea>
+        <div class="chat-actions">
+          <button class="btn-copy" onclick="copyPrompt('input-p5-2')">복사</button>
+          <button class="btn-send" onclick="sendMessage('p5-2')">전송</button>
+        </div>
+      </div>
+    </div>
+    <div style="padding:0 28px 12px;">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;">아래 도구에서 프롬프트를 붙여넣고 음악을 생성해보세요:</div>
+      <a href="https://suno.com" target="_blank" class="link-btn">Suno AI (음악 생성) &rarr;</a>
+      <a href="https://udio.com" target="_blank" class="link-btn">Udio (음악 생성) &rarr;</a>
+    </div>
+  </div>
+
+  <!-- Step 5-3: Feedback -->
+  <div class="step-card" id="step-p5-3">
+    <div class="step-card-header">
+      <div class="step-label">STEP 3</div>
+      <div class="step-title">실습 완료 소감</div>
+      <div class="step-desc">AI 음악 생성을 체험해본 소감을 남겨주세요. 업무에서 활용할 수 있는 장면이 있을까요?</div>
+    </div>
+    <div class="feedback-section">
+      <textarea id="feedback-p5" placeholder="예: 프롬프트만 잘 쓰면 진짜 음악이 만들어져서 신기했어요"></textarea>
+      <div class="feedback-actions">
+        <button class="btn-feedback" onclick="saveFeedback('p5')">소감 제출</button>
+        <span class="complete-badge" id="badge-p5"></span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 </div><!-- /container -->
 
 <footer>
@@ -545,7 +769,7 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
 (function() {
   /* ── Config ── */
   var SYSTEM_PROMPT = '당신은 대한민국 보훈심사위원회 실무자를 돕는 AI 어시스턴트입니다. 보훈심사, 국가유공자 요건 심의, 행정 문서 작성 등의 업무를 지원합니다. 친절하고 명확하게 답변하며, 전문 용어는 쉽게 풀어 설명합니다. 개인정보나 기밀 정보를 요구하지 않습니다.';
-  var stepCounts = { p1: 3, p2: 4, p3: 3 };
+  var stepCounts = { p1: 3, p2: 4, p3: 3, p4: 4, p5: 3 };
   var SESSION_ID = crypto.randomUUID();
 
   /* ── Supabase ── */
@@ -581,7 +805,7 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
   /* ── Tab switching ── */
   window.switchTab = function(tabId) {
     document.querySelectorAll('.practice-tab').forEach(function(t, i) {
-      t.classList.toggle('active', t === document.querySelectorAll('.practice-tab')[['p1','p2','p3'].indexOf(tabId)]);
+      t.classList.toggle('active', t === document.querySelectorAll('.practice-tab')[['p1','p2','p3','p4','p5'].indexOf(tabId)]);
     });
     document.querySelectorAll('.practice-content').forEach(function(c) {
       c.classList.toggle('active', c.id === 'content-' + tabId);
@@ -728,7 +952,7 @@ B: '신청인 A의 요건심의 건에 대해 검토해주세요'</textarea>
   }
 
   /* ── Restore completion state ── */
-  ['p1', 'p2', 'p3'].forEach(function(id) {
+  ['p1', 'p2', 'p3', 'p4', 'p5'].forEach(function(id) {
     if (localStorage.getItem('bosim_complete_' + id) === 'true') {
       showCompleteBadge(id);
     }
