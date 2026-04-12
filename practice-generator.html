@@ -1,461 +1,356 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BOSIM Lab — AI 실습 생성기</title>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" />
-  <style>
-    /* ═══ Reset & Base ═══ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0a0e1a; --bg2: #111827; --surface: rgba(255,255,255,0.04);
-      --surface-h: rgba(255,255,255,0.08); --border: rgba(255,255,255,0.08);
-      --text: #e2e8f0; --text2: #94a3b8; --text3: #64748b;
-      --accent: #34d399; --accent2: #22d3ee;
-      --warn: #f59e0b; --danger: #f87171; --info: #60a5fa; --purple: #a78bfa;
-      --nav-h: 60px;
-    }
-    body {
-      font-family: 'Pretendard', 'Noto Sans KR', -apple-system, sans-serif;
-      background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 40%, #0f172a 100%);
-      color: var(--text); min-height: 100vh;
-    }
-    a { color: inherit; text-decoration: none; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSIM Lab — AI 실습 생성기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --text: #1a1a2e;
+  --text-secondary: #6B6B7B;
+  --text-tertiary: #9B9BAB;
+  --accent: #534AB7;
+  --accent-light: #EEEDFE;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --blue: #185FA5;
+  --blue-light: #E8EEF8;
+  --border: rgba(0,0,0,0.08);
+  --radius: 16px;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Noto Sans KR', -apple-system, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); }
+.container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
 
-    /* ═══ Nav (matches main site) ═══ */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      height: var(--nav-h); display: flex; align-items: center; justify-content: space-between;
-      padding: 0 24px; background: rgba(10,14,26,0.92); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
-    .nav-brand span { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: var(--bg);
-      width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center;
-      justify-content: center; font-size: 13px; font-weight: 900; }
-    .nav-links { display: flex; gap: 20px; font-size: 13px; color: var(--text2); }
-    .nav-links a:hover { color: var(--accent); }
-    .nav-links .active { color: var(--accent); font-weight: 600; }
+/* Nav */
+nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; height:60px; max-width:1120px; margin:0 auto; padding:0 24px; }
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+.logo-mark { width:32px; height:32px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; font-weight:700; }
+.logo-text { font-weight:700; font-size:15px; letter-spacing:-0.3px; }
+.logo-sub { font-size:11px; color:var(--text-tertiary); font-weight:400; }
+.nav-links { display:flex; gap:4px; }
+.nav-links a { padding:8px 14px; font-size:13px; color:var(--text-secondary); text-decoration:none; border-radius:8px; font-weight:500; transition:all .2s; }
+.nav-links a:hover, .nav-links a.active { background:var(--accent-light); color:var(--accent); }
+.nav-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); color:var(--text-secondary); }
+.nav-badge .dot { width:6px; height:6px; border-radius:50%; background:#0F6E56; animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+.nav-toggle { display:none; width:36px; height:36px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; align-items:center; justify-content:center; font-size:18px; color:var(--text-secondary); }
 
-    /* ═══ Main Container ═══ */
-    .container { max-width: 700px; margin: 0 auto; padding: calc(var(--nav-h) + 24px) 16px 40px; }
+/* Header */
+.page-header { padding:48px 0 12px; text-align:center; }
+.page-header .badge { display:inline-block; padding:6px 16px; border-radius:20px; background:var(--accent-light); color:var(--accent); font-size:12px; font-weight:600; margin-bottom:12px; }
+.page-header h1 { font-size:28px; font-weight:700; letter-spacing:-0.5px; line-height:1.4; }
+.page-header h1 span { color:var(--accent); }
+.page-header p { font-size:14px; color:var(--text-secondary); margin-top:8px; line-height:1.6; }
+.pillars { display:flex; gap:8px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
+.pill { font-size:11px; font-weight:600; padding:5px 14px; border-radius:20px; }
 
-    /* ═══ Header ═══ */
-    .header { text-align: center; margin-bottom: 32px; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: linear-gradient(135deg, rgba(52,211,153,0.15), rgba(34,211,238,0.1));
-      border: 1px solid rgba(52,211,153,0.25); border-radius: 40px;
-      padding: 8px 20px; margin-bottom: 14px; font-size: 13px; color: var(--accent); font-weight: 600;
-    }
-    .header h1 {
-      font-size: 26px; font-weight: 800; line-height: 1.35; margin-bottom: 10px;
-      background: linear-gradient(135deg, #e2e8f0, #34d399);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .header p { color: var(--text2); font-size: 14px; line-height: 1.5; }
-    .header p .hl { color: var(--accent); font-weight: 600; }
-    .pillars { display: flex; gap: 8px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
-    .pill {
-      font-size: 11px; font-weight: 600; padding: 5px 14px; border-radius: 20px;
-    }
+/* Steps Indicator */
+.steps-ind { display:flex; gap:8px; justify-content:center; margin:24px 0 28px; }
+.step-dot-g { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; background:#F5F5F2; color:var(--text-tertiary); border:1px solid var(--border); transition:all .3s; }
+.step-dot-g.active { background:var(--accent); color:#fff; border:none; }
+.step-label-g { font-size:10px; color:var(--text-tertiary); text-align:center; margin-top:4px; }
+.step-label-g.active { color:var(--text-secondary); }
+.step-line-g { width:36px; height:2px; background:var(--border); align-self:center; margin-bottom:16px; transition:all .3s; }
+.step-line-g.active { background:var(--accent); }
 
-    /* ═══ Steps Indicator ═══ */
-    .steps-ind { display: flex; gap: 8px; justify-content: center; margin-bottom: 28px; }
-    .step-dot {
-      width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; font-size: 12px; font-weight: 700;
-      background: var(--surface); color: var(--text3); border: 1px solid var(--border);
-      transition: all 0.3s;
-    }
-    .step-dot.active { background: var(--accent); color: var(--bg); border: none; }
-    .step-label { font-size: 10px; color: var(--text3); text-align: center; margin-top: 4px; }
-    .step-label.active { color: var(--text2); }
-    .step-line { width: 36px; height: 2px; background: var(--border); align-self: center; margin-bottom: 16px; transition: all 0.3s; }
-    .step-line.active { background: var(--accent); }
+/* Cards */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; }
+.card-pad { padding:24px; }
 
-    /* ═══ Cards ═══ */
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; padding: 20px; margin-bottom: 14px; transition: all 0.25s;
-    }
-    .card-pad { padding: 24px; }
+/* Category Grid */
+.cat-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.cat-btn { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px 14px; cursor:pointer; text-align:left; transition:all .25s; display:flex; flex-direction:column; gap:4px; }
+.cat-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.06); border-color:var(--accent); }
+.cat-btn .emoji { font-size:24px; }
+.cat-btn .label { font-size:14px; font-weight:700; }
+.cat-btn .desc { font-size:11px; color:var(--text-secondary); line-height:1.4; }
 
-    /* ═══ Category Grid ═══ */
-    .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .cat-btn {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      padding: 16px 14px; cursor: pointer; text-align: left; transition: all 0.25s;
-      display: flex; flex-direction: column; gap: 4px;
-    }
-    .cat-btn:hover { transform: translateY(-2px); background: var(--surface-h); border-color: var(--accent); }
-    .cat-btn .emoji { font-size: 24px; }
-    .cat-btn .label { font-size: 14px; font-weight: 700; color: #f1f5f9; }
-    .cat-btn .desc { font-size: 11px; color: var(--text2); line-height: 1.4; }
+/* Form */
+.form-label { font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:6px; display:block; }
+textarea { width:100%; min-height:72px; padding:12px 14px; border-radius:10px; background:var(--bg); border:1px solid var(--border); color:var(--text); font-size:14px; resize:vertical; outline:none; font-family:var(--sans); }
+textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
 
-    /* ═══ Form Elements ═══ */
-    .form-label { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 6px; display: block; }
-    textarea {
-      width: 100%; min-height: 72px; padding: 12px 14px; border-radius: 10px;
-      background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: var(--text);
-      font-size: 14px; resize: vertical; outline: none; font-family: inherit;
-    }
-    textarea:focus { border-color: var(--accent); }
+.diff-group { display:flex; gap:8px; margin-top:8px; }
+.diff-btn { flex:1; padding:10px 0; border-radius:10px; cursor:pointer; font-size:14px; font-weight:700; border:2px solid var(--border); background:transparent; color:var(--text-tertiary); transition:all .2s; font-family:var(--sans); }
+.diff-btn.sel-green { border-color:var(--teal); background:var(--teal-light); color:var(--teal); }
+.diff-btn.sel-amber { border-color:var(--amber); background:var(--amber-light); color:var(--amber); }
+.diff-btn.sel-red { border-color:var(--coral); background:var(--coral-light); color:var(--coral); }
 
-    .diff-group { display: flex; gap: 8px; margin-top: 8px; }
-    .diff-btn {
-      flex: 1; padding: 10px 0; border-radius: 10px; cursor: pointer;
-      font-size: 14px; font-weight: 700; border: 2px solid var(--border);
-      background: transparent; color: var(--text3); transition: all 0.2s;
-    }
-    .diff-btn.sel-green { border-color: #22c55e; background: rgba(34,197,94,0.08); color: #22c55e; }
-    .diff-btn.sel-amber { border-color: #f59e0b; background: rgba(245,158,11,0.08); color: #f59e0b; }
-    .diff-btn.sel-red   { border-color: #ef4444; background: rgba(239,68,68,0.08); color: #ef4444; }
+/* Toggle */
+.toggle-row { display:flex; align-items:center; justify-content:space-between; margin-top:18px; }
+.toggle { width:48px; height:26px; border-radius:13px; border:none; cursor:pointer; position:relative; transition:all .2s; background:#D0D0D8; }
+.toggle.on { background:var(--accent); }
+.toggle .knob { width:20px; height:20px; border-radius:50%; background:#fff; position:absolute; top:3px; left:3px; transition:left .2s; }
+.toggle.on .knob { left:25px; }
 
-    /* Toggle */
-    .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; }
-    .toggle {
-      width: 48px; height: 26px; border-radius: 13px; border: none; cursor: pointer;
-      position: relative; transition: all 0.2s; background: #334155;
-    }
-    .toggle.on { background: var(--accent); }
-    .toggle .knob {
-      width: 20px; height: 20px; border-radius: 50%; background: #fff;
-      position: absolute; top: 3px; left: 3px; transition: left 0.2s;
-    }
-    .toggle.on .knob { left: 25px; }
+/* Generate Button */
+.gen-btn { width:100%; padding:16px 0; border-radius:14px; border:none; background:var(--accent); color:#fff; font-size:16px; font-weight:700; cursor:pointer; transition:all .2s; font-family:var(--sans); margin-top:14px; }
+.gen-btn:disabled { background:var(--text-tertiary); opacity:.5; cursor:not-allowed; }
+.gen-btn:not(:disabled):hover { background:#4340A0; transform:translateY(-1px); }
 
-    /* Generate Button */
-    .gen-btn {
-      width: 100%; padding: 16px 0; border-radius: 14px; border: none;
-      background: linear-gradient(135deg, #34d399, #22d3ee);
-      color: var(--bg); font-size: 16px; font-weight: 800; cursor: pointer; transition: all 0.2s;
-    }
-    .gen-btn:disabled { background: #334155; opacity: 0.4; cursor: not-allowed; }
-    .gen-btn:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(52,211,153,0.3); }
+.back-btn { background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:13px; margin-bottom:16px; padding:0; display:flex; align-items:center; gap:4px; font-family:var(--sans); }
 
-    .back-btn {
-      background: none; border: none; color: var(--text2); cursor: pointer;
-      font-size: 13px; margin-bottom: 16px; padding: 0; display: flex; align-items: center; gap: 4px;
-    }
+/* Loading */
+.loading-msg { font-size:14px; color:var(--accent); font-weight:600; margin-bottom:16px; }
+.dot-anim { width:6px; height:6px; border-radius:50%; background:var(--accent); display:inline-block; margin-left:2px; }
+.dot-anim:nth-child(1) { animation: bounce .8s ease-in-out 0s infinite; }
+.dot-anim:nth-child(2) { animation: bounce .8s ease-in-out .15s infinite; }
+.dot-anim:nth-child(3) { animation: bounce .8s ease-in-out .3s infinite; }
+@keyframes bounce { 0%,80%,100%{transform:scale(0);opacity:.4} 40%{transform:scale(1);opacity:1} }
+.shimmer { height:12px; border-radius:6px; margin:10px auto; background:linear-gradient(90deg, var(--accent-light) 25%, rgba(83,74,183,.15) 50%, var(--accent-light) 75%); background-size:200% 100%; animation:shimmer 1.5s ease-in-out infinite; }
+@keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
 
-    /* ═══ Loading ═══ */
-    .loading-msg { font-size: 14px; color: var(--accent); font-weight: 600; margin-bottom: 16px; }
-    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; margin-left: 2px; }
-    .dot:nth-child(1) { animation: bounce 1.2s ease-in-out 0s infinite; }
-    .dot:nth-child(2) { animation: bounce 1.2s ease-in-out 0.15s infinite; }
-    .dot:nth-child(3) { animation: bounce 1.2s ease-in-out 0.3s infinite; }
-    @keyframes bounce { 0%,80%,100%{transform:scale(0);opacity:.4} 40%{transform:scale(1);opacity:1} }
-    .shimmer {
-      height: 12px; border-radius: 6px; margin: 10px auto;
-      background: linear-gradient(90deg, rgba(52,211,153,0.1) 25%, rgba(52,211,153,0.25) 50%, rgba(52,211,153,0.1) 75%);
-      background-size: 200% 100%; animation: shimmer 1.5s ease-in-out infinite;
-    }
-    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+/* Result */
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+.fade-up { animation:fadeUp .5s ease-out forwards; }
 
-    /* ═══ Result Sections ═══ */
-    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
-    .fade-up { animation: fadeUp 0.5s ease-out forwards; }
+.result-title { font-size:11px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+.result-h2 { font-size:21px; font-weight:700; margin-bottom:8px; line-height:1.3; }
+.why-diff { font-size:12px; color:var(--amber); background:var(--amber-light); padding:8px 12px; border-radius:8px; line-height:1.5; border-left:3px solid var(--amber); margin-top:10px; }
+.tag-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+.tag { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+.section-title { font-size:15px; font-weight:700; margin-bottom:16px; }
 
-    .result-title { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-    .result-h2 { font-size: 21px; font-weight: 800; color: #f1f5f9; margin-bottom: 8px; line-height: 1.3; }
-    .why-diff {
-      font-size: 12px; color: #fbbf24; background: rgba(251,191,36,0.08);
-      padding: 8px 12px; border-radius: 8px; line-height: 1.5; border-left: 3px solid #fbbf24; margin-top: 10px;
-    }
-    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-    .tag {
-      padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
-    }
+/* Steps timeline */
+.step-item { display:flex; gap:14px; margin-bottom:18px; position:relative; }
+.step-item:last-child { margin-bottom:0; }
+.step-line-v { position:absolute; left:15px; top:32px; bottom:-8px; width:2px; background:var(--border); }
+.step-num { width:32px; height:32px; border-radius:50%; flex-shrink:0; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; }
+.step-num.verify { background:var(--coral); }
+.step-content { flex:1; }
+.step-head { display:flex; justify-content:space-between; align-items:baseline; }
+.step-name { font-size:14px; font-weight:700; }
+.step-name.verify-name { color:var(--coral); }
+.step-time { font-size:11px; color:var(--text-tertiary); }
+.step-desc { font-size:13px; color:var(--text-secondary); margin-top:4px; line-height:1.5; }
+.req-badge { font-size:11px; color:var(--coral); margin-left:4px; }
 
-    .section-title { font-size: 15px; font-weight: 700; color: #f1f5f9; margin-bottom: 16px; }
+/* Verification */
+.verify-card { background:var(--coral-light); border:1px solid rgba(216,90,48,.15); }
+.verify-title { color:var(--coral); display:flex; align-items:center; gap:8px; }
+.pulse-badge { font-size:10px; background:rgba(216,90,48,.15); padding:2px 8px; border-radius:10px; font-weight:600; animation:pulse 2s infinite; color:var(--coral); }
+.verify-warn { font-size:13px; color:var(--coral); line-height:1.6; margin-bottom:14px; background:rgba(0,0,0,.03); padding:10px 14px; border-radius:10px; }
+.verify-src { font-size:12px; color:var(--text); background:rgba(0,0,0,.03); padding:6px 12px; border-radius:8px; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+.verify-src .arrow { color:var(--accent); }
+.verify-step { font-size:12px; color:var(--text-secondary); margin-bottom:4px; display:flex; gap:8px; }
+.verify-step-num { width:20px; height:20px; border-radius:50%; flex-shrink:0; background:rgba(216,90,48,.1); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:var(--coral); }
 
-    /* Steps timeline */
-    .step-item { display: flex; gap: 14px; margin-bottom: 18px; position: relative; }
-    .step-item:last-child { margin-bottom: 0; }
-    .step-line-v {
-      position: absolute; left: 15px; top: 32px; bottom: -8px;
-      width: 2px; background: var(--border);
-    }
-    .step-num {
-      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 800; color: var(--bg);
-    }
-    .step-num.verify { background: linear-gradient(135deg, var(--warn), var(--danger)); }
-    .step-content { flex: 1; }
-    .step-head { display: flex; justify-content: space-between; align-items: baseline; }
-    .step-name { font-size: 14px; font-weight: 700; color: #f1f5f9; }
-    .step-name.verify-name { color: #fbbf24; }
-    .step-time { font-size: 11px; color: var(--text3); }
-    .step-desc { font-size: 13px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
-    .req-badge { font-size: 11px; color: var(--warn); margin-left: 4px; }
+/* Tools */
+.tool-item { background:var(--bg); border-radius:10px; padding:12px 14px; border:1px solid var(--border); margin-bottom:10px; }
+.tool-item:last-child { margin-bottom:0; }
+.tool-head { display:flex; justify-content:space-between; align-items:center; }
+.tool-name { font-size:14px; font-weight:700; color:var(--accent); }
+.tool-link { font-size:11px; color:var(--text-tertiary); background:var(--accent-light); padding:3px 10px; border-radius:20px; text-decoration:none; }
+.tool-why { font-size:12px; color:var(--text-secondary); margin-top:4px; }
+.tool-offline { margin-top:8px; font-size:11px; color:var(--accent); background:var(--accent-light); padding:6px 10px; border-radius:6px; }
 
-    /* Verification */
-    .verify-card { background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.2); }
-    .verify-title { color: var(--danger); display: flex; align-items: center; gap: 8px; }
-    .pulse-badge {
-      font-size: 10px; background: rgba(248,113,113,0.2); padding: 2px 8px;
-      border-radius: 10px; font-weight: 600; animation: pulse 2s infinite;
-    }
-    .verify-warn {
-      font-size: 13px; color: #fca5a5; line-height: 1.6; margin-bottom: 14px;
-      background: rgba(0,0,0,0.2); padding: 10px 14px; border-radius: 10px;
-    }
-    .verify-src {
-      font-size: 12px; color: var(--text); background: rgba(0,0,0,0.15);
-      padding: 6px 12px; border-radius: 8px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
-    }
-    .verify-src .arrow { color: var(--accent); }
-    .verify-step {
-      font-size: 12px; color: #cbd5e1; margin-bottom: 4px; display: flex; gap: 8px;
-    }
-    .verify-step-num {
-      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
-      background: rgba(248,113,113,0.15); display: flex; align-items: center;
-      justify-content: center; font-size: 10px; font-weight: 700; color: var(--danger);
-    }
+/* Prompts */
+.prompt-sit { font-size:12px; color:var(--accent); font-weight:600; margin-bottom:6px; }
+.prompt-box { background:var(--bg); border-radius:10px; padding:12px 14px; font-size:13px; color:var(--text-secondary); line-height:1.6; border:1px solid var(--border); white-space:pre-wrap; position:relative; cursor:pointer; margin-bottom:14px; }
+.prompt-box:last-child { margin-bottom:0; }
+.copy-btn { position:absolute; top:8px; right:10px; font-size:10px; cursor:pointer; color:var(--text-tertiary); background:var(--surface); padding:3px 10px; border-radius:10px; border:1px solid var(--border); transition:all .2s; font-family:var(--sans); }
+.copy-btn.copied { color:var(--teal); background:var(--teal-light); }
 
-    /* Tools */
-    .tool-item {
-      background: rgba(0,0,0,0.2); border-radius: 10px; padding: 12px 14px;
-      border: 1px solid var(--border); margin-bottom: 10px;
-    }
-    .tool-item:last-child { margin-bottom: 0; }
-    .tool-head { display: flex; justify-content: space-between; align-items: center; }
-    .tool-name { font-size: 14px; font-weight: 700; color: var(--accent2); }
-    .tool-link {
-      font-size: 11px; color: var(--text3); background: rgba(255,255,255,0.05);
-      padding: 3px 10px; border-radius: 20px;
-    }
-    .tool-why { font-size: 12px; color: var(--text2); margin-top: 4px; }
-    .tool-offline {
-      margin-top: 8px; font-size: 11px; color: var(--purple);
-      background: rgba(167,139,250,0.08); padding: 6px 10px; border-radius: 6px;
-    }
+/* Legal */
+.legal-card { background:var(--blue-light); border:1px solid rgba(24,95,165,.15); }
+.legal-title { color:var(--blue); }
+.legal-tag { display:inline-block; font-size:11px; font-weight:600; padding:4px 12px; border-radius:20px; background:rgba(24,95,165,.1); color:var(--blue); border:1px solid rgba(24,95,165,.15); margin:0 6px 6px 0; }
+.legal-note { font-size:12px; color:var(--blue); line-height:1.6; background:rgba(0,0,0,.03); padding:10px 14px; border-radius:8px; border-left:3px solid var(--blue); margin-top:10px; }
 
-    /* Prompts */
-    .prompt-sit { font-size: 12px; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
-    .prompt-box {
-      background: rgba(0,0,0,0.35); border-radius: 10px; padding: 12px 14px;
-      font-size: 13px; color: #cbd5e1; line-height: 1.6; border: 1px solid var(--border);
-      white-space: pre-wrap; position: relative; cursor: pointer; margin-bottom: 14px;
-    }
-    .prompt-box:last-child { margin-bottom: 0; }
-    .copy-btn {
-      position: absolute; top: 8px; right: 10px; font-size: 10px; cursor: pointer;
-      color: var(--text3); background: rgba(255,255,255,0.06);
-      padding: 3px 10px; border-radius: 10px; border: none; transition: all 0.2s;
-    }
-    .copy-btn.copied { color: var(--accent); background: rgba(52,211,153,0.15); }
+/* Mission */
+.mission-card { background:var(--amber-light); border:1px solid rgba(186,117,23,.15); }
+.mission-title { color:var(--amber); }
+.mission-text { font-size:14px; color:var(--amber); line-height:1.6; }
 
-    /* Legal */
-    .legal-card { background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.2); }
-    .legal-title { color: var(--info); }
-    .legal-tag {
-      display: inline-block; font-size: 11px; font-weight: 600; padding: 4px 12px;
-      border-radius: 20px; background: rgba(96,165,250,0.12); color: #93c5fd;
-      border: 1px solid rgba(96,165,250,0.2); margin: 0 6px 6px 0;
-    }
-    .legal-note {
-      font-size: 12px; color: #bfdbfe; line-height: 1.6;
-      background: rgba(0,0,0,0.15); padding: 10px 14px; border-radius: 8px;
-      border-left: 3px solid var(--info); margin-top: 10px;
-    }
+/* Checklist */
+.check-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; cursor:pointer; font-size:13px; color:var(--text-secondary); }
+.check-item input { margin-top:2px; accent-color:var(--accent); width:16px; height:16px; }
 
-    /* Mission */
-    .mission-card {
-      background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(245,158,11,0.05));
-      border: 1px solid rgba(251,191,36,0.2);
-    }
-    .mission-title { color: #fbbf24; }
-    .mission-text { font-size: 14px; color: #fde68a; line-height: 1.6; }
+/* Reset */
+.reset-btn { width:100%; padding:14px 0; border-radius:14px; background:var(--surface); border:1px solid var(--border); color:var(--text-secondary); font-size:14px; font-weight:600; cursor:pointer; margin-top:4px; font-family:var(--sans); }
+.reset-btn:hover { border-color:var(--accent); color:var(--accent); }
 
-    /* Checklist */
-    .check-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; cursor: pointer; font-size: 13px; color: #cbd5e1; }
-    .check-item input { margin-top: 2px; accent-color: var(--accent); width: 16px; height: 16px; }
+/* Error */
+.error-card { background:var(--coral-light); border:1px solid rgba(216,90,48,.2); border-radius:14px; padding:20px; text-align:center; color:var(--coral); }
+.retry-btn { background:rgba(216,90,48,.1); border:1px solid rgba(216,90,48,.25); border-radius:8px; padding:8px 20px; color:var(--coral); cursor:pointer; font-size:13px; font-family:var(--sans); }
 
-    /* Reset */
-    .reset-btn {
-      width: 100%; padding: 14px 0; border-radius: 14px;
-      background: var(--surface); border: 1px solid var(--border);
-      color: var(--text2); font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 4px;
-    }
+/* Footer */
+footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); margin-top:40px; }
 
-    /* Error */
-    .error-card {
-      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
-      border-radius: 14px; padding: 20px; text-align: center; color: #fca5a5;
-    }
-    .retry-btn {
-      background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.4);
-      border-radius: 8px; padding: 8px 20px; color: #fca5a5; cursor: pointer; font-size: 13px;
-    }
+.hidden { display:none !important; }
 
-    /* Footer */
-    .footer { text-align: center; margin-top: 40px; }
-    .footer .motto { color: var(--text3); font-size: 11px; margin-bottom: 4px; }
-    .footer .copy { color: #475569; font-size: 11px; }
-
-    /* Hidden */
-    .hidden { display: none !important; }
-
-    /* Mobile */
-    @media (max-width: 500px) {
-      .cat-grid { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
-      .header h1 { font-size: 22px; }
-    }
-  </style>
+@media (max-width:768px) {
+  .nav-inner { flex-wrap:wrap; height:auto; padding:10px 24px; }
+  .nav-links { display:none; width:100%; flex-direction:column; gap:2px; padding-top:8px; }
+  .nav-links.open { display:flex; }
+  .nav-toggle { display:flex; }
+  .nav-badge { display:none; }
+  .cat-grid { grid-template-columns:1fr; }
+  .page-header h1 { font-size:22px; }
+  .diff-group { flex-direction:column; }
+}
+</style>
 </head>
 <body>
 
-<!-- ═══ Navigation ═══ -->
-<nav class="nav">
-  <a href="index.html" class="nav-brand"><span>BL</span> BOSIM Lab</a>
+<nav>
+<div class="nav-inner">
+  <a href="index.html" class="logo">
+    <div class="logo-mark">BL</div>
+    <div>
+      <div class="logo-text">BOSIM Lab</div>
+      <div class="logo-sub">AI-Driven Innovation</div>
+    </div>
+  </a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
   <div class="nav-links">
     <a href="index.html">Dashboard</a>
+    <a href="index.html#casebook">Casebook</a>
     <a href="journey.html">Our Journey</a>
     <a href="security-guide.html">Security Guide</a>
-    <a href="practice-generator.html" class="active">실습 생성기</a>
+    <a href="painpoints.html">Pain Points</a>
+    <a href="practice.html">실습하기</a>
+    <a href="case-submit.html">케이스 등록</a>
   </div>
+  <div class="nav-badge">
+    <span class="dot"></span>
+    실습 생성기
+  </div>
+</div>
 </nav>
 
-<!-- ═══ Main ═══ -->
 <div class="container">
 
-  <!-- Header -->
-  <div class="header">
-    <div class="badge">⚡ BOSIM Lab 실습 생성기</div>
-    <h1>공무원의 AI 교육은<br>달라야 합니다</h1>
-    <p>배우고 싶은 주제를 입력하면, 보훈심사 업무에 맞는<br><span class="hl">검증 가능한</span> 실습 가이드가 자동 생성됩니다</p>
-    <div class="pillars">
-      <span class="pill" style="background:rgba(248,113,113,0.1);color:#f87171;border:1px solid rgba(248,113,113,0.25)">⚠️ AI 검증 포인트</span>
-      <span class="pill" style="background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.25)">🔒 폐쇄망 대안</span>
-      <span class="pill" style="background:rgba(96,165,250,0.1);color:#60a5fa;border:1px solid rgba(96,165,250,0.25)">📎 법적 근거 연결</span>
-    </div>
+<!-- Header -->
+<div class="page-header">
+  <span class="badge">BOSIM Lab 실습 생성기</span>
+  <h1>공무원의 AI 교육은<br><span>달라야 합니다</span></h1>
+  <p>배우고 싶은 주제를 입력하면, 보훈심사 업무에 맞는<br>검증 가능한 실습 가이드가 자동 생성됩니다</p>
+  <div class="pillars">
+    <span class="pill" style="background:var(--coral-light);color:var(--coral);border:1px solid rgba(216,90,48,.2)">AI 검증 포인트</span>
+    <span class="pill" style="background:var(--accent-light);color:var(--accent);border:1px solid rgba(83,74,183,.2)">폐쇄망 대안</span>
+    <span class="pill" style="background:var(--blue-light);color:var(--blue);border:1px solid rgba(24,95,165,.2)">법적 근거 연결</span>
   </div>
+</div>
 
-  <!-- Step Indicator -->
-  <div class="steps-ind" id="stepIndicator"></div>
+<!-- Step Indicator -->
+<div class="steps-ind" id="stepIndicator"></div>
 
-  <!-- ═══ Step 1: Categories ═══ -->
-  <div id="step1">
-    <h2 style="font-size:17px;font-weight:700;margin-bottom:16px;color:#f1f5f9">어떤 분야를 배우고 싶으세요?</h2>
-    <div class="cat-grid" id="catGrid"></div>
-  </div>
+<!-- Step 1: Categories -->
+<div id="step1">
+  <h2 style="font-size:17px;font-weight:700;margin-bottom:16px">어떤 분야를 배우고 싶으세요?</h2>
+  <div class="cat-grid" id="catGrid"></div>
+</div>
 
-  <!-- ═══ Step 2: Detail Input ═══ -->
-  <div id="step2" class="hidden">
-    <button class="back-btn" onclick="goStep(1)">← 카테고리 다시 선택</button>
-    <div class="card card-pad">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
-        <span id="selEmoji" style="font-size:28px"></span>
-        <div>
-          <div id="selLabel" style="font-size:16px;font-weight:700;color:#f1f5f9"></div>
-          <div id="selDesc" style="font-size:12px;color:var(--text2)"></div>
-        </div>
-      </div>
-      <label class="form-label" id="topicLabel">구체적으로 배우고 싶은 내용 (선택)</label>
-      <textarea id="topicInput" placeholder="예: 민원 답변서를 자동으로 초안 작성하는 방법"></textarea>
-
-      <div style="margin-top:18px">
-        <label class="form-label">난이도</label>
-        <div class="diff-group">
-          <button class="diff-btn sel-green" id="diff-beginner" onclick="setDiff('beginner')">입문</button>
-          <button class="diff-btn" id="diff-intermediate" onclick="setDiff('intermediate')">중급</button>
-          <button class="diff-btn" id="diff-advanced" onclick="setDiff('advanced')">심화</button>
-        </div>
-      </div>
-
-      <div class="toggle-row">
-        <span style="font-size:13px;color:var(--text2)">자가평가 체크리스트 포함</span>
-        <button class="toggle on" id="toggleChecklist" onclick="toggleCL()"><div class="knob"></div></button>
+<!-- Step 2: Detail Input -->
+<div id="step2" class="hidden">
+  <button class="back-btn" onclick="goStep(1)">&larr; 카테고리 다시 선택</button>
+  <div class="card card-pad">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <span id="selEmoji" style="font-size:28px"></span>
+      <div>
+        <div id="selLabel" style="font-size:16px;font-weight:700"></div>
+        <div id="selDesc" style="font-size:12px;color:var(--text-secondary)"></div>
       </div>
     </div>
-    <button class="gen-btn" id="genBtn" onclick="generate()">⚡ 실습 가이드 생성하기</button>
+    <label class="form-label" id="topicLabel">구체적으로 배우고 싶은 내용 (선택)</label>
+    <textarea id="topicInput" placeholder="예: 민원 답변서를 자동으로 초안 작성하는 방법"></textarea>
+    <div style="margin-top:18px">
+      <label class="form-label">난이도</label>
+      <div class="diff-group">
+        <button class="diff-btn sel-green" id="diff-beginner" onclick="setDiff('beginner')">입문</button>
+        <button class="diff-btn" id="diff-intermediate" onclick="setDiff('intermediate')">중급</button>
+        <button class="diff-btn" id="diff-advanced" onclick="setDiff('advanced')">심화</button>
+      </div>
+    </div>
+    <div class="toggle-row">
+      <span style="font-size:13px;color:var(--text-secondary)">자가평가 체크리스트 포함</span>
+      <button class="toggle on" id="toggleChecklist" onclick="toggleCL()"><div class="knob"></div></button>
+    </div>
   </div>
+  <button class="gen-btn" id="genBtn" onclick="generate()">실습 가이드 생성하기</button>
+</div>
 
-  <!-- ═══ Step 3: Result ═══ -->
-  <div id="step3" class="hidden">
-    <div id="loadingArea" class="hidden">
-      <div class="card" style="padding:32px;text-align:center">
-        <div class="loading-msg" id="loadMsg">실습 주제를 분석하고 있어요... <span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-        <div class="shimmer" style="width:100%"></div>
-        <div class="shimmer" style="width:70%"></div>
-        <div class="shimmer" style="width:50%"></div>
-        <div class="shimmer" style="width:80%"></div>
-      </div>
+<!-- Step 3: Result -->
+<div id="step3" class="hidden">
+  <div id="loadingArea" class="hidden">
+    <div class="card" style="padding:32px;text-align:center">
+      <div class="loading-msg" id="loadMsg">실습 주제를 분석하고 있어요... <span class="dot-anim"></span><span class="dot-anim"></span><span class="dot-anim"></span></div>
+      <div class="shimmer" style="width:100%"></div>
+      <div class="shimmer" style="width:70%"></div>
+      <div class="shimmer" style="width:50%"></div>
+      <div class="shimmer" style="width:80%"></div>
     </div>
-    <div id="errorArea" class="hidden">
-      <div class="error-card">
-        <p style="margin-bottom:12px;font-size:14px">실습 생성 중 오류가 발생했어요. 다시 시도해주세요.</p>
-        <button class="retry-btn" onclick="generate()">다시 시도</button>
-      </div>
-    </div>
-    <div id="resultArea" class="hidden fade-up"></div>
   </div>
+  <div id="errorArea" class="hidden">
+    <div class="error-card">
+      <p style="margin-bottom:12px;font-size:14px">실습 생성 중 오류가 발생했어요. 다시 시도해주세요.</p>
+      <button class="retry-btn" onclick="generate()">다시 시도</button>
+    </div>
+  </div>
+  <div id="resultArea" class="hidden fade-up"></div>
+</div>
 
 </div>
 
-<!-- Footer -->
-<div class="footer">
-  <div class="motto">틀려도 되는 AI, 틀리면 안 되는 심사</div>
-  <div class="copy">BOSIM Lab · 보훈심사위원회 AI 연구모임 · 2026</div>
-</div>
+<footer>
+  <div class="container">
+    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
+    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  </div>
+</footer>
 
 <script>
-// ═══════════════════════════════════════════
 // State
-// ═══════════════════════════════════════════
-const CATS = [
-  { id:"image", emoji:"🎨", label:"이미지 생성", desc:"AI로 시각자료·인포그래픽 만들기" },
-  { id:"document", emoji:"📄", label:"문서 작성·요약", desc:"보고서·회의록·요약문 자동 작성" },
-  { id:"law", emoji:"⚖️", label:"법령·판례 검색", desc:"법률 조문 검색 및 해석 보조" },
-  { id:"data", emoji:"📊", label:"데이터 분석", desc:"엑셀·통계 데이터 정리 및 시각화" },
-  { id:"prompt", emoji:"💬", label:"프롬프트 엔지니어링", desc:"효과적인 AI 질문법 익히기" },
-  { id:"security", emoji:"🔒", label:"AI 보안·검증", desc:"AI 결과물 팩트체크 및 보안 준수" },
-  { id:"onboarding", emoji:"🎓", label:"신규직원 교육", desc:"AI 활용 온보딩 코스 설계" },
-  { id:"custom", emoji:"✏️", label:"직접 입력", desc:"내가 원하는 주제를 자유롭게" },
+var CATS = [
+  { id:"image", emoji:"\uD83C\uDFA8", label:"이미지 생성", desc:"AI로 시각자료·인포그래픽 만들기" },
+  { id:"document", emoji:"\uD83D\uDCC4", label:"문서 작성·요약", desc:"보고서·회의록·요약문 자동 작성" },
+  { id:"law", emoji:"\u2696\uFE0F", label:"법령·판례 검색", desc:"법률 조문 검색 및 해석 보조" },
+  { id:"data", emoji:"\uD83D\uDCCA", label:"데이터 분석", desc:"엑셀·통계 데이터 정리 및 시각화" },
+  { id:"prompt", emoji:"\uD83D\uDCAC", label:"프롬프트 엔지니어링", desc:"효과적인 AI 질문법 익히기" },
+  { id:"security", emoji:"\uD83D\uDD12", label:"AI 보안·검증", desc:"AI 결과물 팩트체크 및 보안 준수" },
+  { id:"onboarding", emoji:"\uD83C\uDF93", label:"신규직원 교육", desc:"AI 활용 온보딩 코스 설계" },
+  { id:"custom", emoji:"\u270F\uFE0F", label:"직접 입력", desc:"내가 원하는 주제를 자유롭게" }
 ];
-const DIFFS = { beginner:{label:"입문",cls:"sel-green"}, intermediate:{label:"중급",cls:"sel-amber"}, advanced:{label:"심화",cls:"sel-red"} };
-const LOAD_MSGS = ["실습 주제를 분석하고 있어요...","보훈심사 업무 맥락을 연결 중...","AI 검증 포인트를 설계 중...","폐쇄망 대안을 탐색 중...","맞춤형 실습 가이드를 완성 중..."];
+var DIFFS = { beginner:{label:"입문"}, intermediate:{label:"중급"}, advanced:{label:"심화"} };
+var LOAD_MSGS = ["실습 주제를 분석하고 있어요...","보훈심사 업무 맥락을 연결 중...","AI 검증 포인트를 설계 중...","폐쇄망 대안을 탐색 중...","맞춤형 실습 가이드를 완성 중..."];
 
-let currentStep = 1, selectedCat = null, difficulty = "beginner", showChecklist = true, loadIdx = 0, loadTimer = null;
+var currentStep = 1, selectedCat = null, difficulty = "beginner", showChecklist = true, loadIdx = 0, loadTimer = null;
 
-// ═══════════════════════════════════════════
 // Init
-// ═══════════════════════════════════════════
-function init() {
-  renderStepInd();
-  renderCats();
-}
+function init() { renderStepInd(); renderCats(); }
 
 function renderStepInd() {
-  const labels = ["주제 선택","세부 설정","실습 가이드"];
-  let html = '';
-  labels.forEach((l,i) => {
-    html += `<div style="text-align:center"><div class="step-dot ${currentStep>=i+1?'active':''}">${i+1}</div><div class="step-label ${currentStep>=i+1?'active':''}">${l}</div></div>`;
-    if (i < 2) html += `<div class="step-line ${currentStep>i+1?'active':''}"></div>`;
+  var labels = ["주제 선택","세부 설정","실습 가이드"];
+  var html = '';
+  labels.forEach(function(l, i) {
+    html += '<div style="text-align:center"><div class="step-dot-g ' + (currentStep >= i+1 ? 'active' : '') + '">' + (i+1) + '</div><div class="step-label-g ' + (currentStep >= i+1 ? 'active' : '') + '">' + l + '</div></div>';
+    if (i < 2) html += '<div class="step-line-g ' + (currentStep > i+1 ? 'active' : '') + '"></div>';
   });
   document.getElementById('stepIndicator').innerHTML = html;
 }
 
 function renderCats() {
-  let html = '';
-  CATS.forEach(c => {
-    html += `<button class="cat-btn" onclick="selectCat('${c.id}')"><span class="emoji">${c.emoji}</span><span class="label">${c.label}</span><span class="desc">${c.desc}</span></button>`;
+  var html = '';
+  CATS.forEach(function(c) {
+    html += '<button class="cat-btn" onclick="selectCat(\'' + c.id + '\')"><span class="emoji">' + c.emoji + '</span><span class="label">' + c.label + '</span><span class="desc">' + c.desc + '</span></button>';
   });
   document.getElementById('catGrid').innerHTML = html;
 }
 
-// ═══════════════════════════════════════════
 // Navigation
-// ═══════════════════════════════════════════
 function goStep(n) {
   currentStep = n;
   renderStepInd();
@@ -466,12 +361,12 @@ function goStep(n) {
 }
 
 function selectCat(id) {
-  selectedCat = CATS.find(c => c.id === id);
+  selectedCat = CATS.find(function(c) { return c.id === id; });
   document.getElementById('selEmoji').textContent = selectedCat.emoji;
   document.getElementById('selLabel').textContent = selectedCat.label;
   document.getElementById('selDesc').textContent = selectedCat.desc;
-  const inp = document.getElementById('topicInput');
-  const lbl = document.getElementById('topicLabel');
+  var inp = document.getElementById('topicInput');
+  var lbl = document.getElementById('topicLabel');
   if (id === 'custom') {
     lbl.textContent = '배우고 싶은 주제를 적어주세요 *';
     inp.placeholder = '예: 이미지 생성에 대해서 배우고 싶다';
@@ -485,8 +380,14 @@ function selectCat(id) {
 
 function setDiff(d) {
   difficulty = d;
-  ['beginner','intermediate','advanced'].forEach(k => {
-    document.getElementById('diff-'+k).className = 'diff-btn' + (k===d ? ' '+DIFFS[k].cls : '');
+  ['beginner','intermediate','advanced'].forEach(function(k) {
+    var cls = 'diff-btn';
+    if (k === d) {
+      if (k === 'beginner') cls += ' sel-green';
+      else if (k === 'intermediate') cls += ' sel-amber';
+      else cls += ' sel-red';
+    }
+    document.getElementById('diff-' + k).className = cls;
   });
 }
 
@@ -495,11 +396,9 @@ function toggleCL() {
   document.getElementById('toggleChecklist').classList.toggle('on', showChecklist);
 }
 
-// ═══════════════════════════════════════════
-// Generate
-// ═══════════════════════════════════════════
+// Generate via /api/gemini proxy
 async function generate() {
-  const topic = selectedCat.id === 'custom'
+  var topic = selectedCat.id === 'custom'
     ? document.getElementById('topicInput').value.trim()
     : (document.getElementById('topicInput').value.trim()
         ? selectedCat.label + ' — ' + document.getElementById('topicInput').value.trim()
@@ -512,65 +411,21 @@ async function generate() {
 
   loadIdx = 0;
   updateLoadMsg();
-  loadTimer = setInterval(() => { loadIdx = (loadIdx+1) % LOAD_MSGS.length; updateLoadMsg(); }, 2400);
+  loadTimer = setInterval(function() { loadIdx = (loadIdx + 1) % LOAD_MSGS.length; updateLoadMsg(); }, 2400);
 
-  const diff = DIFFS[difficulty].label;
-  const prompt = `당신은 BOSIM Lab(보훈심사위원회 AI 연구모임)의 실습 가이드 생성기입니다.
-
-핵심 원칙: "공무원의 AI 교육은 달라야 한다"
-- 일반 AI 교육과 달리, 공무원은 법령 근거 없이 판단할 수 없고, AI가 틀려도 책임은 공무원이 지며, 보안 규정을 준수해야 합니다.
-- 모든 실습은 반드시 "AI 결과를 검증하는 단계"를 포함해야 합니다.
-- 폐쇄망(인터넷 차단 업무환경)에서도 가능한 대안을 항상 제시합니다.
-
-참여자가 배우고 싶은 주제: "${topic}"
-난이도: ${diff}
-맥락: 보훈심사위원회 실무 (심사 업무, 법령 검토, 사실조사, 민원 응대, 의학용어 확인, 사실혼 인정 등)
-
-반드시 아래 JSON 형식으로만 응답하세요. 마크다운 백틱이나 설명 없이 순수 JSON만 출력하세요.
-
-{
-  "title": "실습 제목",
-  "objective": "실습 목표 (1~2문장)",
-  "duration": "예상 소요시간",
-  "why_different": "이 실습이 일반 AI 교육과 다른 이유 (공무원 맥락 1~2문장)",
-  "steps": [
-    {"step": 1, "title": "단계 제목", "description": "상세 설명 2~3문장", "time": "10분"}
-  ],
-  "tools": [
-    {"name": "도구명", "url": "접속 URL 또는 #", "why": "이유 1문장", "offline_alt": "폐쇄망 대안 1문장 (없으면 null)"}
-  ],
-  "prompt_examples": [
-    {"situation": "활용 상황", "prompt": "복붙용 프롬프트 전문"}
-  ],
-  "verification": {
-    "warning": "이 실습에서 AI가 틀릴 수 있는 부분 1~2문장 (구체적 예시 포함)",
-    "check_sources": ["검증용 공식 출처 이름 + URL 또는 접근방법"],
-    "check_steps": ["검증 절차 단계별 1문장씩 2~3개"]
-  },
-  "legal_basis": {
-    "relevant_rules": ["관련 규정·가이드라인 이름"],
-    "compliance_notes": "실무 적용 시 지켜야 할 보안·규정 사항 1~2문장"
-  },
-  "mission": "보훈심사 업무 연계 미션 (구체적 과제 1개)"${showChecklist ? `,
-  "self_checklist": ["체크 항목 5~7개, 반드시 검증 관련 항목 2개 이상 포함"]` : ''}
-}
-
-steps는 3~5개 (마지막 단계는 "결과 검증"), tools는 2~3개, prompt_examples는 2~3개.`;
+  var diff = DIFFS[difficulty].label;
+  var prompt = '당신은 BOSIM Lab(보훈심사위원회 AI 연구모임)의 실습 가이드 생성기입니다.\n\n핵심 원칙: "공무원의 AI 교육은 달라야 한다"\n- 일반 AI 교육과 달리, 공무원은 법령 근거 없이 판단할 수 없고, AI가 틀려도 책임은 공무원이 지며, 보안 규정을 준수해야 합니다.\n- 모든 실습은 반드시 "AI 결과를 검증하는 단계"를 포함해야 합니다.\n- 폐쇄망(인터넷 차단 업무환경)에서도 가능한 대안을 항상 제시합니다.\n\n참여자가 배우고 싶은 주제: "' + topic + '"\n난이도: ' + diff + '\n맥락: 보훈심사위원회 실무 (심사 업무, 법령 검토, 사실조사, 민원 응대, 의학용어 확인, 사실혼 인정 등)\n\n반드시 아래 JSON 형식으로만 응답하세요. 마크다운 백틱이나 설명 없이 순수 JSON만 출력하세요.\n\n{\n  "title": "실습 제목",\n  "objective": "실습 목표 (1~2문장)",\n  "duration": "예상 소요시간",\n  "why_different": "이 실습이 일반 AI 교육과 다른 이유 (공무원 맥락 1~2문장)",\n  "steps": [\n    {"step": 1, "title": "단계 제목", "description": "상세 설명 2~3문장", "time": "10분"}\n  ],\n  "tools": [\n    {"name": "도구명", "url": "접속 URL 또는 #", "why": "이유 1문장", "offline_alt": "폐쇄망 대안 1문장 (없으면 null)"}\n  ],\n  "prompt_examples": [\n    {"situation": "활용 상황", "prompt": "복붙용 프롬프트 전문"}\n  ],\n  "verification": {\n    "warning": "이 실습에서 AI가 틀릴 수 있는 부분 1~2문장 (구체적 예시 포함)",\n    "check_sources": ["검증용 공식 출처 이름 + URL 또는 접근방법"],\n    "check_steps": ["검증 절차 단계별 1문장씩 2~3개"]\n  },\n  "legal_basis": {\n    "relevant_rules": ["관련 규정·가이드라인 이름"],\n    "compliance_notes": "실무 적용 시 지켜야 할 보안·규정 사항 1~2문장"\n  },\n  "mission": "보훈심사 업무 연계 미션 (구체적 과제 1개)"' + (showChecklist ? ',\n  "self_checklist": ["체크 항목 5~7개, 반드시 검증 관련 항목 2개 이상 포함"]' : '') + '\n}\n\nsteps는 3~5개 (마지막 단계는 "결과 검증"), tools는 2~3개, prompt_examples는 2~3개.';
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1500,
-        messages: [{ role: "user", content: prompt }],
-      }),
+    var res = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: prompt, systemPrompt: '' })
     });
-    const data = await res.json();
-    const text = (data.content || []).map(i => i.text || "").join("");
-    const clean = text.replace(/```json|```/g, "").trim();
-    const r = JSON.parse(clean);
+    var data = await res.json();
+    var text = data.text || '';
+    var clean = text.replace(/```json|```/g, '').trim();
+    var r = JSON.parse(clean);
     clearInterval(loadTimer);
     hideEl('loadingArea');
     renderResult(r);
@@ -583,138 +438,133 @@ steps는 3~5개 (마지막 단계는 "결과 검증"), tools는 2~3개, prompt_e
 }
 
 function updateLoadMsg() {
-  document.getElementById('loadMsg').innerHTML = LOAD_MSGS[loadIdx] + ' <span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+  document.getElementById('loadMsg').innerHTML = LOAD_MSGS[loadIdx] + ' <span class="dot-anim"></span><span class="dot-anim"></span><span class="dot-anim"></span>';
 }
 
-// ═══════════════════════════════════════════
 // Render Result
-// ═══════════════════════════════════════════
 function renderResult(r) {
-  const diffInfo = DIFFS[difficulty];
-  const diffColors = { beginner:"#22c55e", intermediate:"#f59e0b", advanced:"#ef4444" };
-  const dc = diffColors[difficulty];
+  var diffColors = { beginner: 'var(--teal)', intermediate: 'var(--amber)', advanced: 'var(--coral)' };
+  var diffBgs = { beginner: 'var(--teal-light)', intermediate: 'var(--amber-light)', advanced: 'var(--coral-light)' };
+  var dc = diffColors[difficulty];
+  var db = diffBgs[difficulty];
 
-  let html = '';
+  var html = '';
 
   // Title card
-  html += `<div class="card card-pad" style="background:linear-gradient(135deg,rgba(52,211,153,0.12),rgba(34,211,238,0.08));border-color:rgba(52,211,153,0.2)">
-    <div class="result-title">공무원 맞춤 AI 실습 가이드</div>
-    <h2 class="result-h2">${esc(r.title)}</h2>
-    <p style="font-size:13px;color:var(--text2)">${esc(r.objective)}</p>
-    ${r.why_different ? `<div class="why-diff">💡 <strong>일반 AI 교육과 다른 점:</strong> ${esc(r.why_different)}</div>` : ''}
-    <div class="tag-row">
-      <span class="tag" style="background:rgba(52,211,153,0.15);color:var(--accent)">⏱ ${esc(r.duration)}</span>
-      <span class="tag" style="background:${dc}20;color:${dc}">${diffInfo.label}</span>
-    </div>
-  </div>`;
+  html += '<div class="card card-pad" style="background:var(--accent-light);border-color:rgba(83,74,183,.15)">' +
+    '<div class="result-title">공무원 맞춤 AI 실습 가이드</div>' +
+    '<h2 class="result-h2">' + esc(r.title) + '</h2>' +
+    '<p style="font-size:13px;color:var(--text-secondary)">' + esc(r.objective) + '</p>' +
+    (r.why_different ? '<div class="why-diff">' + esc(r.why_different) + '</div>' : '') +
+    '<div class="tag-row">' +
+      '<span class="tag" style="background:var(--accent-light);color:var(--accent)">' + esc(r.duration) + '</span>' +
+      '<span class="tag" style="background:' + db + ';color:' + dc + '">' + DIFFS[difficulty].label + '</span>' +
+    '</div>' +
+  '</div>';
 
   // Steps
-  html += `<div class="card"><div class="section-title">📋 실습 단계</div>`;
-  (r.steps||[]).forEach((s,i) => {
-    const isLast = i === r.steps.length - 1;
-    html += `<div class="step-item">
-      ${!isLast ? '<div class="step-line-v"></div>' : ''}
-      <div class="step-num ${isLast?'verify':''}">${isLast?'✓':s.step}</div>
-      <div class="step-content">
-        <div class="step-head">
-          <span class="step-name ${isLast?'verify-name':''}">${esc(s.title)} ${isLast?'<span class="req-badge">(필수)</span>':''}</span>
-          <span class="step-time">${esc(s.time)}</span>
-        </div>
-        <div class="step-desc">${esc(s.description)}</div>
-      </div>
-    </div>`;
+  html += '<div class="card"><div class="section-title">실습 단계</div>';
+  (r.steps || []).forEach(function(s, i) {
+    var isLast = i === r.steps.length - 1;
+    html += '<div class="step-item">' +
+      (!isLast ? '<div class="step-line-v"></div>' : '') +
+      '<div class="step-num ' + (isLast ? 'verify' : '') + '">' + (isLast ? '✓' : s.step) + '</div>' +
+      '<div class="step-content">' +
+        '<div class="step-head">' +
+          '<span class="step-name ' + (isLast ? 'verify-name' : '') + '">' + esc(s.title) + (isLast ? ' <span class="req-badge">(필수)</span>' : '') + '</span>' +
+          '<span class="step-time">' + esc(s.time) + '</span>' +
+        '</div>' +
+        '<div class="step-desc">' + esc(s.description) + '</div>' +
+      '</div></div>';
   });
-  html += `</div>`;
+  html += '</div>';
 
   // Verification
   if (r.verification) {
-    html += `<div class="card verify-card">
-      <div class="section-title verify-title">⚠️ AI 검증 포인트 <span class="pulse-badge">반드시 확인</span></div>
-      <div class="verify-warn">${esc(r.verification.warning)}</div>
-      <div style="font-size:12px;color:var(--text2);font-weight:600;margin-bottom:8px">검증 출처</div>`;
-    (r.verification.check_sources||[]).forEach(s => {
-      html += `<div class="verify-src"><span class="arrow">→</span> ${esc(s)}</div>`;
+    html += '<div class="card verify-card">' +
+      '<div class="section-title verify-title">AI 검증 포인트 <span class="pulse-badge">반드시 확인</span></div>' +
+      '<div class="verify-warn">' + esc(r.verification.warning) + '</div>' +
+      '<div style="font-size:12px;color:var(--text-secondary);font-weight:600;margin-bottom:8px">검증 출처</div>';
+    (r.verification.check_sources || []).forEach(function(s) {
+      html += '<div class="verify-src"><span class="arrow">&rarr;</span> ' + esc(s) + '</div>';
     });
-    html += `<div style="font-size:12px;color:var(--text2);font-weight:600;margin:14px 0 8px">검증 절차</div>`;
-    (r.verification.check_steps||[]).forEach((s,i) => {
-      html += `<div class="verify-step"><span class="verify-step-num">${i+1}</span><span style="line-height:1.5">${esc(s)}</span></div>`;
+    html += '<div style="font-size:12px;color:var(--text-secondary);font-weight:600;margin:14px 0 8px">검증 절차</div>';
+    (r.verification.check_steps || []).forEach(function(s, i) {
+      html += '<div class="verify-step"><span class="verify-step-num">' + (i+1) + '</span><span style="line-height:1.5">' + esc(s) + '</span></div>';
     });
-    html += `</div>`;
+    html += '</div>';
   }
 
   // Tools
-  html += `<div class="card"><div class="section-title">🛠 추천 도구</div>`;
-  (r.tools||[]).forEach(t => {
-    html += `<div class="tool-item">
-      <div class="tool-head">
-        <span class="tool-name">${esc(t.name)}</span>
-        ${t.url && t.url !== '#' ? `<a href="${esc(t.url)}" target="_blank" class="tool-link">접속 →</a>` : ''}
-      </div>
-      <div class="tool-why">${esc(t.why)}</div>
-      ${t.offline_alt && t.offline_alt !== 'null' && t.offline_alt !== null ? `<div class="tool-offline">🔒 <strong>폐쇄망 대안:</strong> ${esc(t.offline_alt)}</div>` : ''}
-    </div>`;
+  html += '<div class="card"><div class="section-title">추천 도구</div>';
+  (r.tools || []).forEach(function(t) {
+    html += '<div class="tool-item">' +
+      '<div class="tool-head">' +
+        '<span class="tool-name">' + esc(t.name) + '</span>' +
+        (t.url && t.url !== '#' ? '<a href="' + esc(t.url) + '" target="_blank" class="tool-link">접속 &rarr;</a>' : '') +
+      '</div>' +
+      '<div class="tool-why">' + esc(t.why) + '</div>' +
+      (t.offline_alt && t.offline_alt !== 'null' && t.offline_alt !== null ? '<div class="tool-offline">폐쇄망 대안: ' + esc(t.offline_alt) + '</div>' : '') +
+    '</div>';
   });
-  html += `</div>`;
+  html += '</div>';
 
   // Prompts
-  html += `<div class="card"><div class="section-title">💬 복붙용 프롬프트</div>`;
-  (r.prompt_examples||[]).forEach((p,i) => {
-    html += `<div class="prompt-sit">상황: ${esc(p.situation)}</div>
-      <div class="prompt-box" onclick="copyPrompt(this)">${esc(p.prompt)}<button class="copy-btn">복사</button></div>`;
+  html += '<div class="card"><div class="section-title">복붙용 프롬프트</div>';
+  (r.prompt_examples || []).forEach(function(p) {
+    html += '<div class="prompt-sit">상황: ' + esc(p.situation) + '</div>' +
+      '<div class="prompt-box" onclick="copyPromptBox(this)">' + esc(p.prompt) + '<button class="copy-btn">복사</button></div>';
   });
-  html += `</div>`;
+  html += '</div>';
 
   // Legal
   if (r.legal_basis) {
-    html += `<div class="card legal-card">
-      <div class="section-title legal-title">📎 법적 근거 및 규정</div>
-      <div style="font-size:12px;color:var(--text2);font-weight:600;margin-bottom:6px">관련 규정·가이드라인</div>
-      <div style="margin-bottom:10px">`;
-    (r.legal_basis.relevant_rules||[]).forEach(rule => {
-      html += `<span class="legal-tag">${esc(rule)}</span>`;
+    html += '<div class="card legal-card">' +
+      '<div class="section-title legal-title">법적 근거 및 규정</div>' +
+      '<div style="font-size:12px;color:var(--text-secondary);font-weight:600;margin-bottom:6px">관련 규정·가이드라인</div><div style="margin-bottom:10px">';
+    (r.legal_basis.relevant_rules || []).forEach(function(rule) {
+      html += '<span class="legal-tag">' + esc(rule) + '</span>';
     });
-    html += `</div>`;
+    html += '</div>';
     if (r.legal_basis.compliance_notes) {
-      html += `<div class="legal-note">⚖️ ${esc(r.legal_basis.compliance_notes)}</div>`;
+      html += '<div class="legal-note">' + esc(r.legal_basis.compliance_notes) + '</div>';
     }
-    html += `</div>`;
+    html += '</div>';
   }
 
   // Mission
-  html += `<div class="card mission-card">
-    <div class="section-title mission-title">🎯 보훈심사 연계 미션</div>
-    <div class="mission-text">${esc(r.mission)}</div>
-  </div>`;
+  html += '<div class="card mission-card">' +
+    '<div class="section-title mission-title">보훈심사 연계 미션</div>' +
+    '<div class="mission-text">' + esc(r.mission) + '</div>' +
+  '</div>';
 
   // Checklist
   if (showChecklist && r.self_checklist) {
-    html += `<div class="card"><div class="section-title">✅ 자가평가 체크리스트</div>`;
-    r.self_checklist.forEach(item => {
-      html += `<label class="check-item"><input type="checkbox"><span style="line-height:1.5">${esc(item)}</span></label>`;
+    html += '<div class="card"><div class="section-title">자가평가 체크리스트</div>';
+    r.self_checklist.forEach(function(item) {
+      html += '<label class="check-item"><input type="checkbox"><span style="line-height:1.5">' + esc(item) + '</span></label>';
     });
-    html += `</div>`;
+    html += '</div>';
   }
 
   // Reset
-  html += `<button class="reset-btn" onclick="resetAll()">🔄 새로운 실습 생성하기</button>`;
+  html += '<button class="reset-btn" onclick="resetAll()">새로운 실습 생성하기</button>';
 
   document.getElementById('resultArea').innerHTML = html;
   showEl('resultArea');
 }
 
-// ═══════════════════════════════════════════
 // Utilities
-// ═══════════════════════════════════════════
 function showEl(id) { document.getElementById(id).classList.remove('hidden'); }
 function hideEl(id) { document.getElementById(id).classList.add('hidden'); }
-function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function esc(s) { if (!s) return ''; var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-function copyPrompt(el) {
-  const text = el.textContent.replace('복사','').replace('✓ 복사됨','').trim();
-  navigator.clipboard?.writeText(text);
-  const btn = el.querySelector('.copy-btn');
+function copyPromptBox(el) {
+  var text = el.textContent.replace('복사','').replace('✓ 복사됨','').trim();
+  navigator.clipboard.writeText(text);
+  var btn = el.querySelector('.copy-btn');
   btn.textContent = '✓ 복사됨'; btn.classList.add('copied');
-  setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 1500);
+  setTimeout(function() { btn.textContent = '복사'; btn.classList.remove('copied'); }, 1500);
 }
 
 function resetAll() {
@@ -726,7 +576,6 @@ function resetAll() {
   goStep(1);
 }
 
-// Boot
 init();
 </script>
 </body>
