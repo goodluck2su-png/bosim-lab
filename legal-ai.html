@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSIM Lab - 법령 AI 검색</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --text: #1a1a2e;
+  --text-secondary: #6B6B7B;
+  --text-tertiary: #9B9BAB;
+  --accent: #534AB7;
+  --accent-light: #EEEDFE;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --blue: #185FA5;
+  --blue-light: #E8EEF8;
+  --border: rgba(0,0,0,0.08);
+  --radius: 16px;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Noto Sans KR', -apple-system, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav */
+nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; height:60px; }
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+.logo-mark { width:32px; height:32px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; font-weight:700; }
+.logo-text { font-weight:700; font-size:15px; letter-spacing:-0.3px; }
+.logo-sub { font-size:11px; color:var(--text-tertiary); font-weight:400; }
+.nav-links { display:flex; gap:4px; }
+.nav-links a { padding:8px 14px; font-size:13px; color:var(--text-secondary); text-decoration:none; border-radius:8px; font-weight:500; transition:all .2s; }
+.nav-links a:hover, .nav-links a.active { background:var(--accent-light); color:var(--accent); }
+.nav-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); color:var(--text-secondary); }
+.nav-badge .dot { width:6px; height:6px; border-radius:50%; background:#0F6E56; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.nav-toggle { display:none; width:36px; height:36px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; align-items:center; justify-content:center; font-size:18px; color:var(--text-secondary); }
+
+/* Hero */
+.hero { padding:40px 0 24px; text-align:center; }
+.hero .badge { display:inline-block; padding:6px 16px; border-radius:20px; background:var(--blue-light); color:var(--blue); font-size:12px; font-weight:600; margin-bottom:12px; }
+.hero h1 { font-size:28px; font-weight:700; letter-spacing:-0.5px; margin-bottom:8px; }
+.hero h1 span { color:var(--accent); }
+.hero p { font-size:14px; color:var(--text-secondary); line-height:1.6; }
+.hero-note { display:inline-block; margin-top:12px; font-size:11px; color:var(--text-tertiary); background:#F5F5F2; padding:4px 12px; border-radius:6px; }
+
+/* Search Box */
+.search-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:24px; }
+.search-input-row { display:flex; gap:10px; }
+.search-input { flex:1; padding:14px 18px; border:1px solid var(--border); border-radius:12px; font-size:15px; background:var(--bg); color:var(--text); outline:none; font-family:var(--sans); }
+.search-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.search-input::placeholder { color:var(--text-tertiary); }
+.search-btn { padding:14px 28px; border-radius:12px; border:none; background:var(--accent); color:#fff; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; font-family:var(--sans); white-space:nowrap; }
+.search-btn:hover { background:#4340A0; }
+.search-btn:disabled { background:var(--text-tertiary); cursor:not-allowed; }
+.search-hints { display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
+.search-hint { padding:5px 12px; border-radius:8px; font-size:11px; font-weight:500; background:#F5F5F2; color:var(--text-secondary); cursor:pointer; border:none; transition:all .2s; font-family:var(--sans); }
+.search-hint:hover { background:var(--accent-light); color:var(--accent); }
+
+/* Results Layout */
+.results { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:48px; }
+.results.solo { grid-template-columns:1fr; }
+
+/* Panel */
+.panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.panel-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.panel-title { font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.panel-badge { font-size:10px; font-weight:600; padding:3px 8px; border-radius:6px; }
+.panel-body { padding:20px; min-height:200px; }
+.panel-empty { text-align:center; padding:40px 20px; color:var(--text-tertiary); font-size:13px; line-height:1.6; }
+
+/* Law Results */
+.law-item { padding:14px; border:1px solid var(--border); border-radius:10px; margin-bottom:10px; cursor:pointer; transition:all .2s; }
+.law-item:hover { border-color:var(--accent); background:var(--accent-light); }
+.law-item:last-child { margin-bottom:0; }
+.law-item-title { font-size:14px; font-weight:700; margin-bottom:4px; color:var(--text); }
+.law-item-meta { font-size:11px; color:var(--text-tertiary); display:flex; gap:8px; }
+.law-item-badge { font-size:10px; font-weight:600; padding:2px 8px; border-radius:4px; background:var(--blue-light); color:var(--blue); }
+.law-disabled-msg { background:var(--amber-light); border:1px solid rgba(186,117,23,.15); border-radius:10px; padding:14px 18px; font-size:13px; color:var(--amber); line-height:1.6; }
+
+/* AI Response */
+.ai-response { font-size:14px; line-height:1.8; color:var(--text); white-space:pre-wrap; }
+.ai-response-meta { font-size:11px; color:var(--text-tertiary); margin-top:12px; font-family:var(--mono); }
+
+/* Loading */
+.typing-dots { display:flex; gap:4px; padding:8px 0; justify-content:center; }
+.typing-dots span { width:8px; height:8px; border-radius:50%; background:var(--accent); animation:typing .8s infinite; }
+.typing-dots span:nth-child(2) { animation-delay:.15s; }
+.typing-dots span:nth-child(3) { animation-delay:.3s; }
+@keyframes typing { 0%,100%{opacity:.3;transform:scale(.8)} 50%{opacity:1;transform:scale(1)} }
+
+/* Detail Modal */
+.detail-overlay { position:fixed; inset:0; background:rgba(10,10,30,.55); backdrop-filter:blur(4px); z-index:200; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; }
+.detail-overlay.open { opacity:1; pointer-events:auto; }
+.detail-modal { background:var(--surface); border-radius:20px; width:92%; max-width:640px; max-height:85vh; overflow-y:auto; transform:translateY(24px) scale(.97); transition:transform .3s; box-shadow:0 24px 64px rgba(0,0,0,.18); }
+.detail-overlay.open .detail-modal { transform:translateY(0) scale(1); }
+.detail-header { padding:24px 28px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; }
+.detail-title { font-size:18px; font-weight:700; flex:1; }
+.detail-close { width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; color:var(--text-tertiary); flex-shrink:0; }
+.detail-close:hover { background:#f5f5f5; color:var(--text); }
+.detail-body { padding:24px 28px; font-size:14px; line-height:1.8; color:var(--text-secondary); white-space:pre-wrap; }
+.detail-loading { text-align:center; padding:40px; }
+
+/* Footer */
+footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
+
+@media (max-width:768px) {
+  .nav-inner { flex-wrap:wrap; height:auto; padding:10px 0; }
+  .nav-links { display:none; width:100%; flex-direction:column; gap:2px; padding-top:8px; }
+  .nav-links.open { display:flex; }
+  .nav-toggle { display:flex; }
+  .nav-badge { display:none; }
+  .hero h1 { font-size:22px; }
+  .results { grid-template-columns:1fr; }
+  .search-input-row { flex-direction:column; }
+  .search-btn { width:100%; }
+  .detail-header { padding:20px; }
+  .detail-body { padding:16px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container nav-inner">
+  <a href="index.html" class="logo">
+    <div class="logo-mark">BL</div>
+    <div>
+      <div class="logo-text">BOSIM Lab</div>
+      <div class="logo-sub">AI-Driven Innovation</div>
+    </div>
+  </a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="index.html">Dashboard</a>
+    <a href="index.html#casebook">Casebook</a>
+    <a href="journey.html">Our Journey</a>
+    <a href="security-guide.html">Security Guide</a>
+    <a href="legal-ai.html" class="active">법령 AI</a>
+    <a href="painpoints.html">Pain Points</a>
+    <a href="practice.html">실습하기</a>
+    <a href="case-submit.html">케이스 등록</a>
+  </div>
+  <div class="nav-badge">
+    <span class="dot"></span>
+    법령 AI
+  </div>
+</div>
+</nav>
+
+<div class="container">
+
+<div class="hero">
+  <span class="badge">법령 AI 검색</span>
+  <h1>보훈 <span>법령</span>을 AI에게 물어보세요</h1>
+  <p>법령 검색 + AI 해석을 한 화면에서 확인합니다</p>
+  <div class="hero-note" id="modeNote">Gemini AI 단독 모드</div>
+</div>
+
+<!-- Search Box -->
+<div class="search-box">
+  <div class="search-input-row">
+    <input type="text" class="search-input" id="searchInput" placeholder="예: 국가유공자 요건, 보훈보상법 부양 요건" onkeydown="if(event.key==='Enter')doSearch()">
+    <button class="search-btn" id="searchBtn" onclick="doSearch()">검색</button>
+  </div>
+  <div class="search-hints">
+    <button class="search-hint" onclick="setQuery('국가유공자법')">국가유공자법</button>
+    <button class="search-hint" onclick="setQuery('보훈보상법')">보훈보상법</button>
+    <button class="search-hint" onclick="setQuery('공무상 상이 인정 요건')">공무상 상이 요건</button>
+    <button class="search-hint" onclick="setQuery('부양 심의 기준')">부양 심의 기준</button>
+    <button class="search-hint" onclick="setQuery('이의신청 절차')">이의신청 절차</button>
+  </div>
+</div>
+
+<!-- Results -->
+<div class="results" id="resultsGrid">
+  <!-- Left: Law Search -->
+  <div class="panel" id="lawPanel">
+    <div class="panel-header">
+      <div class="panel-title">법령 검색 결과</div>
+      <span class="panel-badge" id="lawBadge" style="background:var(--blue-light);color:var(--blue)">대기</span>
+    </div>
+    <div class="panel-body" id="lawBody">
+      <div class="panel-empty" id="lawEmpty">검색어를 입력하면 관련 법령이 표시됩니다</div>
+    </div>
+  </div>
+
+  <!-- Right: AI Response -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">AI 해석</div>
+      <span class="panel-badge" style="background:var(--accent-light);color:var(--accent)">Gemini 2.5</span>
+    </div>
+    <div class="panel-body" id="aiBody">
+      <div class="panel-empty" id="aiEmpty">검색어를 입력하면 AI가 법령을 해석해드립니다</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- Detail Modal -->
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-modal">
+    <div class="detail-header">
+      <div class="detail-title" id="detailTitle">법령 상세</div>
+      <button class="detail-close" onclick="closeDetail()">&times;</button>
+    </div>
+    <div class="detail-body" id="detailBody">
+      <div class="detail-loading"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
+    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/lawApi.js"></script>
+<script>
+(function() {
+  var SYSTEM_PROMPT = '당신은 대한민국 보훈심사위원회 법령 해석 전문 AI입니다. 국가유공자법, 보훈보상법 등 보훈 관련 법령에 대해 정확하고 이해하기 쉽게 설명합니다. 답변 시 관련 법령 조항을 명시하고, 실무 적용 시 유의사항도 함께 안내합니다. 개인정보는 요구하지 않습니다.';
+
+  var lawEnabled = window.BOSIM_CONFIG && window.BOSIM_CONFIG.features && window.BOSIM_CONFIG.features.LAW_API_ENABLED;
+
+  // Update mode note & layout
+  if (lawEnabled) {
+    document.getElementById('modeNote').textContent = '법령 API + Gemini AI 연동 모드';
+    document.getElementById('modeNote').style.background = 'var(--teal-light)';
+    document.getElementById('modeNote').style.color = 'var(--teal)';
+  } else {
+    // Solo mode: hide law panel, full width AI
+    document.getElementById('resultsGrid').classList.add('solo');
+    document.getElementById('lawPanel').style.display = 'none';
+  }
+
+  // Set query from hint
+  window.setQuery = function(q) {
+    document.getElementById('searchInput').value = q;
+    doSearch();
+  };
+
+  // Main search
+  window.doSearch = async function() {
+    var query = document.getElementById('searchInput').value.trim();
+    if (!query) return;
+
+    var btn = document.getElementById('searchBtn');
+    btn.disabled = true;
+    btn.textContent = '검색 중...';
+
+    // Clear previous
+    document.getElementById('aiBody').innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    if (document.getElementById('lawEmpty')) document.getElementById('lawEmpty').remove();
+    if (document.getElementById('aiEmpty')) document.getElementById('aiEmpty').remove();
+
+    // Parallel: law search + AI
+    var lawPromise = lawEnabled ? searchLawResults(query) : Promise.resolve(null);
+    var aiPromise = searchAI(query);
+
+    await Promise.all([lawPromise, aiPromise]);
+
+    btn.disabled = false;
+    btn.textContent = '검색';
+  };
+
+  // Law search
+  async function searchLawResults(query) {
+    var body = document.getElementById('lawBody');
+    body.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    document.getElementById('lawBadge').textContent = '검색 중';
+
+    var result = await window.LawApi.searchLaw(query, { display: '5' });
+
+    if (result.disabled || result.error) {
+      body.innerHTML = '<div class="law-disabled-msg">법령 API가 비활성화 상태입니다. AI 해석만 제공됩니다.</div>';
+      document.getElementById('lawBadge').textContent = '비활성';
+      return;
+    }
+
+    // Parse law.go.kr response
+    var laws = [];
+    if (result.LawSearch && result.LawSearch.law) {
+      laws = Array.isArray(result.LawSearch.law) ? result.LawSearch.law : [result.LawSearch.law];
+    }
+
+    if (laws.length === 0) {
+      body.innerHTML = '<div class="panel-empty">검색 결과가 없습니다</div>';
+      document.getElementById('lawBadge').textContent = '0건';
+      return;
+    }
+
+    document.getElementById('lawBadge').textContent = laws.length + '건';
+    body.innerHTML = laws.map(function(law) {
+      return '<div class="law-item" onclick="openDetail(\'' + esc(law.법령일련번호 || law.MST || '') + '\', \'' + escAttr(law.법령명한글 || law.법령명 || '법령') + '\')">' +
+        '<div class="law-item-title">' + esc(law.법령명한글 || law.법령명 || '-') + '</div>' +
+        '<div class="law-item-meta">' +
+          '<span class="law-item-badge">' + esc(law.법령구분 || law.법령종류 || '법률') + '</span>' +
+          '<span>' + esc(law.시행일자 || '') + '</span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // AI search
+  async function searchAI(query) {
+    var body = document.getElementById('aiBody');
+    var startTime = Date.now();
+
+    try {
+      var res = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: query,
+          systemPrompt: SYSTEM_PROMPT
+        })
+      });
+
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+
+      var data = await res.json();
+      var elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+
+      body.innerHTML = '<div class="ai-response">' + escHtml(data.text || '') + '</div>' +
+        '<div class="ai-response-meta">Gemini 2.5 Flash · ' + elapsed + '초</div>';
+    } catch (err) {
+      body.innerHTML = '<div style="color:var(--coral);font-size:13px">AI 응답 오류: ' + esc(err.message) + '</div>';
+    }
+  }
+
+  // Detail modal
+  window.openDetail = async function(id, title) {
+    if (!id) return;
+    document.getElementById('detailTitle').textContent = title;
+    document.getElementById('detailBody').innerHTML = '<div class="detail-loading"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+    document.getElementById('detailOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    var result = await window.LawApi.getLawDetail(id);
+
+    if (result.disabled) {
+      document.getElementById('detailBody').innerHTML = '<p style="color:var(--amber)">법령 상세 API가 비활성화 상태입니다.</p>';
+      return;
+    }
+
+    if (result.error) {
+      document.getElementById('detailBody').innerHTML = '<p style="color:var(--coral)">상세 조회 오류: ' + esc(result.error) + '</p>';
+      return;
+    }
+
+    // Render detail
+    var text = JSON.stringify(result, null, 2);
+    if (result.법령 && result.법령.조문 && result.법령.조문.조문단위) {
+      var articles = Array.isArray(result.법령.조문.조문단위) ? result.법령.조문.조문단위 : [result.법령.조문.조문단위];
+      text = articles.map(function(a) {
+        return (a.조문번호 || '') + ' ' + (a.조문제목 || '') + '\n' + (a.조문내용 || '');
+      }).join('\n\n');
+    }
+
+    document.getElementById('detailBody').textContent = text;
+  };
+
+  window.closeDetail = function() {
+    document.getElementById('detailOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  document.getElementById('detailOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeDetail();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeDetail();
+  });
+
+  // Utils
+  function esc(s) { if (!s) return ''; var d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
+  function escAttr(s) { return esc(s).replace(/'/g, '&#39;'); }
+  function escHtml(s) { return esc(s).replace(/\n/g, '<br>'); }
+
+})();
+</script>
+
+</body>
+</html>
