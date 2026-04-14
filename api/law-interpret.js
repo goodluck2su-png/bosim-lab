@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'query is required' });
     }
 
-    const url = `https://www.law.go.kr/DRF/lawSearch.do?OC=${encodeURIComponent(OC)}&target=expc&type=JSON&query=${encodeURIComponent(query)}&display=${encodeURIComponent(display)}`;
+    const url = `http://www.law.go.kr/DRF/lawSearch.do?OC=${encodeURIComponent(OC)}&target=expc&type=JSON&query=${encodeURIComponent(query)}&display=${encodeURIComponent(display)}`;
 
     const response = await fetch(url);
 
