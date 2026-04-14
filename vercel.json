@@ -1,0 +1,8 @@
+{
+  "regions": ["icn1"],
+  "functions": {
+    "api/law-search.js": { "maxDuration": 10 },
+    "api/law-detail.js": { "maxDuration": 10 },
+    "api/law-interpret.js": { "maxDuration": 10 }
+  }
+}
