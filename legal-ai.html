@@ -213,6 +213,17 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   </div>
 </div>
 
+<!-- 해석례 섹션 -->
+<div class="panel" id="interpretPanel" style="margin-bottom:48px;display:none;">
+  <div class="panel-header">
+    <div class="panel-title">법령 해석례</div>
+    <span class="panel-badge" id="interpretBadge" style="background:var(--amber-light);color:var(--amber)">대기</span>
+  </div>
+  <div class="panel-body" id="interpretBody">
+    <div class="panel-empty">검색어를 입력하면 관련 해석례가 표시됩니다</div>
+  </div>
+</div>
+
 </div>
 
 <!-- Detail Modal -->
@@ -244,6 +255,8 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   var lawEnabled = window.BOSIM_CONFIG && window.BOSIM_CONFIG.features && window.BOSIM_CONFIG.features.LAW_API_ENABLED;
 
   // Update mode note & layout
+  var interpretEnabled = window.BOSIM_CONFIG && window.BOSIM_CONFIG.features && window.BOSIM_CONFIG.features.LAW_INTERPRET;
+
   if (lawEnabled) {
     document.getElementById('modeNote').textContent = '법령 API + Gemini AI 연동 모드';
     document.getElementById('modeNote').style.background = 'var(--teal-light)';
@@ -274,11 +287,12 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     if (document.getElementById('lawEmpty')) document.getElementById('lawEmpty').remove();
     if (document.getElementById('aiEmpty')) document.getElementById('aiEmpty').remove();
 
-    // Parallel: law search + AI
+    // Parallel: law search + AI + interpret
     var lawPromise = lawEnabled ? searchLawResults(query) : Promise.resolve(null);
     var aiPromise = searchAI(query);
+    var interpretPromise = interpretEnabled ? searchInterpretResults(query) : Promise.resolve(null);
 
-    await Promise.all([lawPromise, aiPromise]);
+    await Promise.all([lawPromise, aiPromise, interpretPromise]);
 
     btn.disabled = false;
     btn.textContent = '검색';
@@ -348,6 +362,66 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
       body.innerHTML = '<div style="color:var(--coral);font-size:13px">AI 응답 오류: ' + esc(err.message) + '</div>';
     }
   }
+
+  // Interpret search
+  async function searchInterpretResults(query) {
+    var panel = document.getElementById('interpretPanel');
+    var body = document.getElementById('interpretBody');
+    panel.style.display = 'block';
+    body.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    document.getElementById('interpretBadge').textContent = '검색 중';
+
+    var result = await window.LawApi.searchInterpret(query);
+
+    if (result.disabled || result.error) {
+      body.innerHTML = '<div class="law-disabled-msg">해석례 API가 비활성화 상태입니다.</div>';
+      document.getElementById('interpretBadge').textContent = '비활성';
+      return;
+    }
+
+    var items = [];
+    if (result.Expc && result.Expc.expc) {
+      items = Array.isArray(result.Expc.expc) ? result.Expc.expc : [result.Expc.expc];
+    }
+
+    if (items.length === 0) {
+      body.innerHTML = '<div class="panel-empty">관련 해석례가 없습니다</div>';
+      document.getElementById('interpretBadge').textContent = '0건';
+      return;
+    }
+
+    var total = result.Expc.totalCnt || items.length;
+    document.getElementById('interpretBadge').textContent = total + '건';
+
+    body.innerHTML = items.map(function(item) {
+      return '<div class="law-item" onclick="openInterpretDetail(\'' + esc(item.법령해석례일련번호 || '') + '\', \'' + escAttr(item.안건명 || '') + '\')">' +
+        '<div class="law-item-title">' + esc(item.안건명 || '-') + '</div>' +
+        '<div class="law-item-meta">' +
+          '<span class="law-item-badge" style="background:var(--amber-light);color:var(--amber)">' + esc(item.회신기관명 || '법제처') + '</span>' +
+          '<span>' + esc(item.회신일자 || '') + '</span>' +
+          '<span>' + esc(item.안건번호 || '') + '</span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Interpret detail modal
+  window.openInterpretDetail = async function(id, title) {
+    if (!id) return;
+    document.getElementById('detailTitle').textContent = title;
+    document.getElementById('detailBody').innerHTML = '<div class="detail-loading"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+    document.getElementById('detailOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    try {
+      var res = await fetch('/api/law-interpret?query=' + encodeURIComponent(title) + '&display=1');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      document.getElementById('detailBody').textContent = JSON.stringify(data, null, 2);
+    } catch (e) {
+      document.getElementById('detailBody').innerHTML = '<p style="color:var(--coral)">해석례 조회 오류: ' + esc(e.message) + '</p>';
+    }
+  };
 
   // Detail modal
   window.openDetail = async function(id, title) {
