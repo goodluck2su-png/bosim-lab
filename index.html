@@ -119,6 +119,8 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .cb-appeal { background:var(--amber-light); color:var(--amber); }
 .cb-common { background:var(--teal-light); color:var(--teal); }
 .cb-improve { background:var(--teal-light); color:var(--teal); font-family:var(--mono); }
+.cb-highlight { background:rgba(233,69,96,.12); color:#e94560; font-weight:700; }
+.case-top.cat-highlight { background:#e94560; }
 .case-title { font-size:15px; font-weight:700; line-height:1.4; margin-bottom:6px; }
 .case-desc { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:16px; }
 .case-footer { display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--border); }
@@ -147,6 +149,7 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .modal-top.mt-dep { background:var(--coral); }
 .modal-top.mt-appeal { background:var(--amber); }
 .modal-top.mt-common { background:var(--teal); }
+.modal-top.mt-highlight { background:#e94560; }
 .modal-header { padding:28px 32px 0; display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
 .modal-header-left { flex:1; }
 .modal-title { font-size:20px; font-weight:700; line-height:1.3; margin-bottom:6px; }
@@ -255,13 +258,13 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   <div class="metrics">
     <div class="metric m-purple">
       <div class="metric-label">실무 적용 케이스</div>
-      <div class="metric-value">23</div>
-      <div class="metric-change up">+8 this month</div>
+      <div class="metric-value">25</div>
+      <div class="metric-change up">+10 this month</div>
     </div>
     <div class="metric m-teal">
       <div class="metric-label">평균 효율 개선</div>
-      <div class="metric-value">37%</div>
-      <div class="metric-change up">처리시간 기준</div>
+      <div class="metric-value">83%</div>
+      <div class="metric-change up">시간 절감 기준</div>
     </div>
     <div class="metric m-blue">
       <div class="metric-label">AI 인식 점수</div>
@@ -315,7 +318,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 <div class="section-divider" id="casebook">
   <h2>Casebook</h2>
   <div class="line"></div>
-  <span class="case-count">23 cases</span>
+  <span class="case-count">25 cases · BOSIM Lab 실증 케이스 기반 · 실제 업무 적용 완료</span>
 </div>
 
 <div class="filters">
@@ -327,6 +330,44 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 </div>
 
 <div class="cases">
+  <div class="case-card" data-category="highlight" data-case-id="case-bash-001">
+    <div class="case-top cat-highlight"></div>
+    <div class="case-body">
+      <div class="case-badges">
+        <span class="case-badge cb-highlight">⭐ 실증 케이스</span>
+        <span class="case-badge cb-improve">-83%</span>
+      </div>
+      <div class="case-title">ZIP 다중 중첩 파일 자동 해제 & 일괄 인쇄</div>
+      <div class="case-desc">심사 문서가 ZIP 중첩 구조로 압축되어 수동 해제 시 최대 800페이지 분량 처리 필요. Claude Code 기반 BASH 스크립트로 자동화했습니다.</div>
+      <div class="case-footer">
+        <div class="case-author">
+          <div class="author-avatar" style="background:var(--coral)">박</div>
+          <span class="author-info">박승정 · 심사1과</span>
+        </div>
+        <span class="case-time">35분 → 6분 (83% 절감)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card" data-category="highlight" data-case-id="case-flex-002">
+    <div class="case-top cat-highlight"></div>
+    <div class="case-body">
+      <div class="case-badges">
+        <span class="case-badge cb-highlight">⭐ 실증 케이스</span>
+        <span class="case-badge cb-improve">-83%</span>
+      </div>
+      <div class="case-title">출퇴근 유연근무 신청 사유 AI 초안 작성</div>
+      <div class="case-desc">유연근무 신청 시 사유 문구를 매번 새로 작성하는 부담. ChatGPT 개인 계정으로 비식별 지침을 따라 공문체 초안을 생성합니다.</div>
+      <div class="case-footer">
+        <div class="case-author">
+          <div class="author-avatar" style="background:var(--coral)">박</div>
+          <span class="author-info">박승정 · 심사1과</span>
+        </div>
+        <span class="case-time">30분 → 5분 (83% 절감)</span>
+      </div>
+    </div>
+  </div>
+
   <div class="case-card" data-category="req" data-case-id="1">
     <div class="case-top cat-req"></div>
     <div class="case-body">
@@ -881,6 +922,41 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 
   /* ── Case Data ── */
   const caseData = {
+    'case-bash-001': {
+      title: 'ZIP 다중 중첩 파일 자동 해제 & 일괄 인쇄',
+      author: '박승정', dept: '심사1과', avatarColor: 'var(--coral)',
+      category: 'highlight', categoryLabel: '⭐ 실증 케이스 · 업무자동화', badgeClass: 'cb-highlight',
+      improve: '-83%',
+      desc: '심사 문서가 ZIP > ZIP > ZIP 다중 중첩으로 압축되어 있어 수동 해제 시 최대 800페이지 분량 처리 필요. 사건 1건 준비에 약 35분 소요, 파일 누락 위험도 존재했습니다. Claude와 3회 반복 대화로 BASH 스크립트를 작성하여 압축 자동 해제 → 파일 목록 생성 → 인쇄 대기열 전송까지 전 과정을 자동화했습니다.',
+      table: [
+        ['처리시간', '35분', '6분', '-83%'],
+        ['파일 누락 위험', '존재', '없음', '제거'],
+        ['전문 지식', '불필요', '불필요', '유지']
+      ],
+      tools: [
+        { name: 'Claude Code', color: 'var(--accent)' },
+        { name: 'BASH 스크립트', color: 'var(--teal)' }
+      ],
+      prompt: '다음 요구사항으로 BASH 스크립트를 작성해주세요.\n\n1. 지정 폴더의 ZIP 파일을 재귀적으로 해제 (ZIP 내부의 ZIP까지 모두)\n2. 해제된 모든 PDF·이미지 파일 목록을 정렬하여 생성\n3. 인쇄 대기열에 순서대로 전송\n4. 에러 발생 시 어느 파일에서 문제인지 명확히 출력\n\n환경: 업무망 로컬 실행, Windows Git Bash',
+      insight: '"이게 된다고요?" — 첫 시연 후 동료 반응. 코딩 지식 없이도 Claude와의 대화만으로 업무 자동화가 가능하다는 것을 팀 내부에 증명한 사례. 팀 공유 완료 후 실제 업무에 사용 중이며, 업무망(폐쇄망) 로컬 실행으로 보안 우려도 없음.'
+    },
+    'case-flex-002': {
+      title: '출퇴근 유연근무 신청 사유 AI 초안 작성',
+      author: '박승정', dept: '심사1과', avatarColor: 'var(--coral)',
+      category: 'highlight', categoryLabel: '⭐ 실증 케이스 · 행정문서', badgeClass: 'cb-highlight',
+      improve: '-83%',
+      desc: '유연근무 신청 시 사유 문구를 매번 새로 고민. 규정 확인과 사유 쓰기에 약 30분 소요, 공문체에 맞는 문구 작성이 어려웠습니다. ChatGPT 개인 계정으로 개인정보 미포함 수칙 철저히 준수하며 "공무원 유연근무 신청 사유 3~4문장, 공문체 어조" 프롬프트로 초안 생성 → 수정 후 제출. 동료 2~3명에게 자발적으로 공유되며 확산.',
+      table: [
+        ['처리시간', '30분', '5분', '-83%'],
+        ['문체 일관성', '편차 있음', '공문체 유지', '향상'],
+        ['개인정보 노출', '없음', '없음(비식별)', '유지']
+      ],
+      tools: [
+        { name: 'ChatGPT', color: '#10A37F' }
+      ],
+      prompt: '당신은 공공기관 행정 문서 작성 전문가입니다.\n\n아래 조건으로 공무원 유연근무 신청 사유를 3~4문장으로 작성해주세요.\n- 사유 유형: [시차출퇴근 / 재택근무 / 기타]\n- 기간: [시작일~종료일]\n- 필요성: [간단한 상황 설명 — 개인정보 미포함]\n- 어조: 공문체, 정중하게\n\n개인 식별 정보(이름, 주민번호, 부서 세부 정보)는 포함하지 않습니다.',
+      insight: '"심사 업무 외에도 행정 잡무에도 쓸 수 있네요" — 동료 반응. 개인 계정 ChatGPT를 쓰되 비식별 수칙을 철저히 준수한 안전한 활용 사례. 개인 활용에서 시작하여 동료 자발적 확산으로 이어진 점이 인상적.'
+    },
     '1': {
       title: '이의신청 검토 AI 보조',
       author: '손숙', dept: '심사1과', avatarColor: 'var(--accent)',
@@ -1311,7 +1387,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   const modalPrompt = document.getElementById('modalPrompt');
   const modalInsight = document.getElementById('modalInsight');
 
-  const topClassMap = { req:'mt-req', dep:'mt-dep', appeal:'mt-appeal', common:'mt-common' };
+  const topClassMap = { req:'mt-req', dep:'mt-dep', appeal:'mt-appeal', common:'mt-common', highlight:'mt-highlight' };
 
   function openModal(id) {
     const d = caseData[id];
