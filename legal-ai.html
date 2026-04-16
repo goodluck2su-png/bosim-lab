@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BOSIM Lab - 법령 AI</title>
+<title>BOSIM Lab - 보심 AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -61,7 +61,33 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .legal-tab.active { border-color:var(--accent); background:var(--accent); color:#fff; }
 .legal-tab-sub { font-size:11px; font-weight:400; margin-top:2px; opacity:.7; }
 
-/* Tab Content */
+/* Top-level Tabs (AI 실습 / 법령 검색) */
+.top-tabs { display:flex; gap:8px; margin:24px 0 20px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:6px; }
+.top-tab { flex:1; padding:14px; border-radius:10px; font-size:15px; font-weight:700; text-align:center; cursor:pointer; background:transparent; color:var(--text-secondary); transition:all .2s; border:none; font-family:var(--sans); }
+.top-tab:hover { color:var(--accent); }
+.top-tab.active { background:var(--accent); color:#fff; }
+.top-content { display:none; }
+.top-content.active { display:block; }
+
+/* AI 실습 카드 */
+.practice-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:48px; }
+.practice-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:28px 24px; text-align:left; transition:all .2s; display:flex; flex-direction:column; }
+.practice-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.06); border-color:var(--accent); }
+.practice-card-icon { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:16px; }
+.practice-card-icon.pc-1 { background:var(--accent-light); color:var(--accent); }
+.practice-card-icon.pc-2 { background:var(--teal-light); color:var(--teal); }
+.practice-card-icon.pc-3 { background:var(--blue-light); color:var(--blue); }
+.practice-card-title { font-size:17px; font-weight:700; margin-bottom:8px; }
+.practice-card-desc { font-size:13px; color:var(--text-secondary); line-height:1.7; margin-bottom:20px; flex:1; }
+.practice-card-btn { display:inline-flex; align-items:center; justify-content:space-between; padding:11px 18px; border-radius:10px; font-size:13px; font-weight:600; border:none; cursor:pointer; text-decoration:none; transition:all .2s; font-family:var(--sans); }
+.practice-card-btn.pcb-1 { background:var(--accent); color:#fff; }
+.practice-card-btn.pcb-1:hover { background:#4340A0; }
+.practice-card-btn.pcb-2 { background:var(--teal); color:#fff; }
+.practice-card-btn.pcb-2:hover { background:#0B5A47; }
+.practice-card-btn.pcb-3 { background:var(--blue); color:#fff; }
+.practice-card-btn.pcb-3:hover { background:#0F4680; }
+
+/* Tab Content (sub-tabs) */
 .tab-content { display:none; }
 .tab-content.active { display:block; }
 
@@ -156,6 +182,8 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   .search-input-row { flex-direction:column; }
   .action-btn { width:100%; }
   .legal-tabs { flex-direction:column; gap:4px; }
+  .top-tabs { flex-direction:column; }
+  .practice-cards { grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -172,14 +200,11 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   </a>
   <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
   <div class="nav-links">
-    <a href="index.html">Dashboard</a>
-    <a href="index.html#casebook">Casebook</a>
-    <a href="journey.html">Our Journey</a>
-    <a href="security-guide.html">Security Guide</a>
-    <a href="legal-ai.html" class="active">법령 AI</a>
-    <a href="painpoints.html">Pain Points</a>
-    <a href="practice.html">실습하기</a>
-    <a href="case-submit.html">케이스 등록</a>
+    <a href="index.html">홈</a>
+    <a href="journey.html">기록</a>
+    <a href="index.html#casebook">케이스</a>
+    <a href="legal-ai.html" class="active">보심 AI</a>
+    <a href="notice.html">소식</a>
   </div>
   <div class="nav-badge">
     <span class="dot"></span>
@@ -191,13 +216,46 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 <div class="container">
 
 <div class="hero">
-  <span class="badge">법령 AI 도구</span>
-  <h1>보훈 <span>법령</span>을 AI에게 물어보세요</h1>
-  <p>법령 검색, 비식별화, 서식 진단을 한 곳에서 처리합니다</p>
+  <span class="badge">보심 AI</span>
+  <h1>보심 AI — <span>실습부터 법령 검색까지</span></h1>
+  <p>AI 실습과 법령 검색·비식별화·서식 진단을 한 곳에서 처리합니다</p>
   <div class="hero-note" id="modeNote">Gemini AI 단독 모드</div>
 </div>
 
-<!-- ════ Tabs ════ -->
+<!-- ════ Top-Level Tabs ════ -->
+<div class="top-tabs">
+  <button class="top-tab" onclick="switchTopTab('practice')">AI 실습</button>
+  <button class="top-tab active" onclick="switchTopTab('legal')">법령 검색</button>
+</div>
+
+<!-- ════ Top 1: AI 실습 ════ -->
+<div class="top-content" id="top-practice">
+  <div class="practice-cards">
+    <div class="practice-card">
+      <div class="practice-card-icon pc-1">1</div>
+      <div class="practice-card-title">보훈심사 AI 실습</div>
+      <div class="practice-card-desc">단계별로 AI와 직접 대화하며 실무 적용법을 익힙니다. 기초 체험부터 프롬프트 작성, 보안 점검, 카드뉴스·음악 생성까지 5개 실습을 제공합니다.</div>
+      <a href="practice.html" class="practice-card-btn pcb-1">실습 시작하기 &rarr;</a>
+    </div>
+    <div class="practice-card">
+      <div class="practice-card-icon pc-2">2</div>
+      <div class="practice-card-title">AI 실습 생성기</div>
+      <div class="practice-card-desc">주제를 선택하면 AI가 맞춤형 실습 가이드를 자동 생성합니다. 검증 포인트, 폐쇄망 대안, 법적 근거까지 포함된 실습 가이드를 받을 수 있습니다.</div>
+      <a href="practice-generator.html" class="practice-card-btn pcb-2">생성기 열기 &rarr;</a>
+    </div>
+    <div class="practice-card">
+      <div class="practice-card-icon pc-3">3</div>
+      <div class="practice-card-title">법령 AI 직접 사용</div>
+      <div class="practice-card-desc">법령 검색·비식별화·서식 진단을 바로 사용합니다. 실무에서 자주 쓰는 보훈 법령 검색, 개인정보 마스킹, 서식 진단 도구를 한 번에 제공합니다.</div>
+      <button class="practice-card-btn pcb-3" onclick="switchTopTab('legal')">법령 검색 시작 &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ Top 2: 법령 검색 ════ -->
+<div class="top-content active" id="top-legal">
+
+<!-- ════ Sub Tabs ════ -->
 <div class="legal-tabs">
   <div class="legal-tab active" onclick="switchLegalTab('search')">
     법령 검색
@@ -308,9 +366,11 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     </div>
   </div>
 
-</div>
+</div><!-- /tab-audit -->
 
-</div>
+</div><!-- /top-legal -->
+
+</div><!-- /container -->
 
 <!-- Detail Modal -->
 <div class="detail-overlay" id="detailOverlay">
@@ -352,7 +412,18 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     document.getElementById('lawPanel').style.display = 'none';
   }
 
-  /* ── Tab Switching ── */
+  /* ── Top-level Tab Switching ── */
+  window.switchTopTab = function(tabId) {
+    var tabs = document.querySelectorAll('.top-tab');
+    var ids = ['practice', 'legal'];
+    tabs.forEach(function(t, i) { t.classList.toggle('active', ids[i] === tabId); });
+    document.querySelectorAll('.top-content').forEach(function(c) {
+      c.classList.toggle('active', c.id === 'top-' + tabId);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  /* ── Sub Tab Switching ── */
   window.switchLegalTab = function(tabId) {
     document.querySelectorAll('.legal-tab').forEach(function(t, i) {
       var ids = ['search', 'deidentify', 'audit'];

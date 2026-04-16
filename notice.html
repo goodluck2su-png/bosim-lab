@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOSIM Lab - 소식</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --text: #1a1a2e;
+  --text-secondary: #6B6B7B;
+  --text-tertiary: #9B9BAB;
+  --accent: #534AB7;
+  --accent-light: #EEEDFE;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --blue: #185FA5;
+  --blue-light: #E8EEF8;
+  --border: rgba(0,0,0,0.08);
+  --radius: 16px;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Noto Sans KR', -apple-system, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav */
+nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; height:60px; }
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+.logo-mark { width:32px; height:32px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; font-weight:700; }
+.logo-text { font-weight:700; font-size:15px; letter-spacing:-0.3px; }
+.logo-sub { font-size:11px; color:var(--text-tertiary); font-weight:400; }
+.nav-links { display:flex; gap:4px; }
+.nav-links a { padding:8px 14px; font-size:13px; color:var(--text-secondary); text-decoration:none; border-radius:8px; font-weight:500; transition:all .2s; }
+.nav-links a:hover, .nav-links a.active { background:var(--accent-light); color:var(--accent); }
+.nav-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); color:var(--text-secondary); }
+.nav-badge .dot { width:6px; height:6px; border-radius:50%; background:#0F6E56; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.nav-toggle { display:none; width:36px; height:36px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; align-items:center; justify-content:center; font-size:18px; color:var(--text-secondary); }
+
+/* Page Header */
+.page-header { padding:48px 0 32px; }
+.page-header h1 { font-size:28px; font-weight:700; letter-spacing:-0.5px; }
+.page-header h1 span { color:var(--accent); }
+.page-header p { font-size:14px; color:var(--text-secondary); margin-top:6px; }
+
+/* Section Divider */
+.section-header { display:flex; align-items:center; gap:16px; margin:40px 0 20px; }
+.section-header:first-of-type { margin-top:0; }
+.section-header h2 { font-size:20px; font-weight:700; white-space:nowrap; }
+.section-header .line { flex:1; height:1px; background:var(--border); }
+.section-count { font-family:var(--mono); font-size:13px; color:var(--text-tertiary); }
+
+/* Notice Cards */
+.notice-list { margin-bottom:40px; }
+.notice-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px 24px; margin-bottom:12px; transition:all .2s; }
+.notice-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.04); }
+.notice-date { font-family:var(--mono); font-size:12px; color:var(--text-tertiary); margin-bottom:6px; }
+.notice-title { font-size:15px; font-weight:700; margin-bottom:4px; }
+.notice-desc { font-size:13px; color:var(--text-secondary); line-height:1.6; }
+.notice-badge { display:inline-block; padding:3px 10px; border-radius:6px; font-size:10px; font-weight:600; margin-right:6px; }
+.nb-new { background:var(--coral-light); color:var(--coral); }
+.nb-complete { background:var(--teal-light); color:var(--teal); }
+.nb-kickoff { background:var(--accent-light); color:var(--accent); }
+
+/* Session Cards */
+.session-list { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:40px; }
+.session-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; transition:all .2s; }
+.session-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.04); }
+.session-num { font-family:var(--mono); font-size:11px; color:var(--accent); font-weight:700; margin-bottom:4px; }
+.session-title { font-size:15px; font-weight:700; margin-bottom:6px; }
+.session-date { font-size:12px; color:var(--text-tertiary); margin-bottom:14px; }
+.session-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:8px; font-size:12px; font-weight:600; border:1px solid var(--border); background:var(--surface); color:var(--text-secondary); cursor:pointer; transition:all .2s; text-decoration:none; font-family:var(--sans); }
+.session-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-light); }
+
+/* Security Guide Card */
+.sg-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:28px; margin-bottom:48px; display:flex; gap:24px; align-items:flex-start; }
+.sg-icon { width:56px; height:56px; border-radius:14px; background:var(--teal-light); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+.sg-content { flex:1; }
+.sg-title { font-size:17px; font-weight:700; margin-bottom:6px; }
+.sg-collab { font-size:12px; color:var(--teal); font-weight:600; margin-bottom:8px; }
+.sg-desc { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:14px; }
+.sg-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.sg-btn { display:inline-flex; align-items:center; gap:6px; padding:10px 20px; border-radius:10px; font-size:13px; font-weight:600; text-decoration:none; transition:all .2s; font-family:var(--sans); }
+.sg-btn-primary { background:var(--teal); color:#fff; border:none; }
+.sg-btn-primary:hover { background:#0B5A47; }
+.sg-btn-secondary { background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); }
+.sg-btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+
+/* Footer */
+footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
+
+@media (max-width:768px) {
+  .nav-inner { flex-wrap:wrap; height:auto; padding:10px 0; }
+  .nav-links { display:none; width:100%; flex-direction:column; gap:2px; padding-top:8px; }
+  .nav-links.open { display:flex; }
+  .nav-toggle { display:flex; }
+  .nav-badge { display:none; }
+  .page-header h1 { font-size:22px; }
+  .session-list { grid-template-columns:1fr; }
+  .sg-card { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container nav-inner">
+  <a href="index.html" class="logo">
+    <div class="logo-mark">BL</div>
+    <div>
+      <div class="logo-text">BOSIM Lab</div>
+      <div class="logo-sub">AI-Driven Innovation</div>
+    </div>
+  </a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="index.html">홈</a>
+    <a href="journey.html">기록</a>
+    <a href="index.html#casebook">케이스</a>
+    <a href="legal-ai.html">보심 AI</a>
+    <a href="notice.html" class="active">소식</a>
+  </div>
+  <div class="nav-badge">
+    <span class="dot"></span>
+    소식
+  </div>
+</div>
+</nav>
+
+<div class="container">
+
+<div class="page-header">
+  <h1>BOSIM Lab <span>소식</span></h1>
+  <p>공지사항, 세션 자료, 협업 산출물을 확인합니다</p>
+</div>
+
+<!-- ════ 섹션 1: 공지사항 ════ -->
+<div class="section-header">
+  <h2>공지사항</h2>
+  <div class="line"></div>
+  <span class="section-count">3건</span>
+</div>
+
+<div class="notice-list">
+  <div class="notice-card">
+    <div class="notice-date">2026.04.11</div>
+    <div class="notice-title">
+      <span class="notice-badge nb-new">NEW</span>
+      세션 2 완료 — AI 이미지·영상 제작 도구 실습
+    </div>
+    <div class="notice-desc">Bing Image Creator, Suno AI, Runway 등 생성형 AI 도구를 활용한 이미지·영상 제작 실습을 진행했습니다. 보훈 홍보 카드뉴스 제작 프로젝트도 시작했습니다.</div>
+  </div>
+
+  <div class="notice-card">
+    <div class="notice-date">2026.03.28</div>
+    <div class="notice-title">
+      <span class="notice-badge nb-complete">완료</span>
+      세션 1 완료 — 생성형 AI 기초 및 보훈심사 활용 방향
+    </div>
+    <div class="notice-desc">ChatGPT, Claude, Gemini 등 주요 생성형 AI 도구의 기초 사용법을 학습하고, 보훈심사 업무에 AI를 적용할 수 있는 영역을 탐색했습니다.</div>
+  </div>
+
+  <div class="notice-card">
+    <div class="notice-date">2026.03.14</div>
+    <div class="notice-title">
+      <span class="notice-badge nb-kickoff">킥오프</span>
+      BOSIM Lab 킥오프 — 국가보훈부 AI 연구모임 선정
+    </div>
+    <div class="notice-desc">보훈심사위원회 AI 연구모임 'BOSIM Lab'이 국가보훈부 2026년 AI 연구모임으로 공식 선정되었습니다. 15명의 실무자가 참여하며, 3월~7월 5개월간 운영됩니다.</div>
+  </div>
+</div>
+
+<!-- ════ 섹션 2: 세션 자료 ════ -->
+<div class="section-header">
+  <h2>세션 자료</h2>
+  <div class="line"></div>
+  <span class="section-count">2건</span>
+</div>
+
+<div class="session-list">
+  <div class="session-card">
+    <div class="session-num">SESSION 2</div>
+    <div class="session-title">AI 이미지·영상 만들어보기</div>
+    <div class="session-date">2026.04.11</div>
+    <a href="#" class="session-btn">PPT 다운로드</a>
+  </div>
+
+  <div class="session-card">
+    <div class="session-num">SESSION 1</div>
+    <div class="session-title">생성형 AI 기초</div>
+    <div class="session-date">2026.03.28</div>
+    <a href="#" class="session-btn">PPT 다운로드</a>
+  </div>
+</div>
+
+<!-- ════ 섹션 3: Security Guide ════ -->
+<div class="section-header">
+  <h2>Security Guide</h2>
+  <div class="line"></div>
+</div>
+
+<div class="sg-card">
+  <div class="sg-icon">
+    <img src="images/mcee_logo.svg" alt="기후에너지환경부" style="height:32px;object-fit:contain;">
+  </div>
+  <div class="sg-content">
+    <div class="sg-title">AI 보안 가이드라인 v1.0</div>
+    <div class="sg-collab">이미정 (기후에너지환경부 4급) 협업 산출물</div>
+    <div class="sg-desc">공공기관 실무자가 생성형 AI를 안전하게 활용할 수 있도록, 입력 데이터 보안 규칙, AI 도구 사용 원칙, Do/Don't 가이드, 사용 전 체크리스트를 포함한 보안 가이드라인입니다.</div>
+    <div class="sg-actions">
+      <a href="#" class="sg-btn sg-btn-primary">PDF 다운로드</a>
+      <a href="security-guide.html" class="sg-btn sg-btn-secondary">웹에서 보기</a>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
+    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  </div>
+</footer>
+
+</body>
+</html>
