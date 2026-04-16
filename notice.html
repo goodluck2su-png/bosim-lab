@@ -82,9 +82,10 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .session-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-light); }
 
 /* Security Guide Card */
-.sg-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:28px; margin-bottom:48px; display:flex; gap:24px; align-items:flex-start; }
-.sg-icon { width:56px; height:56px; border-radius:14px; background:var(--teal-light); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
-.sg-content { flex:1; }
+.sg-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:28px; margin-bottom:48px; }
+.sg-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.sg-header img { width:32px; height:32px; object-fit:contain; flex-shrink:0; }
+.sg-org { font-size:13px; font-weight:700; color:var(--text); }
 .sg-title { font-size:17px; font-weight:700; margin-bottom:6px; }
 .sg-collab { font-size:12px; color:var(--teal); font-weight:600; margin-bottom:8px; }
 .sg-desc { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:14px; }
@@ -106,7 +107,6 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   .nav-badge { display:none; }
   .page-header h1 { font-size:22px; }
   .session-list { grid-template-columns:1fr; }
-  .sg-card { flex-direction:column; }
 }
 </style>
 </head>
@@ -209,17 +209,16 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 </div>
 
 <div class="sg-card">
-  <div class="sg-icon">
-    <img src="images/mcee_logo.svg" alt="기후에너지환경부" style="height:32px;object-fit:contain;">
+  <div class="sg-header">
+    <img src="images/mcee_logo.svg" alt="기후에너지환경부">
+    <span class="sg-org">기후에너지환경부</span>
   </div>
-  <div class="sg-content">
-    <div class="sg-title">AI 보안 가이드라인 v1.0</div>
-    <div class="sg-collab">이미정 (기후에너지환경부 4급) 협업 산출물</div>
-    <div class="sg-desc">공공기관 실무자가 생성형 AI를 안전하게 활용할 수 있도록, 입력 데이터 보안 규칙, AI 도구 사용 원칙, Do/Don't 가이드, 사용 전 체크리스트를 포함한 보안 가이드라인입니다.</div>
-    <div class="sg-actions">
-      <a href="#" class="sg-btn sg-btn-primary">PDF 다운로드</a>
-      <a href="security-guide.html" class="sg-btn sg-btn-secondary">웹에서 보기</a>
-    </div>
+  <div class="sg-title">AI 보안 가이드라인 v1.0</div>
+  <div class="sg-collab">이미정 (4급) 협업 산출물</div>
+  <div class="sg-desc">공공기관 실무자가 생성형 AI를 안전하게 활용할 수 있도록, 입력 데이터 보안 규칙, AI 도구 사용 원칙, Do/Don't 가이드, 사용 전 체크리스트를 포함한 보안 가이드라인입니다.</div>
+  <div class="sg-actions">
+    <a href="#" class="sg-btn sg-btn-primary">PDF 다운로드</a>
+    <a href="security-guide.html" class="sg-btn sg-btn-secondary">웹에서 보기</a>
   </div>
 </div>
 
