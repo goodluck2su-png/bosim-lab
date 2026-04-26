@@ -108,6 +108,7 @@ export default async function handler(req, res) {
     const total = count ? parseInt(count.split('/')[1]) : data.length;
     return res.status(200).json({ data, total });
   } catch (err) {
-    return res.status(500).json({ error: 'Internal error', detail: err.message, stack: err.stack });
+    const debugUrl = `${SUPABASE_URL}/rest/v1/${table}`;
+    return res.status(500).json({ error: 'Internal error', detail: err.message, stack: err.stack, debugUrl, hasKey: !!SERVICE_KEY });
   }
 }
