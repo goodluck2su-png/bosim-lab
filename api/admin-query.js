@@ -99,7 +99,8 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      return res.status(response.status).json({ error: 'Query failed' });
+      const errText = await response.text();
+      return res.status(response.status).json({ error: 'Query failed', detail: errText, url });
     }
 
     const data = await response.json();
@@ -107,6 +108,6 @@ export default async function handler(req, res) {
     const total = count ? parseInt(count.split('/')[1]) : data.length;
     return res.status(200).json({ data, total });
   } catch (err) {
-    return res.status(500).json({ error: 'Internal error' });
+    return res.status(500).json({ error: 'Internal error', detail: err.message, stack: err.stack });
   }
 }
