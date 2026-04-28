@@ -21,9 +21,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // API temporarily disabled
-  return res.status(503).json({ error: 'Service temporarily unavailable' });
-
   const GEMINI_KEY = process.env.GEMINI_API_KEY;
   if (!GEMINI_KEY) {
     return res.status(500).json({ error: 'API key not configured' });

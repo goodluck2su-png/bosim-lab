@@ -269,6 +269,10 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     서식 진단
     <div class="legal-tab-sub">개인정보 수집 적합성</div>
   </div>
+          <div class="legal-tab" onclick="switchLegalTab('compare')">
+            이의신청 비교
+            <div class="legal-tab-sub">처분시점 법령 자동 비교</div>
+          </div>
 </div>
 
 <!-- ════ Tab 1: 법령 검색 ════ -->
@@ -368,6 +372,39 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 
 </div><!-- /tab-audit -->
 
+          <!-- Tab 4: 이의신청 법령 비교 -->
+          <div id="tab-compare" class="tab-content">
+            <div class="section-header">
+              <h3>이의신청 법령 비교</h3>
+              <p class="section-desc">처분 당시 법령과 현행 법령을 나란히 비교합니다.</p>
+            </div>
+            <div class="compare-inputs">
+              <div class="input-group">
+                <label>법령명</label>
+                <input type="text" id="compareLawName" placeholder="예: 국가유공자 등 예우 및 지원에 관한 법률" />
+              </div>
+              <div class="input-group">
+                <label>처분시점 (YYYY-MM-DD)</label>
+                <input type="date" id="compareBaseDate" />
+              </div>
+              <button class="btn-primary" onclick="runLawCompare()">비교 조회</button>
+            </div>
+            <div id="compareLoading" style="display:none; text-align:center; padding:20px;">조회 중...</div>
+            <div id="compareError" style="display:none; color:red; padding:10px;"></div>
+            <div id="compareResult" style="display:none;">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+                <div>
+                  <h4 style="margin-bottom:8px;">📅 처분시점 법령</h4>
+                  <div id="comparePast" style="background:#f8f8f8; padding:12px; border-radius:8px; font-size:13px; white-space:pre-wrap; max-height:400px; overflow-y:auto;"></div>
+                </div>
+                <div>
+                  <h4 style="margin-bottom:8px;">📋 현행 법령</h4>
+                  <div id="compareCurrent" style="background:#f0f7ff; padding:12px; border-radius:8px; font-size:13px; white-space:pre-wrap; max-height:400px; overflow-y:auto;"></div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /tab-compare -->
+
 </div><!-- /top-legal -->
 
 </div><!-- /container -->
@@ -426,13 +463,50 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   /* ── Sub Tab Switching ── */
   window.switchLegalTab = function(tabId) {
     document.querySelectorAll('.legal-tab').forEach(function(t, i) {
-      var ids = ['search', 'deidentify', 'audit'];
+      var ids = ['search', 'deidentify', 'audit', 'compare'];
       t.classList.toggle('active', ids[i] === tabId);
     });
     document.querySelectorAll('.tab-content').forEach(function(c) {
       c.classList.toggle('active', c.id === 'tab-' + tabId);
     });
   };
+
+        window.runLawCompare = async function() {
+          const lawName = document.getElementById('compareLawName').value.trim();
+          const baseDate = document.getElementById('compareBaseDate').value.replace(/-/g, '');
+          const loading = document.getElementById('compareLoading');
+          const error = document.getElementById('compareError');
+          const result = document.getElementById('compareResult');
+
+          if (!lawName) { alert('법령명을 입력해주세요.'); return; }
+
+          loading.style.display = 'block';
+          error.style.display = 'none';
+          result.style.display = 'none';
+
+          try {
+            const params = new URLSearchParams({ lawName });
+            if (baseDate) params.append('baseDate', baseDate);
+
+            const res = await fetch(`/api/law-compare?${params}`);
+            const data = await res.json();
+
+            if (data.error) throw new Error(data.error);
+
+            const pastText = JSON.stringify(data.past, null, 2);
+            const currentText = JSON.stringify(data.current, null, 2);
+
+            document.getElementById('comparePast').textContent = pastText;
+            document.getElementById('compareCurrent').textContent = currentText;
+
+            loading.style.display = 'none';
+            result.style.display = 'block';
+          } catch (err) {
+            loading.style.display = 'none';
+            error.style.display = 'block';
+            error.textContent = '오류: ' + err.message;
+          }
+        }
 
   /* ── Tab 1: Law Search ── */
   window.setQuery = function(q) {
