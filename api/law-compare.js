@@ -32,12 +32,19 @@ export default async function handler(req, res) {
     if (!laws || laws.length === 0) {
       return res.status(404).json({ error: '해당 법령을 찾을 수 없습니다', searchResult: searchData });
     }
-    const mst = Array.isArray(laws) ? laws[0]['법령일련번호'] : laws['법령일련번호'];
+    const lawObj = Array.isArray(laws) ? laws[0] : laws;
+    const mst = lawObj['법령일련번호'];
+    const lawId = lawObj['법령ID'];
+    if (!lawId) {
+      return res.status(500).json({ error: '법령ID를 찾을 수 없습니다', lawObj });
+    }
 
-    // Step 2: MST로 처분시점 법령 + 현행 법령 동시 조회
-    const baseDateParam = baseDate ? `&efYd=${encodeURIComponent(baseDate)}` : '';
-    const pastUrl = `http://www.law.go.kr/DRF/lawService.do?OC=${encodeURIComponent(OC)}&target=law&type=JSON&MST=${encodeURIComponent(mst)}${baseDateParam}`;
-    const currentUrl = `http://www.law.go.kr/DRF/lawService.do?OC=${encodeURIComponent(OC)}&target=law&type=JSON&MST=${encodeURIComponent(mst)}`;
+    // Step 2: 법령ID + efYd로 처분시점 법령 조회 (efYd가 시점 버전을 선택), ID만으로 현행 조회
+    // MST(법령일련번호)는 특정 버전을 고정하므로 efYd가 무시됨 → ID 기반으로 조회해야 시점 분리됨
+    const efYd = baseDate ? String(baseDate).replace(/[^0-9]/g, '') : '';
+    const efYdParam = efYd ? `&efYd=${encodeURIComponent(efYd)}` : '';
+    const pastUrl = `http://www.law.go.kr/DRF/lawService.do?OC=${encodeURIComponent(OC)}&target=law&type=JSON&ID=${encodeURIComponent(lawId)}${efYdParam}`;
+    const currentUrl = `http://www.law.go.kr/DRF/lawService.do?OC=${encodeURIComponent(OC)}&target=law&type=JSON&ID=${encodeURIComponent(lawId)}`;
 
     const [pastRes, currentRes] = await Promise.all([
       fetch(pastUrl),
@@ -48,9 +55,10 @@ export default async function handler(req, res) {
     const currentData = currentRes.ok ? await currentRes.json() : { error: '현행 법령 조회 실패' };
 
     return res.status(200).json({
+      lawId,
       mst,
       lawName,
-      baseDate: baseDate || '현행',
+      baseDate: efYd || '현행',
       pastUrl,
       currentUrl,
       past: pastData,
