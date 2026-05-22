@@ -154,6 +154,8 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .compare-cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .compare-col-head { font-size:14px; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
 .compare-pane { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px; max-height:460px; overflow-y:auto; }
+.compare-note { font-size:11px; color:var(--text-tertiary); margin-top:8px; }
+.compare-warn { background:var(--amber-light); border:1px solid rgba(186,117,23,.2); border-radius:8px; padding:12px 14px; font-size:13px; color:var(--amber); line-height:1.6; }
 .diff-article { padding:10px 12px; border-radius:8px; margin-bottom:8px; border-left:3px solid transparent; }
 .diff-article:last-child { margin-bottom:0; }
 .diff-article-head { font-weight:700; font-size:13px; margin-bottom:4px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
@@ -455,11 +457,12 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
       <div class="compare-summary" id="compareSummary"></div>
       <div class="compare-cols">
         <div>
-          <div class="compare-col-head">처분시점 법령 <span class="panel-badge" id="comparePastDate" style="background:var(--blue-light);color:var(--blue)"></span></div>
+          <div class="compare-col-head">📅 처분시점 법령 <span class="panel-badge" id="comparePastDate" style="background:var(--blue-light);color:var(--blue)"></span></div>
           <div class="compare-pane" id="comparePast"></div>
+          <div class="compare-note" id="comparePastNote"></div>
         </div>
         <div>
-          <div class="compare-col-head">현행 법령 <span class="panel-badge" style="background:var(--teal-light);color:var(--teal)">현행</span></div>
+          <div class="compare-col-head">📋 현행 법령 <span class="panel-badge" style="background:var(--teal-light);color:var(--teal)">현행</span></div>
           <div class="compare-pane" id="compareCurrent"></div>
         </div>
       </div>
@@ -558,10 +561,34 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 
       var pastArticles = parseArticles(data.past);
       var currentArticles = parseArticles(data.current);
+      var sel = data.selectedEnforceDate;
+      var versionsFound = data.versionsFound || 0;
+      var noVersion = !!baseDate && !sel; // 처분일 입력했으나 이전 시행 버전 없음
 
-      document.getElementById('comparePastDate').textContent = rawDate || '시점 미지정';
+      // 처분시점 배지: 실제 적용된 시행일자 표시
+      var badgeEl = document.getElementById('comparePastDate');
+      if (sel && /^\d{8}$/.test(sel)) {
+        badgeEl.textContent = '실제 적용: ' + fmtYmd(sel) + ' 시행';
+      } else if (sel === '현행') {
+        badgeEl.textContent = '현행';
+      } else {
+        badgeEl.textContent = rawDate || '시점 미지정';
+      }
 
-      if (pastArticles && currentArticles && (pastArticles.length || currentArticles.length)) {
+      // 버전 수 안내
+      document.getElementById('comparePastNote').textContent =
+        (baseDate && versionsFound) ? '(총 ' + versionsFound + '개 버전 중 처분일 기준 선택)' : '';
+
+      if (noVersion) {
+        document.getElementById('comparePast').innerHTML =
+          '<div class="compare-warn">⚠️ 입력한 처분일(' + esc(rawDate) + ') 이전에 시행된 버전이 없습니다. 가장 오래된 버전부터 적용됩니다.</div>';
+        var selfMap = {}; (currentArticles || []).forEach(function(a) { selfMap[a.num] = a; });
+        document.getElementById('compareCurrent').innerHTML = (currentArticles && currentArticles.length)
+          ? renderDiff(currentArticles, selfMap, 'current')
+          : JSON.stringify(data.current, null, 2);
+        document.getElementById('compareSummary').innerHTML =
+          '<span class="panel-badge" style="background:var(--amber-light);color:var(--amber)">처분일 이전 버전 없음</span>';
+      } else if (pastArticles && currentArticles && (pastArticles.length || currentArticles.length)) {
         var pastMap = {}; pastArticles.forEach(function(a) { pastMap[a.num] = a; });
         var currMap = {}; currentArticles.forEach(function(a) { currMap[a.num] = a; });
 
@@ -583,6 +610,11 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     }
     btn.disabled = false; btn.textContent = '비교 조회';
   };
+
+  function fmtYmd(ymd) {
+    if (!ymd || !/^\d{8}$/.test(ymd)) return ymd || '';
+    return ymd.slice(0, 4) + '.' + ymd.slice(4, 6) + '.' + ymd.slice(6, 8);
+  }
 
   function parseArticles(lawData) {
     try {
