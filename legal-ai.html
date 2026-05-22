@@ -493,11 +493,24 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 
             if (data.error) throw new Error(data.error);
 
-            const pastText = JSON.stringify(data.past, null, 2);
-            const currentText = JSON.stringify(data.current, null, 2);
+            function extractArticles(lawData) {
+              try {
+                const articles = lawData?.법령?.조문?.조문단위 || [];
+                return articles
+                  .filter(a => a.조문여부 === '조문')
+                  .map(a => {
+                    const title = a.조문제목 ? `[${a.조문제목}]` : '';
+                    const content = a.조문내용 || '';
+                    return `${title}\n${content}`;
+                  })
+                  .join('\n\n─────────────────\n\n');
+              } catch(e) {
+                return JSON.stringify(lawData, null, 2);
+              }
+            }
 
-            document.getElementById('comparePast').textContent = pastText;
-            document.getElementById('compareCurrent').textContent = currentText;
+            document.getElementById('comparePast').textContent = extractArticles(data.past);
+            document.getElementById('compareCurrent').textContent = extractArticles(data.current);
 
             loading.style.display = 'none';
             result.style.display = 'block';
