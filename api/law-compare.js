@@ -39,12 +39,13 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: '법령ID를 찾을 수 없습니다', lawObj });
     }
 
-    // Step 2: 법령ID + efYd로 처분시점 법령 조회 (efYd가 시점 버전을 선택), ID만으로 현행 조회
-    // MST(법령일련번호)는 특정 버전을 고정하므로 efYd가 무시됨 → ID 기반으로 조회해야 시점 분리됨
+    // Step 2: 처분시점은 시행일법령(target=eflaw) + efYd로 조회해야 그 시점의 버전이 반환됨.
+    // target=law 는 efYd를 무시하고 항상 현행을 반환하므로 과거 조회에는 eflaw를 사용한다.
     const efYd = baseDate ? String(baseDate).replace(/[^0-9]/g, '') : '';
-    const efYdParam = efYd ? `&efYd=${encodeURIComponent(efYd)}` : '';
-    const pastUrl = `http://www.law.go.kr/DRF/lawService.do?OC=${encodeURIComponent(OC)}&target=law&type=JSON&ID=${encodeURIComponent(lawId)}${efYdParam}`;
     const currentUrl = `http://www.law.go.kr/DRF/lawService.do?OC=${encodeURIComponent(OC)}&target=law&type=JSON&ID=${encodeURIComponent(lawId)}`;
+    const pastUrl = efYd
+      ? `http://www.law.go.kr/DRF/lawService.do?OC=${encodeURIComponent(OC)}&target=eflaw&type=JSON&MST=${encodeURIComponent(mst)}&efYd=${encodeURIComponent(efYd)}`
+      : currentUrl;
 
     const [pastRes, currentRes] = await Promise.all([
       fetch(pastUrl),
@@ -59,6 +60,7 @@ export default async function handler(req, res) {
       mst,
       lawName,
       baseDate: efYd || '현행',
+      pastTarget: efYd ? 'eflaw' : 'law',
       pastUrl,
       currentUrl,
       past: pastData,
