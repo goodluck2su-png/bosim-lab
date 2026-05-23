@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BOSIM Lab - AI Casebook</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 52'%3E%3Cpath d='M6 0H38C41.314 0 44 2.686 44 6V32C44 42 34 50 22 52C10 50 0 42 0 32V6C0 2.686 2.686 0 6 0Z' fill='%23C9A84C'/%3E%3Ctext x='22' y='21' text-anchor='middle' font-family='sans-serif' font-size='13' font-weight='700' fill='%230D1B2A'%3E보%3C/text%3E%3Ctext x='22' y='37' text-anchor='middle' font-family='sans-serif' font-size='13' font-weight='700' fill='%230D1B2A'%3E심%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -33,7 +34,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); }
 nav { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
 .nav-inner { display:flex; align-items:center; justify-content:space-between; height:60px; }
 .logo { display:flex; align-items:center; gap:10px; }
-.logo-mark { width:32px; height:32px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--mono); font-size:12px; font-weight:700; }
+.logo-mark { display:none; }
 .logo-text { font-weight:700; font-size:15px; letter-spacing:-0.3px; }
 .logo-sub { font-size:11px; color:var(--text-tertiary); font-weight:400; }
 .nav-links { display:flex; gap:4px; }
@@ -214,13 +215,18 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   .section-divider h2 { font-size:17px; }
 }
 </style>
+<link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
 
 <nav>
 <div class="container nav-inner">
   <div class="logo">
-    <div class="logo-mark">BL</div>
+    <svg width="32" height="38" viewBox="0 0 44 52" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+      <path d="M6 0H38C41.314 0 44 2.686 44 6V32C44 42 34 50 22 52C10 50 0 42 0 32V6C0 2.686 2.686 0 6 0Z" fill="#C9A84C"/>
+      <text x="22" y="21" text-anchor="middle" font-family="'Noto Sans KR','Apple SD Gothic Neo','맑은 고딕',sans-serif" font-size="13" font-weight="700" fill="#0D1B2A">보</text>
+      <text x="22" y="37" text-anchor="middle" font-family="'Noto Sans KR','Apple SD Gothic Neo','맑은 고딕',sans-serif" font-size="13" font-weight="700" fill="#0D1B2A">심</text>
+    </svg>
     <div>
       <div class="logo-text">BOSIM Lab</div>
       <div class="logo-sub">AI-Driven Innovation</div>
@@ -236,7 +242,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   </div>
   <div class="nav-badge">
     <span class="dot"></span>
-    5th month in progress
+    2026.3~7 · 국가보훈부 선정 AI 연구모임
   </div>
 </div>
 </nav>

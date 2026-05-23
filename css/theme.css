@@ -1,0 +1,194 @@
+/* ── BOSIM Lab · Dark Navy Theme ── */
+:root {
+  --bg: #0D1B2A;
+  --surface: #132233;
+  --text: #EDE9E3;
+  --text-secondary: rgba(237,233,227,.58);
+  --text-tertiary: rgba(237,233,227,.32);
+  --accent: #C9A84C;
+  --accent-light: rgba(201,168,76,.14);
+  --teal: #3BBFA0;
+  --teal-light: rgba(59,191,160,.14);
+  --coral: #E8724A;
+  --coral-light: rgba(232,114,74,.14);
+  --amber: #C9A84C;
+  --amber-light: rgba(201,168,76,.14);
+  --blue: #5BA4D4;
+  --blue-light: rgba(91,164,212,.14);
+  --border: rgba(255,255,255,.08);
+}
+
+body { background: var(--bg) !important; color: var(--text) !important; }
+
+/* ── Nav ── */
+nav {
+  background: #0A1520 !important;
+  border-bottom: 1px solid rgba(255,255,255,.06) !important;
+}
+.nav-links a { color: rgba(237,233,227,.5) !important; }
+.nav-links a:hover, .nav-links a.active {
+  background: rgba(201,168,76,.12) !important;
+  color: #C9A84C !important;
+}
+.nav-badge { border-color: rgba(255,255,255,.1) !important; color: rgba(237,233,227,.5) !important; }
+.logo-text { color: #EDE9E3 !important; }
+.logo-sub { color: rgba(237,233,227,.35) !important; }
+
+/* ── Hero ── */
+.hero h1 { color: var(--text) !important; }
+.hero h1 span { color: #C9A84C !important; }
+.hero p { color: var(--text-secondary) !important; }
+.hero .badge {
+  background: rgba(201,168,76,.15) !important;
+  color: #C9A84C !important;
+}
+.hero-note {
+  background: rgba(255,255,255,.06) !important;
+  color: rgba(237,233,227,.45) !important;
+}
+
+/* ── Cards / Surfaces ── */
+.card, .panel, .tool-card, .practice-card,
+.stat-card, .result-panel, .search-box,
+.compare-inputs, .diff-card, .decision {
+  background: rgba(255,255,255,.04) !important;
+  border-color: rgba(255,255,255,.08) !important;
+  color: var(--text) !important;
+}
+.panel-header {
+  background: rgba(255,255,255,.03) !important;
+  border-bottom-color: rgba(255,255,255,.06) !important;
+}
+.panel-title { color: var(--text) !important; }
+.panel-empty { color: var(--text-tertiary) !important; }
+.practice-card-desc { color: var(--text-secondary) !important; }
+.practice-card:hover {
+  border-color: rgba(201,168,76,.4) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3) !important;
+}
+
+/* ── Tabs ── */
+.top-tabs {
+  background: rgba(255,255,255,.05) !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+.top-tab { color: var(--text-secondary) !important; background: transparent !important; }
+.top-tab:hover { color: #C9A84C !important; }
+.top-tab.active { background: #C9A84C !important; color: #0D1B2A !important; }
+
+.legal-tab {
+  background: rgba(255,255,255,.04) !important;
+  border-color: rgba(255,255,255,.1) !important;
+  color: var(--text-secondary) !important;
+}
+.legal-tab:hover { border-color: #C9A84C !important; color: #C9A84C !important; }
+.legal-tab.active {
+  background: #C9A84C !important;
+  border-color: #C9A84C !important;
+  color: #0D1B2A !important;
+}
+.legal-tab-sub { opacity: .65 !important; }
+
+/* ── Inputs / Forms ── */
+input, textarea, select {
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: var(--text) !important;
+}
+input:focus, textarea:focus {
+  border-color: #C9A84C !important;
+  background: rgba(255,255,255,.08) !important;
+}
+input::placeholder, textarea::placeholder { color: var(--text-tertiary) !important; }
+label { color: var(--text-secondary) !important; }
+
+/* ── Buttons ── */
+.btn-primary, .action-btn {
+  background: #C9A84C !important;
+  color: #0D1B2A !important;
+  border-color: #C9A84C !important;
+}
+.btn-primary:hover, .action-btn:hover {
+  background: #DDB95A !important;
+  box-shadow: 0 4px 16px rgba(201,168,76,.35) !important;
+}
+.btn-copy-result {
+  background: rgba(255,255,255,.08) !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* ── Casebook / Tags ── */
+.case-card {
+  background: rgba(255,255,255,.04) !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+.case-card:hover {
+  border-color: rgba(201,168,76,.35) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25) !important;
+}
+.case-tag {
+  background: rgba(201,168,76,.14) !important;
+  color: #C9A84C !important;
+}
+.case-name { color: var(--text) !important; }
+.case-org, .case-meta { color: var(--text-secondary) !important; }
+.case-save { color: #C9A84C !important; }
+.filter-btn {
+  background: rgba(255,255,255,.05) !important;
+  border-color: rgba(255,255,255,.1) !important;
+  color: var(--text-secondary) !important;
+}
+.filter-btn.active {
+  background: rgba(201,168,76,.14) !important;
+  border-color: #C9A84C !important;
+  color: #C9A84C !important;
+}
+
+/* ── Stats ── */
+.stat-number { color: #C9A84C !important; }
+.stat-label { color: var(--text-secondary) !important; }
+.chart-bar-after { background: #C9A84C !important; }
+.chart-bar-before { background: rgba(255,255,255,.15) !important; }
+
+/* ── AI response ── */
+.ai-response { background: rgba(255,255,255,.03) !important; color: var(--text) !important; }
+
+/* ── Deidentify warning ── */
+.deidentify-warning {
+  background: rgba(201,168,76,.1) !important;
+  border-color: rgba(201,168,76,.25) !important;
+  color: #DDB95A !important;
+}
+
+/* ── Search results ── */
+.law-result-item {
+  background: rgba(255,255,255,.04) !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+.law-result-item:hover { border-color: rgba(201,168,76,.3) !important; }
+.law-result-title { color: var(--text) !important; }
+.law-result-meta { color: var(--text-secondary) !important; }
+
+/* ── Compare result ── */
+#comparePast, #compareCurrent {
+  background: rgba(255,255,255,.04) !important;
+  color: var(--text) !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+/* ── Footer ── */
+footer {
+  background: #0A1520 !important;
+  border-top-color: rgba(255,255,255,.06) !important;
+  color: var(--text-tertiary) !important;
+}
+
+/* ── Section headings ── */
+h1, h2, h3, h4 { color: var(--text) !important; }
+p { color: var(--text-secondary); }
+
+/* ── Scrollbar (webkit) ── */
+::-webkit-scrollbar { width: 6px; background: #0D1B2A; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(201,168,76,.4); }
