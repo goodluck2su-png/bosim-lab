@@ -64,14 +64,16 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 
 /* Top-level Tabs (AI 실습 / 법령 검색) */
 .top-tabs { display:flex; gap:8px; margin:24px 0 20px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:6px; }
-.top-tab { flex:1; padding:14px; border-radius:10px; font-size:15px; font-weight:700; text-align:center; cursor:pointer; background:transparent; color:var(--text-secondary); transition:all .2s; border:none; font-family:var(--sans); }
+.top-tab { padding:14px; border-radius:10px; font-size:15px; font-weight:700; text-align:center; cursor:pointer; background:transparent; color:var(--text-secondary); transition:all .2s; border:none; font-family:var(--sans); }
+.top-tab.tab-practice { flex:0.6; }
+.top-tab.tab-legal { flex:1.4; }
 .top-tab:hover { color:var(--accent); }
 .top-tab.active { background:var(--accent); color:#fff; }
 .top-content { display:none; }
 .top-content.active { display:block; }
 
 /* AI 실습 카드 */
-.practice-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:48px; }
+.practice-cards { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:48px; }
 .practice-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:28px 24px; text-align:left; transition:all .2s; display:flex; flex-direction:column; }
 .practice-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.06); border-color:var(--accent); }
 .practice-card-icon { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:16px; }
@@ -317,8 +319,8 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   </a>
   <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
   <div class="nav-links">
-    <a href="/index.html">AI 스터디</a>
-    <a href="/legal-ai.html" class="active">보심 법령 AI</a>
+    <a href="/index.html">홈</a>
+    <a href="/legal-ai.html" class="active">보심 AI</a>
   </div>
   <div class="nav-badge">
     <span class="dot"></span>
@@ -344,8 +346,8 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 
 <!-- ════ Top-Level Tabs ════ -->
 <div class="top-tabs">
-  <button class="top-tab" onclick="switchTopTab('practice')">AI 실습</button>
-  <button class="top-tab active" onclick="switchTopTab('legal')">법령 검색</button>
+  <button class="top-tab tab-practice" onclick="switchTopTab('practice')">AI 실습</button>
+  <button class="top-tab tab-legal active" onclick="switchTopTab('legal')">법령 검색</button>
 </div>
 
 <!-- ════ Top 1: AI 실습 ════ -->
@@ -363,12 +365,6 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
       <div class="practice-card-desc">주제를 선택하면 AI가 맞춤형 실습 가이드를 자동 생성합니다. 검증 포인트, 폐쇄망 대안, 법적 근거까지 포함된 실습 가이드를 받을 수 있습니다.</div>
       <a href="practice-generator.html" class="practice-card-btn pcb-2">생성기 열기 &rarr;</a>
     </div>
-    <div class="practice-card">
-      <div class="practice-card-icon pc-3">3</div>
-      <div class="practice-card-title">법령 AI 직접 사용</div>
-      <div class="practice-card-desc">법령 검색·비식별화·서식 진단을 바로 사용합니다. 실무에서 자주 쓰는 보훈 법령 검색, 개인정보 마스킹, 서식 진단 도구를 한 번에 제공합니다.</div>
-      <button class="practice-card-btn pcb-3" onclick="switchTopTab('legal')">법령 검색 시작 &rarr;</button>
-    </div>
   </div>
 </div>
 
@@ -382,7 +378,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     <div class="legal-tab-sub">법령 조회 + AI 해석</div>
   </div>
   <div class="legal-tab" onclick="switchLegalTab('compare')">
-    ⭐ 이의신청 비교
+    이의신청 비교
     <div class="legal-tab-sub">처분시점 법령 자동 비교</div>
   </div>
   <div class="legal-tab" onclick="switchLegalTab('deidentify')">
@@ -547,7 +543,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   <!-- Tab 4: 이의신청 법령 비교 -->
   <div id="tab-compare" class="tab-content">
     <div class="section-header">
-      <h3>⭐ 이의신청 법령 비교</h3>
+      <h3>이의신청 법령 비교</h3>
       <p class="section-desc">처분 당시 법령과 현행 법령을 나란히 비교하고, 변경·신설·삭제된 조문을 자동으로 표시합니다.</p>
     </div>
     <div class="compare-inputs">
