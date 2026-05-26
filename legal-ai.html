@@ -261,11 +261,8 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   </a>
   <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
   <div class="nav-links">
-    <a href="index.html">홈</a>
-    <a href="journey.html">기록</a>
-    <a href="index.html#casebook">케이스</a>
-    <a href="legal-ai.html" class="active">보심 AI</a>
-    <a href="notice.html">소식</a>
+    <a href="/index.html">홈</a>
+    <a href="/legal-ai.html" class="active">⚡ 보심 AI</a>
   </div>
   <div class="nav-badge">
     <span class="dot"></span>
@@ -277,10 +274,16 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 <div class="container">
 
 <div class="hero">
-  <span class="badge">보심 AI</span>
-  <h1>보심 AI — <span>실습부터 법령 검색까지</span></h1>
-  <p>AI 실습과 법령 검색·비식별화·서식 진단을 한 곳에서 처리합니다</p>
-  <div class="hero-note" id="modeNote">Gemini AI 단독 모드</div>
+  <h1>보심 AI</h1>
+  <div style="font-size:16px;color:rgba(237,233,227,.65);margin:4px 0 12px;">보훈심사관 전용 법령 종합 분석 시스템</div>
+  <div class="feature-badges">
+    <span class="fbadge">📜 법령 조회 + AI 해석</span>
+    <span class="fbadge">⭐ 처분시점 법령 비교</span>
+    <span class="fbadge">🔒 개인정보 비식별화</span>
+    <span class="fbadge">📋 서식 진단</span>
+  </div>
+  <p>국가법령정보센터 Open API × Gemini · Claude AI<br>BOSIM Lab 11명 · 5개월 실증 (2026.3~7)</p>
+  <div class="hero-note" id="modeNote">법령 API + AI 연동 모드</div>
 </div>
 
 <!-- ════ Top-Level Tabs ════ -->
@@ -491,9 +494,16 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 </div>
 
 <footer>
-  <div class="container">
-    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
-    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  <div class="footer-inner">
+    <div class="footer-left">
+      BOSIM Lab — 보훈심사 AI 연구모임<br>
+      국가보훈부 선정 · 2026.3~7 · 보훈심사위원회 주관
+    </div>
+    <div class="footer-right">
+      <a href="/legal-ai.html">보심 AI 체험</a>
+      <span>·</span>
+      <span>제2회 법령데이터 활용 아이디어 공모전 출품작</span>
+    </div>
   </div>
 </footer>
 
@@ -511,7 +521,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   var interpretEnabled = window.BOSIM_CONFIG && window.BOSIM_CONFIG.features && window.BOSIM_CONFIG.features.LAW_INTERPRET;
 
   if (lawEnabled) {
-    document.getElementById('modeNote').textContent = '법령 API + Gemini AI 연동 모드';
+    document.getElementById('modeNote').textContent = '법령 API + AI 연동 모드';
     document.getElementById('modeNote').style.background = 'var(--teal-light)';
     document.getElementById('modeNote').style.color = 'var(--teal)';
   } else {

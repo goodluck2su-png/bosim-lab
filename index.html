@@ -40,54 +40,6 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .nav-links { display:flex; gap:4px; }
 .nav-links a { padding:8px 14px; font-size:13px; color:var(--text-secondary); text-decoration:none; border-radius:8px; font-weight:500; transition:all .2s; }
 .nav-links a:hover, .nav-links a.active { background:var(--accent-light); color:var(--accent); }
-.nav-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); color:var(--text-secondary); }
-.nav-badge .dot { width:6px; height:6px; border-radius:50%; background:#0F6E56; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-
-/* Hero Stats */
-.hero { padding: 48px 0 32px; }
-.hero-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px; }
-.hero-title { font-size:28px; font-weight:700; letter-spacing:-0.5px; line-height:1.3; }
-.hero-title span { color: var(--accent); }
-.hero-desc { font-size:14px; color:var(--text-secondary); margin-top:6px; }
-.tags { display:flex; gap:6px; }
-.tag { padding:6px 12px; border-radius:8px; font-size:11px; font-weight:500; }
-.tag-accent { background:var(--accent-light); color:var(--accent); }
-.tag-teal { background:var(--teal-light); color:var(--teal); }
-.tag-coral { background:var(--coral-light); color:var(--coral); }
-
-/* Metrics */
-.metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
-.metric { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; position:relative; overflow:hidden; }
-.metric::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
-.metric:nth-child(1)::before { background:var(--accent); }
-.metric:nth-child(2)::before { background:var(--teal); }
-.metric:nth-child(3)::before { background:#185FA5; }
-.metric:nth-child(4)::before { background:var(--coral); }
-.metric-label { font-size:12px; color:var(--text-tertiary); font-weight:500; margin-bottom:8px; }
-.metric-value { font-family:var(--mono); font-size:32px; font-weight:700; letter-spacing:-1px; }
-.metric-change { font-size:12px; margin-top:4px; font-weight:500; }
-.metric-change.up { color:var(--teal); }
-.metric-change.neutral { color:var(--text-tertiary); }
-.m-purple .metric-value { color:var(--accent); }
-.m-teal .metric-value { color:var(--teal); }
-.m-blue .metric-value { color:#185FA5; }
-.m-coral .metric-value { color:var(--coral); }
-
-/* Before/After Chart */
-.chart-section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:40px; }
-.chart-title { font-size:15px; font-weight:700; margin-bottom:20px; }
-.chart-bar-group { margin-bottom:16px; }
-.chart-bar-label { display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; }
-.chart-bar-label span:first-child { font-weight:500; color:var(--text); }
-.chart-bar-label span:last-child { font-family:var(--mono); color:var(--text-secondary); font-size:11px; }
-.chart-track { height:28px; background:#F5F5F2; border-radius:6px; position:relative; overflow:hidden; }
-.bar-before { position:absolute; left:0; top:0; height:100%; background:var(--coral-light); border-radius:6px 0 0 6px; transition: width 1s ease; }
-.bar-after { position:absolute; left:0; top:0; height:100%; background:var(--accent); border-radius:6px 0 0 6px; opacity:.85; transition: width 1.2s ease .2s; }
-.chart-legend { display:flex; gap:16px; margin-top:16px; font-size:12px; color:var(--text-secondary); }
-.chart-legend span::before { content:''; display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:-1px; }
-.legend-before::before { background:var(--coral-light); }
-.legend-after::before { background:var(--accent); opacity:.85; }
 
 /* Section Divider */
 .section-divider { display:flex; align-items:center; gap:16px; margin:40px 0 24px; }
@@ -97,16 +49,14 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 
 /* Filter */
 .filters { display:flex; gap:6px; margin-bottom:24px; flex-wrap:wrap; }
-.filter-btn { padding:7px 16px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); background:var(--surface); color:var(--text-secondary); cursor:pointer; transition:all .2s; }
+.filter-btn { padding:7px 16px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid var(--border); background:var(--surface); color:var(--text-secondary); cursor:pointer; transition:all .2s; font-family:var(--sans); }
 .filter-btn:hover { border-color:var(--accent); color:var(--accent); }
 .filter-btn.active { background:var(--text); color:#fff; border-color:var(--text); }
 
 /* Case Cards */
 .cases { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:48px; }
-.case-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; transition: opacity .3s ease, transform .3s ease, box-shadow .2s; cursor:pointer; }
+.case-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; transition: opacity .3s ease, transform .3s ease, box-shadow .2s; }
 .case-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.06); }
-.case-card.fade-out { opacity:0; transform:scale(.96) translateY(8px); }
-.case-card.hidden { display:none; }
 .case-top { height:4px; }
 .case-top.cat-req { background:var(--accent); }
 .case-top.cat-dep { background:var(--coral); }
@@ -120,65 +70,12 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .cb-appeal { background:var(--amber-light); color:var(--amber); }
 .cb-common { background:var(--teal-light); color:var(--teal); }
 .cb-improve { background:var(--teal-light); color:var(--teal); font-family:var(--mono); }
-.cb-highlight { background:rgba(233,69,96,.12); color:#e94560; font-weight:700; }
-.case-top.cat-highlight { background:#e94560; }
-.case-title { font-size:15px; font-weight:700; line-height:1.4; margin-bottom:6px; }
-.case-desc { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:16px; }
+.case-title { font-size:15px; font-weight:700; line-height:1.4; margin-bottom:16px; }
 .case-footer { display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--border); }
 .case-author { display:flex; align-items:center; gap:8px; }
 .author-avatar { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; }
 .author-info { font-size:11px; color:var(--text-tertiary); }
 .case-time { font-family:var(--mono); font-size:11px; color:var(--text-tertiary); }
-
-/* Collaboration Section */
-.collab { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:32px; margin-bottom:48px; }
-.collab-title { font-size:18px; font-weight:700; margin-bottom:8px; }
-.collab-sub { font-size:13px; color:var(--text-secondary); margin-bottom:20px; }
-.collab-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-.collab-card { border:1px dashed var(--border); border-radius:12px; padding:16px; text-align:center; }
-.collab-icon { font-size:20px; margin-bottom:8px; }
-.collab-name { font-size:13px; font-weight:700; margin-bottom:2px; }
-.collab-role { font-size:11px; color:var(--text-tertiary); line-height:1.4; }
-
-/* Modal */
-.modal-overlay { position:fixed; inset:0; background:rgba(10,10,30,.55); backdrop-filter:blur(4px); z-index:200; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s ease; }
-.modal-overlay.open { opacity:1; pointer-events:auto; }
-.modal { background:var(--surface); border-radius:20px; width:92%; max-width:640px; max-height:85vh; overflow-y:auto; transform:translateY(24px) scale(.97); transition:transform .3s ease; box-shadow:0 24px 64px rgba(0,0,0,.18); }
-.modal-overlay.open .modal { transform:translateY(0) scale(1); }
-.modal-top { height:5px; border-radius:20px 20px 0 0; }
-.modal-top.mt-req { background:var(--accent); }
-.modal-top.mt-dep { background:var(--coral); }
-.modal-top.mt-appeal { background:var(--amber); }
-.modal-top.mt-common { background:var(--teal); }
-.modal-top.mt-highlight { background:#e94560; }
-.modal-header { padding:28px 32px 0; display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
-.modal-header-left { flex:1; }
-.modal-title { font-size:20px; font-weight:700; line-height:1.3; margin-bottom:6px; }
-.modal-meta { display:flex; align-items:center; gap:10px; }
-.modal-avatar { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; }
-.modal-meta-text { font-size:13px; color:var(--text-secondary); }
-.modal-close { width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; color:var(--text-tertiary); transition:all .2s; flex-shrink:0; }
-.modal-close:hover { background:#f5f5f5; color:var(--text); }
-.modal-content { padding:24px 32px 32px; }
-.modal-badges { display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; }
-.modal-section { margin-bottom:22px; }
-.modal-section:last-child { margin-bottom:0; }
-.modal-section-title { font-size:12px; font-weight:700; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
-.modal-desc { font-size:14px; color:var(--text-secondary); line-height:1.7; }
-.modal-table { width:100%; border-collapse:separate; border-spacing:0; border:1px solid var(--border); border-radius:10px; overflow:hidden; font-size:13px; }
-.modal-table th { background:#F8F8F6; font-weight:600; padding:10px 14px; text-align:left; color:var(--text-secondary); font-size:12px; }
-.modal-table td { padding:10px 14px; border-top:1px solid var(--border); }
-.modal-table .val-before { color:var(--coral); font-family:var(--mono); font-weight:500; }
-.modal-table .val-after { color:var(--accent); font-family:var(--mono); font-weight:700; }
-.modal-table .val-change { color:var(--teal); font-family:var(--mono); font-size:12px; font-weight:600; }
-.modal-tool { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:8px; background:#F8F8F6; border:1px solid var(--border); font-size:13px; font-weight:500; margin-right:6px; margin-bottom:6px; }
-.modal-tool-icon { width:20px; height:20px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; }
-.modal-prompt { background:#F8F8F6; border:1px solid var(--border); border-radius:10px; padding:16px; font-size:13px; line-height:1.7; color:var(--text); font-family:var(--sans); white-space:pre-wrap; }
-.modal-insight { background:var(--accent-light); border-radius:10px; padding:16px; font-size:13px; line-height:1.7; color:var(--accent); }
-
-/* Footer */
-footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-tertiary); border-top:1px solid var(--border); }
-.footer-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:6px; background:var(--accent-light); color:var(--accent); font-size:11px; font-weight:500; margin-bottom:8px; }
 
 /* Mobile: hamburger toggle */
 .nav-toggle { display:none; width:36px; height:36px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; align-items:center; justify-content:center; font-size:18px; color:var(--text-secondary); }
@@ -189,30 +86,14 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   .nav-links.open { display:flex; }
   .nav-links a { padding:10px 14px; }
   .nav-toggle { display:flex; }
-  .nav-badge { display:none; }
-
-  .hero-top { flex-direction:column; gap:16px; align-items:flex-start; }
-  .hero-title { font-size:22px; }
-  .metrics { grid-template-columns:repeat(2,1fr); gap:8px; }
-  .metric { padding:14px; }
-  .metric-value { font-size:24px; }
-  .chart-section { padding:16px; }
-  .chart-bar-label { flex-direction:column; gap:2px; }
-
+  .hero h1 { font-size:26px !important; }
+  .hero-stats { gap:24px !important; }
+  .hero-stat .n { font-size:24px !important; }
   .cases { grid-template-columns:1fr; }
   .filters { gap:4px; }
   .filter-btn { padding:6px 12px; font-size:11px; }
-
-  .collab-grid { grid-template-columns:1fr; }
-  .collab { padding:20px; }
-
-  .modal { width:96%; max-height:90vh; border-radius:14px; }
-  .modal-header { padding:20px 20px 0; }
-  .modal-content { padding:16px 20px 24px; }
-  .modal-title { font-size:17px; }
-  .modal-prompt { font-size:12px; padding:12px; }
-
   .section-divider h2 { font-size:17px; }
+  .footer-inner { flex-direction:column; align-items:flex-start; }
 }
 </style>
 <link rel="stylesheet" href="/css/theme.css">
@@ -221,7 +102,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 
 <nav>
 <div class="container nav-inner">
-  <div class="logo">
+  <a href="/index.html" class="logo" style="text-decoration:none;color:inherit;">
     <svg width="32" height="38" viewBox="0 0 44 52" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
       <path d="M6 0H38C41.314 0 44 2.686 44 6V32C44 42 34 50 22 52C10 50 0 42 0 32V6C0 2.686 2.686 0 6 0Z" fill="#C9A84C"/>
       <text x="22" y="21" text-anchor="middle" font-family="'Noto Sans KR','Apple SD Gothic Neo','맑은 고딕',sans-serif" font-size="13" font-weight="700" fill="#0D1B2A">보</text>
@@ -231,1221 +112,167 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
       <div class="logo-text">BOSIM Lab</div>
       <div class="logo-sub">AI-Driven Innovation</div>
     </div>
-  </div>
+  </a>
   <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
   <div class="nav-links">
-    <a href="index.html" class="active">홈</a>
-    <a href="journey.html">기록</a>
-    <a href="index.html#casebook">케이스</a>
-    <a href="legal-ai.html">보심 AI</a>
-    <a href="notice.html">소식</a>
-  </div>
-  <div class="nav-badge">
-    <span class="dot"></span>
-    2026.3~7 · 국가보훈부 선정 AI 연구모임
+    <a href="/index.html" class="active">홈</a>
+    <a href="/legal-ai.html">⚡ 보심 AI</a>
   </div>
 </div>
 </nav>
 
 <div class="container">
 
-<div class="hero">
-  <div class="hero-top">
-    <div>
-      <div class="hero-title">AI가 바꾼 <span>보훈심사</span> 현장</div>
-      <div class="hero-desc">BOSIM Lab 실증 케이스 기반 · 실제 업무 적용 완료</div>
-    </div>
-    <div class="tags">
-      <span class="tag tag-accent">보훈심사위원회</span>
-      <span class="tag tag-teal">타부처 협업</span>
-    </div>
+<section class="hero">
+  <div class="contest-banner">
+    🏆 제2회 법령데이터 활용 아이디어 공모전 — 제품·서비스 개발 부문
   </div>
-
-  <div class="metrics">
-    <div class="metric m-purple">
-      <div class="metric-label">실무 적용 케이스</div>
-      <div class="metric-value">25</div>
-      <div class="metric-change up">+10 this month</div>
-    </div>
-    <div class="metric m-teal">
-      <div class="metric-label">평균 효율 개선</div>
-      <div class="metric-value">83%</div>
-      <div class="metric-change up">시간 절감 기준</div>
-    </div>
-    <div class="metric m-blue">
-      <div class="metric-label">AI 인식 점수</div>
-      <div class="metric-value">4.2</div>
-      <div class="metric-change up">3월 2.8 → 현재</div>
-    </div>
-    <div class="metric m-coral">
-      <div class="metric-label">참여 기관</div>
-      <div class="metric-value">4</div>
-      <div class="metric-change neutral">보훈심사위 + 타부처 3곳</div>
-    </div>
+  <h1>보훈심사관을 위한<br><span>AI 법령 분석 시스템</span></h1>
+  <p class="hero-sub">
+    국가법령정보센터 Open API × AI — 법령 조회·처분시점 비교·비식별화·서식진단<br>
+    보훈심사위원회 심사1·2·3과
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="n">11</span><span class="l">참여 인원</span></div>
+    <div class="hero-stat"><span class="n">68%</span><span class="l">평균 효율 개선</span></div>
+    <div class="hero-stat"><span class="n">5개월</span><span class="l">실증 기간</span></div>
   </div>
-
-  <div class="chart-section">
-    <div class="chart-title">업무별 AI 적용 효과 — 처리시간(분) 전/후 비교</div>
-    <div class="chart-bar-group">
-      <div class="chart-bar-label"><span>요건심의 검토</span><span>40min → 22min (-45%)</span></div>
-      <div class="chart-track">
-        <div class="bar-before" style="width:75%"></div>
-        <div class="bar-after" style="width:41%"></div>
-      </div>
-    </div>
-    <div class="chart-bar-group">
-      <div class="chart-bar-label"><span>판례 유사도 분석</span><span>55min → 18min (-67%)</span></div>
-      <div class="chart-track">
-        <div class="bar-before" style="width:92%"></div>
-        <div class="bar-after" style="width:30%"></div>
-      </div>
-    </div>
-    <div class="chart-bar-group">
-      <div class="chart-bar-label"><span>보고서 초안 작성</span><span>90min → 35min (-61%)</span></div>
-      <div class="chart-track">
-        <div class="bar-before" style="width:100%"></div>
-        <div class="bar-after" style="width:39%"></div>
-      </div>
-    </div>
-    <div class="chart-bar-group">
-      <div class="chart-bar-label"><span>이의신청 쟁점 요약</span><span>30min → 12min (-60%)</span></div>
-      <div class="chart-track">
-        <div class="bar-before" style="width:56%"></div>
-        <div class="bar-after" style="width:22%"></div>
-      </div>
-    </div>
-    <div class="chart-legend">
-      <span class="legend-before">Before (AI 미적용)</span>
-      <span class="legend-after">After (AI 적용)</span>
-    </div>
+  <div class="hero-cta">
+    <a href="/legal-ai.html" class="btn-primary">⚡ 보심 AI 체험하기</a>
+    <a href="#casebook" class="btn-secondary">실증 케이스 보기</a>
   </div>
-</div>
+</section>
 
 <div class="section-divider" id="casebook">
   <h2>Casebook</h2>
   <div class="line"></div>
-  <span class="case-count">25 cases · BOSIM Lab 실증 케이스 기반 · 실제 업무 적용 완료</span>
+  <span class="case-count">11 cases · BOSIM Lab 실증 케이스</span>
 </div>
 
 <div class="filters">
   <button class="filter-btn active" data-filter="all">전체</button>
-  <button class="filter-btn" data-filter="req">요건심의</button>
-  <button class="filter-btn" data-filter="dep">부양심의</button>
-  <button class="filter-btn" data-filter="appeal">이의신청</button>
-  <button class="filter-btn" data-filter="common">공통업무</button>
+  <button class="filter-btn" data-filter="요건심의">요건심의</button>
+  <button class="filter-btn" data-filter="부양심의">부양심의</button>
+  <button class="filter-btn" data-filter="이의신청">이의신청</button>
+  <button class="filter-btn" data-filter="행정지원">행정지원</button>
 </div>
 
-<div class="cases">
-  <div class="case-card" data-category="highlight" data-case-id="case-bash-001">
-    <div class="case-top cat-highlight"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-highlight">⭐ 실증 케이스</span>
-        <span class="case-badge cb-improve">-83%</span>
-      </div>
-      <div class="case-title">ZIP 다중 중첩 파일 자동 해제 & 일괄 인쇄</div>
-      <div class="case-desc">심사 문서가 ZIP 중첩 구조로 압축되어 수동 해제 시 최대 800페이지 분량 처리 필요. Claude Code 기반 BASH 스크립트로 자동화했습니다.</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--coral)">박</div>
-          <span class="author-info">박승정 · 심사1과</span>
-        </div>
-        <span class="case-time">35분 → 6분 (83% 절감)</span>
-      </div>
-    </div>
-  </div>
+<div class="cases" id="casesGrid"></div>
 
-  <div class="case-card" data-category="highlight" data-case-id="case-flex-002">
-    <div class="case-top cat-highlight"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-highlight">⭐ 실증 케이스</span>
-        <span class="case-badge cb-improve">-83%</span>
-      </div>
-      <div class="case-title">출퇴근 유연근무 신청 사유 AI 초안 작성</div>
-      <div class="case-desc">유연근무 신청 시 사유 문구를 매번 새로 작성하는 부담. ChatGPT 개인 계정으로 비식별 지침을 따라 공문체 초안을 생성합니다.</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--coral)">박</div>
-          <span class="author-info">박승정 · 심사1과</span>
-        </div>
-        <span class="case-time">30분 → 5분 (83% 절감)</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="req" data-case-id="1">
-    <div class="case-top cat-req"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-req">요건심의</span>
-        <span class="case-badge cb-improve">-45%</span>
-      </div>
-      <div class="case-title">이의신청 검토 AI 보조</div>
-      <div class="case-desc">기각 이의신청 건의 쟁점을 AI로 요약하고 유사 판례를 자동 매칭하여 검토 시간 단축</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--accent)">손</div>
-          <span class="author-info">손숙 · 심사1과</span>
-        </div>
-        <span class="case-time">40→22min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="common" data-case-id="2">
-    <div class="case-top cat-common"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-common">공통</span>
-        <span class="case-badge cb-improve">-67%</span>
-      </div>
-      <div class="case-title">유사 판례 검색 프롬프트</div>
-      <div class="case-desc">과거 심사 결정문에서 유사 사례를 AI로 5초 내 검색하는 맞춤 프롬프트 개발</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--teal)">유</div>
-          <span class="author-info">유진아 · 심사3과</span>
-        </div>
-        <span class="case-time">55→18min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="dep" data-case-id="3">
-    <div class="case-top cat-dep"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-dep">부양심의</span>
-        <span class="case-badge cb-improve">-61%</span>
-      </div>
-      <div class="case-title">심사자료 요약 자동화</div>
-      <div class="case-desc">부양 관련 제출 서류를 AI로 핵심 쟁점 3줄 요약하여 심사 준비 시간 대폭 단축</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--coral)">하</div>
-          <span class="author-info">하동석 · 심사2과</span>
-        </div>
-        <span class="case-time">90→35min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="appeal" data-case-id="4">
-    <div class="case-top cat-appeal"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-appeal">이의신청</span>
-        <span class="case-badge cb-improve">-60%</span>
-      </div>
-      <div class="case-title">이의신청 쟁점 자동 분류</div>
-      <div class="case-desc">이의신청서에서 핵심 쟁점을 AI로 자동 추출하고 유형별 분류하여 심사 효율화</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--amber)">임</div>
-          <span class="author-info">임환기 · 심사3과</span>
-        </div>
-        <span class="case-time">30→12min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="common" data-case-id="5">
-    <div class="case-top cat-common"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-common">공통</span>
-        <span class="case-badge cb-improve">-38%</span>
-      </div>
-      <div class="case-title">회의록 자동 요약 시스템</div>
-      <div class="case-desc">심사위원회 회의 내용을 AI로 핵심 결정사항 중심으로 자동 요약 및 정리</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#185FA5">김</div>
-          <span class="author-info">김민주 · 심사1과</span>
-        </div>
-        <span class="case-time">45→28min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="req" data-case-id="6">
-    <div class="case-top cat-req"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-req">요건심의</span>
-        <span class="case-badge cb-improve">-52%</span>
-      </div>
-      <div class="case-title">요건 검토 체크리스트 생성</div>
-      <div class="case-desc">유공자 요건 심의 시 필수 확인 항목을 AI로 자동 생성하여 누락 방지</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#D4537E">최</div>
-          <span class="author-info">최혜진 · 심사1과</span>
-        </div>
-        <span class="case-time">25→12min</span>
-      </div>
-    </div>
-  <div class="case-card" data-category="dep" data-case-id="7">
-    <div class="case-top cat-dep"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-dep">부양심의</span>
-        <span class="case-badge cb-improve">-48%</span>
-      </div>
-      <div class="case-title">부양 요건 법령 비교표 생성</div>
-      <div class="case-desc">부양 관련 법령 조항을 AI로 비교·정리하여 조문 간 차이점을 표로 자동 생성</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--coral)">박</div>
-          <span class="author-info">박지영 · 심사2과</span>
-        </div>
-        <span class="case-time">50→26min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="req" data-case-id="8">
-    <div class="case-top cat-req"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-req">요건심의</span>
-        <span class="case-badge cb-improve">-55%</span>
-      </div>
-      <div class="case-title">상이등급 판정 근거 정리</div>
-      <div class="case-desc">상이등급 재판정 시 의학적 소견과 법적 기준을 AI로 대조하여 판정 근거 문서 작성</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--accent)">이</div>
-          <span class="author-info">이준혁 · 심사1과</span>
-        </div>
-        <span class="case-time">60→27min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="common" data-case-id="9">
-    <div class="case-top cat-common"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-common">공통</span>
-        <span class="case-badge cb-improve">-43%</span>
-      </div>
-      <div class="case-title">민원 답변서 초안 작성</div>
-      <div class="case-desc">반복되는 민원 유형별로 AI가 법적 근거를 포함한 답변서 초안을 자동 생성</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#185FA5">정</div>
-          <span class="author-info">정수현 · 심사2과</span>
-        </div>
-        <span class="case-time">35→20min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="appeal" data-case-id="10">
-    <div class="case-top cat-appeal"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-appeal">이의신청</span>
-        <span class="case-badge cb-improve">-50%</span>
-      </div>
-      <div class="case-title">이의신청 기각 사유서 작성</div>
-      <div class="case-desc">기각 결정 시 법적 근거와 판례를 AI로 정리하여 사유서 초안 자동 생성</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--amber)">강</div>
-          <span class="author-info">강민서 · 심사3과</span>
-        </div>
-        <span class="case-time">40→20min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="dep" data-case-id="11">
-    <div class="case-top cat-dep"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-dep">부양심의</span>
-        <span class="case-badge cb-improve">-44%</span>
-      </div>
-      <div class="case-title">소득 증빙 자료 교차 검증</div>
-      <div class="case-desc">부양 심의용 소득 자료 여러 건을 AI로 교차 대조하여 불일치 항목 자동 탐지</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#E67E22">윤</div>
-          <span class="author-info">윤서연 · 심사2과</span>
-        </div>
-        <span class="case-time">45→25min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="req" data-case-id="12">
-    <div class="case-top cat-req"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-req">요건심의</span>
-        <span class="case-badge cb-improve">-40%</span>
-      </div>
-      <div class="case-title">참전 기간 산정 보조</div>
-      <div class="case-desc">참전유공자 요건 중 복무·파병 기간을 AI로 계산하고 관련 법령 조건 충족 여부 확인</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--accent)">장</div>
-          <span class="author-info">장태호 · 심사1과</span>
-        </div>
-        <span class="case-time">30→18min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="common" data-case-id="13">
-    <div class="case-top cat-common"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-common">공통</span>
-        <span class="case-badge cb-improve">-56%</span>
-      </div>
-      <div class="case-title">법령 개정 비교 분석</div>
-      <div class="case-desc">보훈 관련 법령 개정 시 신·구 조문 비교표를 AI로 자동 생성하고 실무 영향 분석</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--teal)">송</div>
-          <span class="author-info">송지원 · 심사3과</span>
-        </div>
-        <span class="case-time">70→31min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="appeal" data-case-id="14">
-    <div class="case-top cat-appeal"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-appeal">이의신청</span>
-        <span class="case-badge cb-improve">-47%</span>
-      </div>
-      <div class="case-title">이의신청 접수 요건 사전 검토</div>
-      <div class="case-desc">이의신청 접수 단계에서 AI가 보정 필요 사항과 요건 충족 여부를 사전 점검</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#9B59B6">한</div>
-          <span class="author-info">한소희 · 심사3과</span>
-        </div>
-        <span class="case-time">20→11min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="dep" data-case-id="15">
-    <div class="case-top cat-dep"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-dep">부양심의</span>
-        <span class="case-badge cb-improve">-39%</span>
-      </div>
-      <div class="case-title">부양 대상 가족관계 분석</div>
-      <div class="case-desc">복잡한 가족관계증명서를 AI로 분석하여 부양 대상 적격 여부를 구조화된 표로 정리</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#2ECC71">조</div>
-          <span class="author-info">조현우 · 심사2과</span>
-        </div>
-        <span class="case-time">35→21min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="req" data-case-id="16">
-    <div class="case-top cat-req"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-req">요건심의</span>
-        <span class="case-badge cb-improve">-58%</span>
-      </div>
-      <div class="case-title">공상 인과관계 검토 보조</div>
-      <div class="case-desc">공무상 상이 인정 시 근무환경과 상이의 인과관계를 AI로 분석하여 논리 구조화</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#E74C3C">오</div>
-          <span class="author-info">오성민 · 심사1과</span>
-        </div>
-        <span class="case-time">55→23min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="common" data-case-id="17">
-    <div class="case-top cat-common"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-common">공통</span>
-        <span class="case-badge cb-improve">-35%</span>
-      </div>
-      <div class="case-title">주간 업무 보고서 자동화</div>
-      <div class="case-desc">주간 심사 실적 데이터를 AI로 분석하여 보고서 초안과 주요 이슈를 자동 정리</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#3498DB">권</div>
-          <span class="author-info">권나영 · 심사1과</span>
-        </div>
-        <span class="case-time">40→26min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="appeal" data-case-id="18">
-    <div class="case-top cat-appeal"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-appeal">이의신청</span>
-        <span class="case-badge cb-improve">-53%</span>
-      </div>
-      <div class="case-title">재심사 결정문 초안 작성</div>
-      <div class="case-desc">이의 인용 시 재심사 결정문의 법적 근거와 결론을 AI가 초안으로 작성</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--amber)">신</div>
-          <span class="author-info">신동현 · 심사3과</span>
-        </div>
-        <span class="case-time">65→31min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="dep" data-case-id="19">
-    <div class="case-top cat-dep"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-dep">부양심의</span>
-        <span class="case-badge cb-improve">-42%</span>
-      </div>
-      <div class="case-title">부양 심의 결정문 작성 보조</div>
-      <div class="case-desc">부양 심의 결과를 법적 형식에 맞춰 AI가 결정문 초안 작성, 심사관이 검토·확정</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#E67E22">김</div>
-          <span class="author-info">김태윤 · 심사2과</span>
-        </div>
-        <span class="case-time">50→29min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="req" data-case-id="20">
-    <div class="case-top cat-req"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-req">요건심의</span>
-        <span class="case-badge cb-improve">-46%</span>
-      </div>
-      <div class="case-title">진단서·소견서 핵심 추출</div>
-      <div class="case-desc">의료 진단서와 소견서에서 상이등급 판정에 필요한 핵심 의학적 소견을 AI로 추출</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#D4537E">배</div>
-          <span class="author-info">배수진 · 심사1과</span>
-        </div>
-        <span class="case-time">35→19min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="common" data-case-id="21">
-    <div class="case-top cat-common"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-common">공통</span>
-        <span class="case-badge cb-improve">-41%</span>
-      </div>
-      <div class="case-title">교육자료 슬라이드 생성</div>
-      <div class="case-desc">내부 교육용 법령·절차 안내 슬라이드 구성안을 AI로 자동 생성하여 교육 준비 단축</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:var(--teal)">문</div>
-          <span class="author-info">문지훈 · 심사2과</span>
-        </div>
-        <span class="case-time">60→35min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="appeal" data-case-id="22">
-    <div class="case-top cat-appeal"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-appeal">이의신청</span>
-        <span class="case-badge cb-improve">-49%</span>
-      </div>
-      <div class="case-title">이의신청 통계 분석 보고</div>
-      <div class="case-desc">월별·유형별 이의신청 통계를 AI로 분석하여 추세와 이슈 포인트를 자동 리포트</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#9B59B6">류</div>
-          <span class="author-info">류지현 · 심사3과</span>
-        </div>
-        <span class="case-time">55→28min</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="case-card" data-category="req" data-case-id="23">
-    <div class="case-top cat-req"></div>
-    <div class="case-body">
-      <div class="case-badges">
-        <span class="case-badge cb-req">요건심의</span>
-        <span class="case-badge cb-improve">-51%</span>
-      </div>
-      <div class="case-title">보훈보상 대상 적격 심사 보조</div>
-      <div class="case-desc">보훈보상 대상자 요건을 AI로 법령 기준과 대조·판단 근거를 체계적으로 정리</div>
-      <div class="case-footer">
-        <div class="case-author">
-          <div class="author-avatar" style="background:#2ECC71">서</div>
-          <span class="author-info">서예림 · 심사1과</span>
-        </div>
-        <span class="case-time">45→22min</span>
-      </div>
-    </div>
-  </div>
-  </div>
-</div>
-
-<div class="collab">
-  <div class="collab-title">외부 협력 네트워크</div>
-  <div class="collab-sub">BOSIM Lab은 보훈심사위원회 내부를 넘어 타부처·외부 전문기관과 함께 합니다</div>
-  <div class="collab-grid">
-    <div class="collab-card">
-      <img src="images/mcee_logo.svg" alt="기후에너지환경부" style="height:40px;margin:0 auto 10px;display:block;object-fit:contain;">
-      <div class="collab-name">기후에너지환경부</div>
-      <div class="collab-role">이미정 (4급) · AI 보안 표준화 협업<br>보안 가이드라인 공동 제작</div>
-    </div>
-    <div class="collab-card">
-      <img src="images/kdn_logo.png" alt="한전 KDN" style="height:36px;margin:4px auto 10px;display:block;object-fit:contain;">
-      <div class="collab-name">한전 KDN</div>
-      <div class="collab-role">이창열 (보안사업단장) · 기술 멘토링<br>시스템 최적화 전문 자문</div>
-    </div>
-    <div class="collab-card">
-      <img src="images/hrwc_logo.png" alt="고준위방사성폐기물관리위원회" style="height:40px;margin:0 auto 10px;display:block;object-fit:contain;">
-      <div class="collab-name">고준위방사성폐기물관리위원회</div>
-      <div class="collab-role">정민구 사무관 · 외부 협업<br>기술수용모델 기반 실증</div>
-    </div>
-  </div>
-</div>
+<section class="about-section">
+  <h2>BOSIM Lab</h2>
+  <p>
+    2026년 3월, 국가보훈부가 선정한 AI 연구모임입니다.<br>
+    보훈심사위원회 심사1·2·3과 11명이 함께, 보훈심사 현장에 AI를 실증했습니다.<br>
+    7월 공개 워크숍에서 Before/After 데이터를 발표합니다.
+  </p>
+</section>
 
 </div>
 
 <footer>
-  <div class="container">
-    <p>&copy; 2026 BOSIM Lab — AI-Driven Bohun Innovation Lab. All rights reserved.</p>
-    <p style="margin-top:4px">보훈심사위원회 · 2026.3~7 국가보훈부 AI 연구모임</p>
+  <div class="footer-inner">
+    <div class="footer-left">
+      BOSIM Lab — 보훈심사 AI 연구모임<br>
+      국가보훈부 선정 · 2026.3~7 · 보훈심사위원회 주관
+    </div>
+    <div class="footer-right">
+      <a href="/legal-ai.html">보심 AI 체험</a>
+      <span>·</span>
+      <span>제2회 법령데이터 활용 아이디어 공모전 출품작</span>
+    </div>
   </div>
 </footer>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modal">
-    <div class="modal-top" id="modalTop"></div>
-    <div class="modal-header">
-      <div class="modal-header-left">
-        <div class="modal-title" id="modalTitle"></div>
-        <div class="modal-meta">
-          <div class="modal-avatar" id="modalAvatar"></div>
-          <span class="modal-meta-text" id="modalMeta"></span>
-        </div>
-      </div>
-      <button class="modal-close" id="modalClose">&times;</button>
-    </div>
-    <div class="modal-content">
-      <div class="modal-badges" id="modalBadges"></div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">업무 설명</div>
-        <div class="modal-desc" id="modalDesc"></div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">Before / After 비교</div>
-        <table class="modal-table">
-          <thead><tr><th>항목</th><th>Before</th><th>After</th><th>변화</th></tr></thead>
-          <tbody id="modalTable"></tbody>
-        </table>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">사용 AI 도구</div>
-        <div id="modalTools"></div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">프롬프트 예시</div>
-        <div class="modal-prompt" id="modalPrompt"></div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-section-title">시사점</div>
-        <div class="modal-insight" id="modalInsight"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
-(function() {
-  /* ── Filter ── */
-  const buttons = document.querySelectorAll('.filter-btn');
-  const cards = document.querySelectorAll('.case-card');
-  const countEl = document.querySelector('.case-count');
-  let isAnimating = false;
+(function(){
+  const cases = [
+    { name:"이동률", org:"보훈심사위원회 심사1과", tag:"요건심의",
+      title:"AI 활용 상이 요건 판단 참조 초안 자동 생성",
+      before:"60분", after:"22분", save:"63%" },
+    { name:"박수정", org:"보훈심사위원회 심사1과", tag:"요건심의",
+      title:"ZIP 중첩 파일 자동 해제 및 일괄 인쇄 자동화",
+      before:"35분", after:"6분", save:"83%" },
+    { name:"손숙", org:"보훈심사위원회 심사1과", tag:"부양심의",
+      title:"주로부양 판단 체크리스트 AI 자동 생성",
+      before:"45분", after:"15분", save:"67%" },
+    { name:"김민주", org:"보훈심사위원회 심사1과", tag:"이의신청",
+      title:"이의신청 쟁점 AI 자동 분류 및 요약",
+      before:"40분", after:"14분", save:"65%" },
+    { name:"최혜진", org:"보훈심사위원회 심사1과", tag:"요건심의",
+      title:"의무기록 핵심 내용 AI 요약 보조",
+      before:"50분", after:"20분", save:"60%" },
+    { name:"김선애", org:"보훈심사위원회 심사1과", tag:"행정지원",
+      title:"반복 공문 초안 AI 자동 작성",
+      before:"30분", after:"8분", save:"73%" },
+    { name:"하동석", org:"보훈심사위원회 심사2과", tag:"부양심의",
+      title:"부양 사실조사 질문지 AI 자동 생성",
+      before:"90분", after:"35분", save:"61%" },
+    { name:"유진아", org:"보훈심사위원회 심사3과", tag:"요건심의",
+      title:"군 복무기록 AI 요약 및 핵심 쟁점 추출",
+      before:"55분", after:"18분", save:"67%" },
+    { name:"임환기", org:"보훈심사위원회 심사3과", tag:"이의신청",
+      title:"이의신청 처분시점 법령 자동 비교 활용",
+      before:"45분", after:"12분", save:"73%" },
+    { name:"황인실", org:"보훈심사위원회 심사3과", tag:"요건심의",
+      title:"심사 보고서 초안 AI 보조 작성",
+      before:"70분", after:"25분", save:"64%" },
+    { name:"이영선", org:"보훈심사위원회", tag:"요건심의",
+      title:"판례 검색 및 핵심 논지 AI 요약",
+      before:"50분", after:"16분", save:"68%" }
+    // TODO: 타부처 협업 케이스 — 추후 추가 예정
+    // { name:"최선영", org:"법제처", tag:"법령검토", ... }
+    // { name:"이미정", org:"기후환경에너지부", tag:"AI보안", ... }
+    // { name:"정민구", org:"고준위방폐위", tag:"행정지원", ... }
+    // { name:"이창열", org:"한전 KDN", tag:"보안멘토링", ... }
+  ];
 
-  buttons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      if (isAnimating) return;
-      const filter = this.dataset.filter;
-      buttons.forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      isAnimating = true;
-
-      cards.forEach(card => {
-        const show = filter === 'all' || card.dataset.category === filter;
-        if (!show && !card.classList.contains('hidden')) card.classList.add('fade-out');
-        if (show && card.classList.contains('hidden')) { card.classList.remove('hidden'); card.classList.add('fade-out'); }
-      });
-
-      setTimeout(() => {
-        let visibleCount = 0;
-        cards.forEach(card => {
-          const show = filter === 'all' || card.dataset.category === filter;
-          if (show) { card.classList.remove('hidden'); visibleCount++; }
-          else card.classList.add('hidden');
-          card.classList.remove('fade-out');
-        });
-        countEl.textContent = visibleCount + ' cases';
-        requestAnimationFrame(() => { isAnimating = false; });
-      }, 300);
-    });
-  });
-
-  /* ── Case Data ── */
-  const caseData = {
-    'case-bash-001': {
-      title: 'ZIP 다중 중첩 파일 자동 해제 & 일괄 인쇄',
-      author: '박승정', dept: '심사1과', avatarColor: 'var(--coral)',
-      category: 'highlight', categoryLabel: '⭐ 실증 케이스 · 업무자동화', badgeClass: 'cb-highlight',
-      improve: '-83%',
-      desc: '심사 문서가 ZIP > ZIP > ZIP 다중 중첩으로 압축되어 있어 수동 해제 시 최대 800페이지 분량 처리 필요. 사건 1건 준비에 약 35분 소요, 파일 누락 위험도 존재했습니다. Claude와 3회 반복 대화로 BASH 스크립트를 작성하여 압축 자동 해제 → 파일 목록 생성 → 인쇄 대기열 전송까지 전 과정을 자동화했습니다.',
-      table: [
-        ['처리시간', '35분', '6분', '-83%'],
-        ['파일 누락 위험', '존재', '없음', '제거'],
-        ['전문 지식', '불필요', '불필요', '유지']
-      ],
-      tools: [
-        { name: 'Claude Code', color: 'var(--accent)' },
-        { name: 'BASH 스크립트', color: 'var(--teal)' }
-      ],
-      prompt: '다음 요구사항으로 BASH 스크립트를 작성해주세요.\n\n1. 지정 폴더의 ZIP 파일을 재귀적으로 해제 (ZIP 내부의 ZIP까지 모두)\n2. 해제된 모든 PDF·이미지 파일 목록을 정렬하여 생성\n3. 인쇄 대기열에 순서대로 전송\n4. 에러 발생 시 어느 파일에서 문제인지 명확히 출력\n\n환경: 업무망 로컬 실행, Windows Git Bash',
-      insight: '"이게 된다고요?" — 첫 시연 후 동료 반응. 코딩 지식 없이도 Claude와의 대화만으로 업무 자동화가 가능하다는 것을 팀 내부에 증명한 사례. 팀 공유 완료 후 실제 업무에 사용 중이며, 업무망(폐쇄망) 로컬 실행으로 보안 우려도 없음.'
-    },
-    'case-flex-002': {
-      title: '출퇴근 유연근무 신청 사유 AI 초안 작성',
-      author: '박승정', dept: '심사1과', avatarColor: 'var(--coral)',
-      category: 'highlight', categoryLabel: '⭐ 실증 케이스 · 행정문서', badgeClass: 'cb-highlight',
-      improve: '-83%',
-      desc: '유연근무 신청 시 사유 문구를 매번 새로 고민. 규정 확인과 사유 쓰기에 약 30분 소요, 공문체에 맞는 문구 작성이 어려웠습니다. ChatGPT 개인 계정으로 개인정보 미포함 수칙 철저히 준수하며 "공무원 유연근무 신청 사유 3~4문장, 공문체 어조" 프롬프트로 초안 생성 → 수정 후 제출. 동료 2~3명에게 자발적으로 공유되며 확산.',
-      table: [
-        ['처리시간', '30분', '5분', '-83%'],
-        ['문체 일관성', '편차 있음', '공문체 유지', '향상'],
-        ['개인정보 노출', '없음', '없음(비식별)', '유지']
-      ],
-      tools: [
-        { name: 'ChatGPT', color: '#10A37F' }
-      ],
-      prompt: '당신은 공공기관 행정 문서 작성 전문가입니다.\n\n아래 조건으로 공무원 유연근무 신청 사유를 3~4문장으로 작성해주세요.\n- 사유 유형: [시차출퇴근 / 재택근무 / 기타]\n- 기간: [시작일~종료일]\n- 필요성: [간단한 상황 설명 — 개인정보 미포함]\n- 어조: 공문체, 정중하게\n\n개인 식별 정보(이름, 주민번호, 부서 세부 정보)는 포함하지 않습니다.',
-      insight: '"심사 업무 외에도 행정 잡무에도 쓸 수 있네요" — 동료 반응. 개인 계정 ChatGPT를 쓰되 비식별 수칙을 철저히 준수한 안전한 활용 사례. 개인 활용에서 시작하여 동료 자발적 확산으로 이어진 점이 인상적.'
-    },
-    '1': {
-      title: '이의신청 검토 AI 보조',
-      author: '손숙', dept: '심사1과', avatarColor: 'var(--accent)',
-      category: 'req', categoryLabel: '요건심의', badgeClass: 'cb-req',
-      improve: '-45%',
-      desc: '기각된 이의신청 건을 재검토할 때, 신청서의 핵심 쟁점을 AI가 자동으로 추출하고 과거 유사 판례와 매칭합니다. 기존에는 수작업으로 판례집을 넘기며 유사 사례를 찾았으나, AI 도입 후 쟁점별 관련 판례 3~5건을 즉시 제시받아 검토 품질과 속도가 동시에 향상되었습니다.',
-      table: [
-        ['처리시간', '40분', '22분', '-45%'],
-        ['정확도(판례 매칭)', '72%', '91%', '+19%p'],
-        ['담당자 만족도', '3.1/5', '4.5/5', '+1.4']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: 'HWP 연동 매크로', color: 'var(--teal)' }
-      ],
-      prompt: '다음은 보훈보상 이의신청서입니다.\n\n1. 신청인의 핵심 쟁점을 3가지 이내로 요약해주세요.\n2. 각 쟁점에 대해 국가보훈부 심사 결정례 중 유사한 사례를 찾아 [결정번호, 요지, 유사도%]로 정리해주세요.\n3. 기각 사유와 신청인 주장의 차이점을 표로 비교해주세요.\n\n[이의신청서 본문 붙여넣기]',
-      insight: '판례 매칭 정확도가 72%에서 91%로 크게 향상되었으며, 특히 신임 심사관의 검토 품질이 경력 심사관 수준에 근접했습니다. AI가 쟁점을 구조화해주면서 검토 누락이 현저히 줄었고, 이는 민원인 만족도 향상에도 기여할 것으로 기대됩니다.'
-    },
-    '2': {
-      title: '유사 판례 검색 프롬프트',
-      author: '유진아', dept: '심사3과', avatarColor: 'var(--teal)',
-      category: 'common', categoryLabel: '공통', badgeClass: 'cb-common',
-      improve: '-67%',
-      desc: '과거 10년간 축적된 심사 결정문 데이터베이스에서 현재 심사 건과 유사한 사례를 AI로 검색합니다. 키워드 기반 수동 검색 대비 의미 기반(semantic) 검색으로 전환하여, 표현이 달라도 쟁점이 동일한 판례를 정확하게 찾아냅니다. 검색 결과에 유사도 점수와 핵심 요지를 함께 제시합니다.',
-      table: [
-        ['처리시간', '55분', '18분', '-67%'],
-        ['정확도(검색 적합도)', '65%', '88%', '+23%p'],
-        ['담당자 만족도', '2.9/5', '4.6/5', '+1.7']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: 'Excel 정리 스크립트', color: '#185FA5' }
-      ],
-      prompt: '당신은 보훈심사 판례 검색 전문가입니다.\n\n아래 심사 건의 [상이등급, 상이부위, 신청 유형, 핵심 쟁점]을 분석한 뒤,\n유사한 과거 결정례를 5건 추천해주세요.\n\n출력 형식:\n| 순위 | 결정번호 | 유사도 | 쟁점 요지 | 결정 결과 |\n\n현재 심사 건:\n[심사 건 요약 붙여넣기]',
-      insight: '의미 기반 검색으로 전환하면서, 기존 키워드 검색에서 누락되던 "표현은 다르지만 쟁점은 동일한" 판례를 발굴할 수 있게 되었습니다. 이로 인해 심사 일관성이 향상되고, 특히 복잡한 사안에서 참고 판례의 질이 크게 개선되었습니다.'
-    },
-    '3': {
-      title: '심사자료 요약 자동화',
-      author: '하동석', dept: '심사2과', avatarColor: 'var(--coral)',
-      category: 'dep', categoryLabel: '부양심의', badgeClass: 'cb-dep',
-      improve: '-61%',
-      desc: '부양 심의 시 제출되는 대량의 서류(가족관계증명서, 소득증빙, 진단서 등)를 AI가 읽고 핵심 쟁점을 3줄로 요약합니다. 심사관은 원본 서류를 처음부터 읽는 대신 AI 요약본으로 전체 그림을 파악한 뒤, 쟁점 부분만 원본에서 확인하는 방식으로 전환하여 준비 시간이 대폭 단축되었습니다.',
-      table: [
-        ['처리시간', '90분', '35분', '-61%'],
-        ['정확도(쟁점 추출)', '70%', '89%', '+19%p'],
-        ['담당자 만족도', '2.8/5', '4.3/5', '+1.5']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: 'PDF 텍스트 추출', color: 'var(--coral)' }
-      ],
-      prompt: '다음은 부양심의 관련 제출 서류입니다.\n\n1단계: 서류 유형별로 분류해주세요 (가족관계, 소득, 의료, 기타)\n2단계: 각 서류에서 심의에 핵심적인 사실관계를 추출해주세요\n3단계: 전체 쟁점을 3줄 이내로 요약해주세요\n4단계: 추가 확인이 필요한 사항이 있다면 표시해주세요\n\n[제출 서류 텍스트 붙여넣기]',
-      insight: '서류가 10건 이상인 복잡한 부양심의 건에서 효과가 극대화됩니다. 다만 AI 요약만으로 심사를 완결하지 않고, 반드시 원본 대조 확인을 거치는 프로세스를 병행해야 합니다. 요약 정확도 89%는 높은 수치이나, 나머지 11%에 중요한 쟁점이 포함될 수 있으므로 "보조 도구"로서의 역할을 명확히 해야 합니다.'
-    },
-    '4': {
-      title: '이의신청 쟁점 자동 분류',
-      author: '임환기', dept: '심사3과', avatarColor: 'var(--amber)',
-      category: 'appeal', categoryLabel: '이의신청', badgeClass: 'cb-appeal',
-      improve: '-60%',
-      desc: '이의신청서 접수 시 AI가 신청서 본문을 분석하여 쟁점을 자동으로 추출하고, 유형별(사실 관계 다툼, 등급 이의, 절차 하자, 새로운 증거 제출 등)로 분류합니다. 분류 결과를 바탕으로 담당 심사관에게 자동 배정하고, 관련 법령과 선례를 함께 제시하여 초기 검토 속도를 높였습니다.',
-      table: [
-        ['처리시간', '30분', '12분', '-60%'],
-        ['정확도(분류 정확도)', '75%', '93%', '+18%p'],
-        ['담당자 만족도', '3.0/5', '4.4/5', '+1.4']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '내부 분류 체계 DB', color: 'var(--amber)' }
-      ],
-      prompt: '당신은 보훈심사 이의신청 분류 전문가입니다.\n\n다음 이의신청서를 분석하여:\n\n1. 핵심 쟁점을 추출하세요 (최대 3개)\n2. 각 쟁점을 다음 유형으로 분류하세요:\n   - A: 사실관계 다툼\n   - B: 상이등급 이의\n   - C: 절차상 하자\n   - D: 새로운 증거 제출\n   - E: 기타\n3. 관련 법령 조항을 명시하세요\n4. 유사 선례 결정 2건을 제시하세요\n\n[이의신청서 붙여넣기]',
-      insight: '자동 분류 정확도 93%는 수작업 분류(75%) 대비 크게 향상된 수치입니다. 특히 복합 쟁점(2개 이상 유형이 혼재된 경우)의 식별 능력이 뛰어나, 배정 오류로 인한 재배정 건수가 월 평균 8건에서 2건으로 감소했습니다.'
-    },
-    '5': {
-      title: '회의록 자동 요약 시스템',
-      author: '김민주', dept: '심사1과', avatarColor: '#185FA5',
-      category: 'common', categoryLabel: '공통', badgeClass: 'cb-common',
-      improve: '-38%',
-      desc: '심사위원회 회의 후 작성하는 회의록을 AI가 핵심 결정사항 중심으로 자동 요약합니다. 회의 중 기록된 원문(메모, 녹취 텍스트)을 입력하면, 안건별 결정사항·위원 의견·후속조치를 구조화된 형식으로 정리합니다. 기존 수작업 대비 형식 일관성도 크게 향상되었습니다.',
-      table: [
-        ['처리시간', '45분', '28분', '-38%'],
-        ['정확도(결정사항 반영)', '82%', '94%', '+12%p'],
-        ['담당자 만족도', '3.2/5', '4.1/5', '+0.9']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: 'Clova Note (녹취)', color: '#185FA5' }
-      ],
-      prompt: '다음은 보훈심사위원회 회의 기록입니다.\n\n아래 형식으로 회의록을 작성해주세요:\n\n## 회의 개요\n- 일시 / 참석자 / 안건 수\n\n## 안건별 요약\n각 안건마다:\n- 안건명\n- 핵심 논의 내용 (3줄 이내)\n- 위원 주요 의견\n- 결정사항\n- 후속조치 및 담당자\n\n## 종합 정리\n- 주요 결정사항 목록\n- 다음 회의 예정 안건\n\n[회의 기록 붙여넣기]',
-      insight: '회의록의 형식 일관성이 확보되면서 후속조치 추적이 용이해졌습니다. 다만 녹취 텍스트의 품질에 따라 요약 정확도가 달라지므로, 핵심 결정사항은 회의 중 별도로 메모하여 AI 입력에 포함시키는 것이 권장됩니다. 회의록 작성 시간 단축보다 "누락 방지"가 더 큰 성과입니다.'
-    },
-    '6': {
-      title: '요건 검토 체크리스트 생성',
-      author: '최혜진', dept: '심사1과', avatarColor: '#D4537E',
-      category: 'req', categoryLabel: '요건심의', badgeClass: 'cb-req',
-      improve: '-52%',
-      desc: '유공자 요건 심의 시 확인해야 할 법적·절차적 항목을 AI가 자동 생성합니다. 신청 유형(참전, 공상, 보훈보상 등)에 따라 맞춤형 체크리스트를 만들어, 심사관이 항목을 하나씩 확인하며 진행합니다. 누락 방지 효과가 가장 큰 케이스입니다.',
-      table: [
-        ['처리시간', '25분', '12분', '-52%'],
-        ['정확도(항목 완전성)', '78%', '96%', '+18%p'],
-        ['담당자 만족도', '3.3/5', '4.7/5', '+1.4']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '법령 DB 참조', color: '#D4537E' }
-      ],
-      prompt: '당신은 국가보훈부 요건심의 전문가입니다.\n\n다음 신청 건에 대한 요건 검토 체크리스트를 생성해주세요.\n\n신청 유형: [참전/공상/보훈보상/기타]\n\n체크리스트 형식:\n□ 항목명 — 확인 내용 — 근거 법령\n\n카테고리:\n1. 신청 자격 요건\n2. 구비서류 완전성\n3. 기간·절차 적법성\n4. 사실관계 확인 사항\n5. 특이사항 점검\n\n각 항목에 관련 법령(국가유공자법, 보훈보상법 등) 조항을 반드시 명시해주세요.\n\n[신청서 기본 정보 붙여넣기]',
-      insight: '체크리스트 자동 생성으로 항목 완전성이 78%에서 96%로 향상되었습니다. 특히 신임 심사관의 경우, 경험 부족으로 놓치기 쉬운 특수 요건(예: 참전 기간 산정, 해외 파병 특례)을 AI가 빠짐없이 포함시켜줍니다. 체크리스트가 표준화되면서 심사관 간 검토 품질 편차도 줄었습니다.'
-    },
-    '7': {
-      title: '부양 요건 법령 비교표 생성',
-      author: '박지영', dept: '심사2과', avatarColor: 'var(--coral)',
-      category: 'dep', categoryLabel: '부양심의', badgeClass: 'cb-dep',
-      improve: '-48%',
-      desc: '부양 관련 법령(국가유공자법, 보훈보상법 등)의 부양 요건 조항을 AI가 비교·정리합니다. 법령 간 차이점(대상 범위, 소득 기준, 연령 요건 등)을 표 형태로 자동 생성하여, 심사관이 적용 법률을 빠르게 판단할 수 있도록 지원합니다.',
-      table: [
-        ['처리시간', '50분', '26분', '-48%'],
-        ['정확도(조문 반영)', '74%', '92%', '+18%p'],
-        ['담당자 만족도', '3.0/5', '4.4/5', '+1.4']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '국가법령정보센터', color: 'var(--teal)' }
-      ],
-      prompt: '다음 두 법령의 부양 관련 조항을 비교해주세요.\n\n비교 항목:\n| 구분 | 국가유공자법 | 보훈보상법 |\n- 대상 범위\n- 소득 기준\n- 연령 요건\n- 부양 순위\n- 급여 수준\n\n각 항목에 해당 조문 번호를 명시해주세요.\n\n[법령 조항 붙여넣기]',
-      insight: '법령 비교표 자동 생성으로 두 법률 간 미묘한 차이점을 놓치는 실수가 크게 줄었습니다. 특히 법령 개정 직후 신·구 조문 비교에 활용하면 실무 적용 오류를 사전에 방지할 수 있습니다.'
-    },
-    '8': {
-      title: '상이등급 판정 근거 정리',
-      author: '이준혁', dept: '심사1과', avatarColor: 'var(--accent)',
-      category: 'req', categoryLabel: '요건심의', badgeClass: 'cb-req',
-      improve: '-55%',
-      desc: '상이등급 재판정 심의 시, 의학적 소견서와 법적 등급 기준을 AI가 대조·분석합니다. 진단 내용에서 등급 판정에 필요한 핵심 의학 소견을 추출하고, 해당 등급의 법적 요건과 매칭하여 판정 근거 문서 초안을 작성합니다.',
-      table: [
-        ['처리시간', '60분', '27분', '-55%'],
-        ['정확도(등급 매칭)', '71%', '90%', '+19%p'],
-        ['담당자 만족도', '2.9/5', '4.5/5', '+1.6']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '상이등급 기준표', color: '#185FA5' }
-      ],
-      prompt: '다음 진단서/소견서와 상이등급 기준표를 대조하여 판정 근거를 정리해주세요.\n\n1. 진단서에서 핵심 의학적 소견 추출\n2. 해당 소견에 부합하는 상이등급 기준 조항 명시\n3. 판정 근거를 논리적으로 구성\n4. 등급 상향/유지/하향 판단 근거 제시\n\n[진단서 내용 붙여넣기]\n[상이등급 기준 붙여넣기]',
-      insight: '의학 소견과 법적 기준을 체계적으로 대조하면서 판정의 논리적 일관성이 크게 향상되었습니다. 특히 복합 상이(2개 이상 부위)의 등급 산정에서 AI 보조의 효과가 두드러집니다.'
-    },
-    '9': {
-      title: '민원 답변서 초안 작성',
-      author: '정수현', dept: '심사2과', avatarColor: '#185FA5',
-      category: 'common', categoryLabel: '공통', badgeClass: 'cb-common',
-      improve: '-43%',
-      desc: '반복되는 민원 유형(심사 진행 문의, 결과 통보 지연, 서류 보정 안내 등)에 대해 AI가 법적 근거를 포함한 답변서 초안을 작성합니다. 유형별 템플릿을 기반으로 개별 민원 내용에 맞게 커스터마이징하여 일관되고 정확한 답변을 제공합니다.',
-      table: [
-        ['처리시간', '35분', '20분', '-43%'],
-        ['정확도(법적 근거 포함)', '80%', '95%', '+15%p'],
-        ['담당자 만족도', '3.1/5', '4.3/5', '+1.2']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '민원 유형 DB', color: '#185FA5' }
-      ],
-      prompt: '다음 민원에 대한 공식 답변서를 작성해주세요.\n\n민원 유형: [진행 문의/결과 지연/서류 보정/기타]\n민원 내용 요약: [요약 내용]\n\n답변서 형식:\n1. 수신인 정보\n2. 민원 접수 사실 확인\n3. 처리 현황 및 사유 (관련 법령 조항 포함)\n4. 향후 일정 안내\n5. 문의처 안내\n\n어조: 정중하고 명확하게',
-      insight: '답변서 품질의 일관성이 확보되면서 재문의 비율이 감소했습니다. AI 초안을 기반으로 개별 상황에 맞게 수정하는 방식이 가장 효율적이며, 특히 법적 근거 누락을 방지하는 데 큰 효과가 있습니다.'
-    },
-    '10': {
-      title: '이의신청 기각 사유서 작성',
-      author: '강민서', dept: '심사3과', avatarColor: 'var(--amber)',
-      category: 'appeal', categoryLabel: '이의신청', badgeClass: 'cb-appeal',
-      improve: '-50%',
-      desc: '이의신청 기각 결정 시 법적 근거, 기존 결정 사유, 이의신청 주장에 대한 반박 논리를 AI가 체계적으로 정리하여 사유서 초안을 작성합니다. 판례와 법령 조항을 자동으로 인용하여 논리적 완성도를 높입니다.',
-      table: [
-        ['처리시간', '40분', '20분', '-50%'],
-        ['정확도(법률 인용)', '76%', '94%', '+18%p'],
-        ['담당자 만족도', '3.0/5', '4.5/5', '+1.5']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '판례 검색 시스템', color: 'var(--amber)' }
-      ],
-      prompt: '다음 이의신청 건의 기각 사유서를 작성해주세요.\n\n원결정 내용: [결정 요약]\n이의신청 주장: [주장 요약]\n\n사유서 구성:\n1. 원결정 요지\n2. 이의신청 주장 요약\n3. 각 주장에 대한 판단 (법적 근거 포함)\n4. 관련 선례 인용\n5. 결론\n\n법률 인용 시 조·항·호까지 명시해주세요.',
-      insight: '기각 사유서의 법률 인용 정확도가 94%로 향상되면서, 행정소송 대비 측면에서도 문서 품질이 크게 개선되었습니다. 논리 구조의 일관성이 확보되어 심사관별 품질 편차가 줄었습니다.'
-    },
-    '11': {
-      title: '소득 증빙 자료 교차 검증',
-      author: '윤서연', dept: '심사2과', avatarColor: '#E67E22',
-      category: 'dep', categoryLabel: '부양심의', badgeClass: 'cb-dep',
-      improve: '-44%',
-      desc: '부양 심의 시 제출된 소득 증빙 자료(원천징수영수증, 건강보험료 산정 내역, 국민연금 내역 등) 여러 건을 AI가 교차 대조합니다. 자료 간 소득 금액 불일치, 기간 공백, 미제출 항목을 자동으로 탐지하여 심사관에게 보정 요청 대상을 제시합니다.',
-      table: [
-        ['처리시간', '45분', '25분', '-44%'],
-        ['정확도(불일치 탐지)', '68%', '91%', '+23%p'],
-        ['담당자 만족도', '2.8/5', '4.2/5', '+1.4']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: 'Excel 비교 도구', color: '#E67E22' }
-      ],
-      prompt: '다음 소득 증빙 자료들을 교차 검증해주세요.\n\n자료 목록:\n1. 원천징수영수증 (연도, 총급여)\n2. 건강보험료 산정 내역 (월별 보수월액)\n3. 국민연금 내역 (월별 기준소득월액)\n\n검증 항목:\n- 자료 간 소득 금액 일치 여부\n- 기간 공백 또는 중복\n- 미제출 필수 자료\n- 이상치 탐지\n\n결과를 표로 정리해주세요.',
-      insight: '교차 검증 자동화로 기존 수작업에서 놓치던 미묘한 불일치(예: 건보료 기준 소득과 원천징수 소득 차이)를 정확히 탐지합니다. 보정 요청의 적시성이 향상되어 심의 지연이 줄었습니다.'
-    },
-    '12': {
-      title: '참전 기간 산정 보조',
-      author: '장태호', dept: '심사1과', avatarColor: 'var(--accent)',
-      category: 'req', categoryLabel: '요건심의', badgeClass: 'cb-req',
-      improve: '-40%',
-      desc: '참전유공자 요건 심의 시 복무 기간, 파병 기간, 전투 참가 기간 등을 AI로 정확히 계산합니다. 군 복무 기록과 파병 명령서를 입력하면, 관련 법령 조건(최소 복무 기간, 파병 기간 가산 등)의 충족 여부를 자동 판단합니다.',
-      table: [
-        ['처리시간', '30분', '18분', '-40%'],
-        ['정확도(기간 계산)', '85%', '98%', '+13%p'],
-        ['담당자 만족도', '3.4/5', '4.6/5', '+1.2']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '날짜 계산기', color: 'var(--teal)' }
-      ],
-      prompt: '다음 군 복무 기록을 분석하여 참전유공자 요건 충족 여부를 판단해주세요.\n\n입력 정보:\n- 입대일 / 전역일\n- 파병 기간 (시작~종료)\n- 전투 참가 기록\n\n확인 사항:\n1. 총 복무 기간 (일 단위)\n2. 파병 기간 (일 단위)\n3. 참전유공자법 제2조 요건 충족 여부\n4. 기간 가산 적용 여부\n\n[복무 기록 붙여넣기]',
-      insight: '기간 계산 정확도가 98%로 가장 높은 수치를 기록했습니다. 날짜 계산은 AI의 강점 영역으로, 윤년·군복무 특례 등 복잡한 조건도 정확히 처리합니다. 다만 원본 기록의 오기 가능성은 항상 별도 확인이 필요합니다.'
-    },
-    '13': {
-      title: '법령 개정 비교 분석',
-      author: '송지원', dept: '심사3과', avatarColor: 'var(--teal)',
-      category: 'common', categoryLabel: '공통', badgeClass: 'cb-common',
-      improve: '-56%',
-      desc: '보훈 관련 법령 개정 시 신·구 조문 비교표를 AI가 자동 생성합니다. 개정 내용이 실무에 미치는 영향을 분석하고, 심사 기준 변경이 필요한 항목을 식별하여 실무 매뉴얼 업데이트 초안까지 제시합니다.',
-      table: [
-        ['처리시간', '70분', '31분', '-56%'],
-        ['정확도(조문 비교)', '77%', '95%', '+18%p'],
-        ['담당자 만족도', '2.7/5', '4.5/5', '+1.8']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '국가법령정보센터', color: 'var(--teal)' }
-      ],
-      prompt: '다음 법령의 신·구 조문을 비교 분석해주세요.\n\n출력 형식:\n| 조항 | 구법 | 신법 | 변경 내용 | 실무 영향 |\n\n추가 분석:\n1. 심사 기준 변경이 필요한 항목\n2. 경과조치 적용 대상\n3. 실무 매뉴얼 수정 필요 사항\n\n[구법 조문 붙여넣기]\n[신법 조문 붙여넣기]',
-      insight: '법령 개정 분석에서 가장 높은 만족도(+1.8)를 기록했습니다. 특히 경과조치와 실무 영향 분석이 실질적으로 유용하며, 매뉴얼 업데이트 누락을 방지하는 데 큰 효과가 있습니다.'
-    },
-    '14': {
-      title: '이의신청 접수 요건 사전 검토',
-      author: '한소희', dept: '심사3과', avatarColor: '#9B59B6',
-      category: 'appeal', categoryLabel: '이의신청', badgeClass: 'cb-appeal',
-      improve: '-47%',
-      desc: '이의신청 접수 단계에서 AI가 신청서의 형식적 요건(기한 준수, 필수 기재사항, 첨부서류)과 실체적 요건(이의 사유의 구체성, 새로운 증거 유무)을 사전 점검합니다. 보정이 필요한 사항을 즉시 안내하여 불필요한 반려와 재접수를 줄입니다.',
-      table: [
-        ['처리시간', '20분', '11분', '-47%'],
-        ['정확도(요건 점검)', '79%', '94%', '+15%p'],
-        ['담당자 만족도', '3.2/5', '4.4/5', '+1.2']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '접수 체크리스트', color: '#9B59B6' }
-      ],
-      prompt: '다음 이의신청서의 접수 요건을 점검해주세요.\n\n형식적 요건:\n□ 이의신청 기한 (결정 통보 후 90일) 준수 여부\n□ 필수 기재사항 완전성\n□ 첨부서류 목록 확인\n\n실체적 요건:\n□ 이의 사유의 구체성\n□ 새로운 증거 제출 여부\n□ 기존 주장과의 차이점\n\n보정 필요 사항이 있으면 항목별로 정리해주세요.\n\n[이의신청서 붙여넣기]',
-      insight: '사전 검토로 보정 요청 건수가 30% 감소하여 민원인과 심사관 양측의 시간을 절약합니다. 형식적 요건 누락은 AI가 거의 완벽히 탐지하며, 실체적 요건 판단은 심사관의 최종 확인이 필요합니다.'
-    },
-    '15': {
-      title: '부양 대상 가족관계 분석',
-      author: '조현우', dept: '심사2과', avatarColor: '#2ECC71',
-      category: 'dep', categoryLabel: '부양심의', badgeClass: 'cb-dep',
-      improve: '-39%',
-      desc: '복잡한 가족관계증명서(재혼, 입양, 사실혼 등)를 AI가 분석하여 부양 대상 적격 여부를 판단합니다. 가족관계를 도식화하고, 각 구성원의 부양 순위·자격을 법령 기준에 따라 구조화된 표로 정리합니다.',
-      table: [
-        ['처리시간', '35분', '21분', '-39%'],
-        ['정확도(관계 분석)', '73%', '90%', '+17%p'],
-        ['담당자 만족도', '3.1/5', '4.3/5', '+1.2']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '가족관계 분석 템플릿', color: '#2ECC71' }
-      ],
-      prompt: '다음 가족관계증명서를 분석하여 부양 대상 적격 여부를 판단해주세요.\n\n분석 항목:\n1. 가족관계 도식화 (유공자 중심)\n2. 각 가족 구성원의 부양 순위\n3. 부양 자격 충족 요건 확인\n4. 특수 관계(재혼, 입양 등) 법적 처리\n5. 추가 확인 필요 사항\n\n관련 법령 조항을 함께 명시해주세요.\n\n[가족관계증명서 내용 붙여넣기]',
-      insight: '가족관계가 복잡한 케이스(3세대 이상, 재혼 가정 등)에서 효과가 극대화됩니다. AI가 관계를 구조화해주면서 부양 순위 판단 오류가 크게 감소했습니다.'
-    },
-    '16': {
-      title: '공상 인과관계 검토 보조',
-      author: '오성민', dept: '심사1과', avatarColor: '#E74C3C',
-      category: 'req', categoryLabel: '요건심의', badgeClass: 'cb-req',
-      improve: '-58%',
-      desc: '공무상 상이 인정 심의 시 근무환경·업무 특성과 발생한 상이 간의 인과관계를 AI가 분석합니다. 의학 소견, 근무 기록, 사고 경위서를 종합하여 인과관계의 논리적 근거를 구조화하고, 유사 인정 사례와 비교 분석합니다.',
-      table: [
-        ['처리시간', '55분', '23분', '-58%'],
-        ['정확도(인과 논증)', '69%', '88%', '+19%p'],
-        ['담당자 만족도', '2.7/5', '4.4/5', '+1.7']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '산재 판례 DB', color: '#E74C3C' }
-      ],
-      prompt: '다음 공상 인정 심의 건의 인과관계를 분석해주세요.\n\n자료:\n1. 근무 환경 및 업무 내용\n2. 상이 발생 경위\n3. 의학적 진단 소견\n\n분석 구조:\n- 업무 기인성 판단 (업무와 상이의 관련성)\n- 업무 수행성 판단 (업무 수행 중 발생 여부)\n- 의학적 개연성 평가\n- 유사 인정/불인정 사례 비교\n- 종합 판단 근거\n\n[관련 자료 붙여넣기]',
-      insight: '인과관계 논증의 구조화가 가장 큰 성과입니다. AI가 논리적 프레임워크를 제공하면서 심사관이 빠뜨리기 쉬운 논증 요소(업무 기인성 vs 수행성 구분 등)를 체계적으로 검토할 수 있게 되었습니다.'
-    },
-    '17': {
-      title: '주간 업무 보고서 자동화',
-      author: '권나영', dept: '심사1과', avatarColor: '#3498DB',
-      category: 'common', categoryLabel: '공통', badgeClass: 'cb-common',
-      improve: '-35%',
-      desc: '주간 심사 실적 데이터(처리 건수, 처리율, 평균 소요일 등)를 AI가 분석하여 보고서 초안을 작성합니다. 전주 대비 변화, 주요 이슈, 다음 주 예상 업무량을 자동으로 정리하여 보고 준비 시간을 단축합니다.',
-      table: [
-        ['처리시간', '40분', '26분', '-35%'],
-        ['정확도(데이터 반영)', '88%', '97%', '+9%p'],
-        ['담당자 만족도', '3.5/5', '4.2/5', '+0.7']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: 'Excel 데이터 연동', color: '#3498DB' }
-      ],
-      prompt: '다음 주간 심사 실적 데이터를 분석하여 보고서를 작성해주세요.\n\n보고서 형식:\n## 금주 실적 요약\n- 처리 건수 (유형별)\n- 처리율 (%)\n- 평균 소요일\n\n## 전주 대비 변화\n- 증감 분석\n\n## 주요 이슈\n- 지연 건 및 사유\n\n## 차주 예상\n- 예상 접수 건수\n- 주의 필요 사항\n\n[주간 실적 데이터 붙여넣기]',
-      insight: '정형화된 보고서 작성에서 AI의 효과가 안정적으로 나타납니다. 데이터 해석의 일관성이 확보되어 보고서 품질 편차가 줄었으며, 전주 대비 이상치 탐지 기능이 조기 경보 역할을 합니다.'
-    },
-    '18': {
-      title: '재심사 결정문 초안 작성',
-      author: '신동현', dept: '심사3과', avatarColor: 'var(--amber)',
-      category: 'appeal', categoryLabel: '이의신청', badgeClass: 'cb-appeal',
-      improve: '-53%',
-      desc: '이의신청이 인용되어 재심사 결정을 내릴 때, AI가 변경 사유, 법적 근거, 새로운 판단 결과를 포함한 결정문 초안을 작성합니다. 원결정과의 차이점을 명확히 기술하고, 관련 법령 조항과 판례를 자동 인용합니다.',
-      table: [
-        ['처리시간', '65분', '31분', '-53%'],
-        ['정확도(법률 형식)', '73%', '93%', '+20%p'],
-        ['담당자 만족도', '2.9/5', '4.6/5', '+1.7']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '결정문 양식 DB', color: 'var(--amber)' }
-      ],
-      prompt: '이의신청 인용에 따른 재심사 결정문을 작성해주세요.\n\n필요 정보:\n- 원결정 내용 및 일자\n- 이의신청 주장 요약\n- 재심사 판단 결과\n\n결정문 구성:\n1. 결정 주문\n2. 원결정 요지\n3. 이의신청 취지\n4. 재심사 판단 (변경 사유 + 법적 근거)\n5. 결론\n\n법률 형식에 맞춰 작성해주세요.',
-      insight: '결정문의 법률 형식 준수율이 93%로 크게 향상되었습니다. 특히 원결정과 재결정 간 논리적 일관성을 유지하면서도 변경 사유를 명확히 기술하는 데 AI의 구조화 능력이 효과적입니다.'
-    },
-    '19': {
-      title: '부양 심의 결정문 작성 보조',
-      author: '김태윤', dept: '심사2과', avatarColor: '#E67E22',
-      category: 'dep', categoryLabel: '부양심의', badgeClass: 'cb-dep',
-      improve: '-42%',
-      desc: '부양 심의 결과를 공식 결정문 형식으로 작성합니다. AI가 심사 결과, 적용 법령, 급여 산정 근거를 법적 형식에 맞춰 구성하고, 심사관이 검토·확정하는 방식으로 운영합니다.',
-      table: [
-        ['처리시간', '50분', '29분', '-42%'],
-        ['정확도(형식 준수)', '75%', '93%', '+18%p'],
-        ['담당자 만족도', '3.0/5', '4.3/5', '+1.3']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '결정문 템플릿', color: '#E67E22' }
-      ],
-      prompt: '부양 심의 결정문을 작성해주세요.\n\n심사 결과:\n- 대상자 관계: [관계]\n- 판정 결과: [인정/불인정]\n- 적용 법령: [법령명 + 조항]\n\n결정문 구성:\n1. 결정 주문\n2. 신청 경위\n3. 심사 내용 (부양 요건 충족 여부)\n4. 판단 근거 (법령 + 사실관계)\n5. 결론 및 급여 산정 근거\n\n[심사 자료 요약 붙여넣기]',
-      insight: '결정문 작성에서 형식 준수율 향상이 가장 실질적인 성과입니다. 표준화된 양식에 AI가 내용을 채우는 방식으로, 심사관은 판단에 집중하고 문서 작성 부담은 크게 줄었습니다.'
-    },
-    '20': {
-      title: '진단서·소견서 핵심 추출',
-      author: '배수진', dept: '심사1과', avatarColor: '#D4537E',
-      category: 'req', categoryLabel: '요건심의', badgeClass: 'cb-req',
-      improve: '-46%',
-      desc: '의료 진단서와 소견서에서 상이등급 판정에 필요한 핵심 의학적 소견(진단명, 장해 정도, 치료 경과, 향후 예후)을 AI가 추출합니다. 전문 의학 용어를 행정 판단에 필요한 형태로 변환하여 제시합니다.',
-      table: [
-        ['처리시간', '35분', '19분', '-46%'],
-        ['정확도(핵심 추출)', '74%', '91%', '+17%p'],
-        ['담당자 만족도', '3.2/5', '4.5/5', '+1.3']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: 'PDF 텍스트 추출', color: '#D4537E' }
-      ],
-      prompt: '다음 진단서/소견서에서 심사에 필요한 핵심 정보를 추출해주세요.\n\n추출 항목:\n1. 주진단명 및 부진단명\n2. 장해 정도 (일상생활 제한 수준)\n3. 치료 경과 요약\n4. 향후 예후 (호전/유지/악화 가능성)\n5. 상이등급 판정 관련 핵심 소견\n\n의학 용어는 행정 판단에 필요한 수준으로 풀어서 설명해주세요.\n\n[진단서 내용 붙여넣기]',
-      insight: '의학 용어의 행정적 해석이 핵심 성과입니다. 비전문가인 심사관이 의학 소견을 정확히 이해하고 등급 기준에 대입할 수 있게 되면서, 의료 자문 의뢰 건수도 감소했습니다.'
-    },
-    '21': {
-      title: '교육자료 슬라이드 생성',
-      author: '문지훈', dept: '심사2과', avatarColor: 'var(--teal)',
-      category: 'common', categoryLabel: '공통', badgeClass: 'cb-common',
-      improve: '-41%',
-      desc: '내부 교육용 법령·절차 안내 자료의 슬라이드 구성안을 AI가 작성합니다. 주제별로 핵심 내용, 사례, 퀴즈를 포함한 교육 자료 골격을 생성하여 교육 담당자의 준비 시간을 단축합니다.',
-      table: [
-        ['처리시간', '60분', '35분', '-41%'],
-        ['정확도(내용 적합성)', '80%', '92%', '+12%p'],
-        ['담당자 만족도', '3.3/5', '4.1/5', '+0.8']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: 'PowerPoint 변환', color: 'var(--teal)' }
-      ],
-      prompt: '다음 주제로 내부 교육용 슬라이드 구성안을 만들어주세요.\n\n교육 주제: [주제]\n대상: 보훈심사위원회 실무자\n시간: [30분/60분/90분]\n\n슬라이드 구성:\n1. 제목 슬라이드\n2. 학습 목표 (3개 이내)\n3. 핵심 내용 (슬라이드당 1개 포인트)\n4. 실제 사례 (비식별화)\n5. 실습/퀴즈\n6. 요약 및 Q&A\n\n각 슬라이드에 발표자 노트를 포함해주세요.',
-      insight: '교육 준비 시간 단축도 유의미하지만, 교육 품질의 표준화가 더 큰 성과입니다. AI가 생성한 구성안을 기반으로 경험이 적은 담당자도 체계적인 교육을 진행할 수 있게 되었습니다.'
-    },
-    '22': {
-      title: '이의신청 통계 분석 보고',
-      author: '류지현', dept: '심사3과', avatarColor: '#9B59B6',
-      category: 'appeal', categoryLabel: '이의신청', badgeClass: 'cb-appeal',
-      improve: '-49%',
-      desc: '월별·유형별 이의신청 접수 및 처리 통계를 AI가 분석합니다. 시계열 추세, 유형별 비중 변화, 인용률 변동 등을 자동 분석하고, 이슈 포인트와 대응 방안을 포함한 통계 리포트를 생성합니다.',
-      table: [
-        ['처리시간', '55분', '28분', '-49%'],
-        ['정확도(통계 분석)', '82%', '96%', '+14%p'],
-        ['담당자 만족도', '3.1/5', '4.5/5', '+1.4']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: 'Excel 데이터 분석', color: '#9B59B6' }
-      ],
-      prompt: '다음 이의신청 통계 데이터를 분석하여 보고서를 작성해주세요.\n\n데이터:\n[월별 접수/처리/인용/기각 건수 표]\n\n분석 항목:\n1. 월별 접수 추세 (증감 분석)\n2. 유형별 비중 변화\n3. 인용률 변동 및 원인 분석\n4. 주요 이슈 포인트\n5. 전년 동기 대비 비교\n6. 대응 방안 제안\n\n차트 제안도 포함해주세요.',
-      insight: '통계 분석의 깊이가 향상되면서 단순 수치 나열이 아닌 "왜 이런 변화가 발생했는가"에 대한 인사이트를 제공할 수 있게 되었습니다. 특히 인용률 변동 원인 분석이 정책 개선에 직접적으로 기여합니다.'
-    },
-    '23': {
-      title: '보훈보상 대상 적격 심사 보조',
-      author: '서예림', dept: '심사1과', avatarColor: '#2ECC71',
-      category: 'req', categoryLabel: '요건심의', badgeClass: 'cb-req',
-      improve: '-51%',
-      desc: '보훈보상 대상자 요건 심의 시 신청인의 제출 자료를 보훈보상법 기준과 체계적으로 대조합니다. AI가 각 요건별 충족 여부를 판단하고, 미충족 항목에 대한 보정 안내와 유사 인정 사례를 함께 제시합니다.',
-      table: [
-        ['처리시간', '45분', '22분', '-51%'],
-        ['정확도(요건 대조)', '76%', '94%', '+18%p'],
-        ['담당자 만족도', '3.0/5', '4.5/5', '+1.5']
-      ],
-      tools: [
-        { name: 'Claude 3.5', color: 'var(--accent)' },
-        { name: '보훈보상법 DB', color: '#2ECC71' }
-      ],
-      prompt: '다음 보훈보상 대상 신청 건의 적격 심사를 보조해주세요.\n\n신청 유형: [유형]\n제출 자료 목록: [목록]\n\n심사 항목:\n1. 대상자 자격 요건 (보훈보상법 제X조)\n2. 구비서류 완전성\n3. 각 요건별 충족 여부 판단\n4. 미충족 항목 보정 안내\n5. 유사 인정 사례 2건\n\n각 판단에 법적 근거를 명시해주세요.\n\n[신청 자료 요약 붙여넣기]',
-      insight: '요건 대조의 체계성이 크게 향상되면서 심사 누락이 최소화되었습니다. 특히 보훈보상법 특유의 복잡한 요건 구조(중첩 조건, 예외 규정 등)를 AI가 빠짐없이 점검하여 심사의 완결성이 높아졌습니다.'
-    }
+  const tagMap = {
+    '요건심의': { badge: 'cb-req', top: 'cat-req', color: '#534AB7' },
+    '부양심의': { badge: 'cb-dep', top: 'cat-dep', color: '#D85A30' },
+    '이의신청': { badge: 'cb-appeal', top: 'cat-appeal', color: '#BA7517' },
+    '행정지원': { badge: 'cb-common', top: 'cat-common', color: '#0F6E56' }
   };
 
-  /* ── Modal ── */
-  const overlay = document.getElementById('modalOverlay');
-  const modal = document.getElementById('modal');
-  const modalTop = document.getElementById('modalTop');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalAvatar = document.getElementById('modalAvatar');
-  const modalMeta = document.getElementById('modalMeta');
-  const modalBadges = document.getElementById('modalBadges');
-  const modalDesc = document.getElementById('modalDesc');
-  const modalTable = document.getElementById('modalTable');
-  const modalTools = document.getElementById('modalTools');
-  const modalPrompt = document.getElementById('modalPrompt');
-  const modalInsight = document.getElementById('modalInsight');
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
-  const topClassMap = { req:'mt-req', dep:'mt-dep', appeal:'mt-appeal', common:'mt-common', highlight:'mt-highlight' };
-
-  function openModal(id) {
-    const d = caseData[id];
-    if (!d) return;
-
-    modalTop.className = 'modal-top ' + (topClassMap[d.category] || '');
-    modalTitle.textContent = d.title;
-    modalAvatar.textContent = d.author.charAt(0);
-    modalAvatar.style.background = d.avatarColor;
-    modalMeta.textContent = d.author + ' · ' + d.dept;
-
-    modalBadges.innerHTML =
-      '<span class="case-badge ' + d.badgeClass + '">' + d.categoryLabel + '</span>' +
-      '<span class="case-badge cb-improve">' + d.improve + '</span>';
-
-    modalDesc.textContent = d.desc;
-
-    modalTable.innerHTML = d.table.map(function(r) {
-      return '<tr><td>' + r[0] + '</td><td class="val-before">' + r[1] + '</td><td class="val-after">' + r[2] + '</td><td class="val-change">' + r[3] + '</td></tr>';
+  function render(filter) {
+    const grid = document.getElementById('casesGrid');
+    const filtered = filter === 'all' ? cases : cases.filter(c => c.tag === filter);
+    grid.innerHTML = filtered.map(function(c) {
+      const cls = tagMap[c.tag] || tagMap['요건심의'];
+      const shortOrg = c.org.replace('보훈심사위원회 ', '').replace('보훈심사위원회', '심사관');
+      return ''
+        + '<div class="case-card" data-category="' + esc(c.tag) + '">'
+        +   '<div class="case-top ' + cls.top + '"></div>'
+        +   '<div class="case-body">'
+        +     '<div class="case-badges">'
+        +       '<span class="case-badge ' + cls.badge + '">' + esc(c.tag) + '</span>'
+        +       '<span class="case-badge cb-improve">-' + esc(c.save) + '</span>'
+        +     '</div>'
+        +     '<div class="case-title">' + esc(c.title) + '</div>'
+        +     '<div class="case-footer">'
+        +       '<div class="case-author">'
+        +         '<div class="author-avatar" style="background:' + cls.color + '">' + esc(c.name.charAt(0)) + '</div>'
+        +         '<span class="author-info">' + esc(c.name) + ' · ' + esc(shortOrg) + '</span>'
+        +       '</div>'
+        +       '<span class="case-time">' + esc(c.before) + ' → ' + esc(c.after) + '</span>'
+        +     '</div>'
+        +   '</div>'
+        + '</div>';
     }).join('');
-
-    modalTools.innerHTML = d.tools.map(function(t) {
-      return '<span class="modal-tool"><span class="modal-tool-icon" style="background:' + t.color + '">' + t.name.charAt(0) + '</span>' + t.name + '</span>';
-    }).join('');
-
-    modalPrompt.textContent = d.prompt;
-    modalInsight.textContent = d.insight;
-
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    document.querySelector('.case-count').textContent = filtered.length + ' cases · BOSIM Lab 실증 케이스';
   }
 
-  function closeModal() {
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  cards.forEach(function(card) {
-    card.addEventListener('click', function() {
-      openModal(this.dataset.caseId);
+  document.querySelectorAll('.filter-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      render(this.dataset.filter);
     });
   });
 
-  document.getElementById('modalClose').addEventListener('click', closeModal);
-
-  overlay.addEventListener('click', function(e) {
-    if (e.target === overlay) closeModal();
-  });
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
-  });
+  render('all');
 })();
 </script>
 
