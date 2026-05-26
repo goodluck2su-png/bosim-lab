@@ -102,8 +102,22 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .action-btn:hover { background:#4340A0; }
 .action-btn:disabled { background:var(--text-tertiary); cursor:not-allowed; }
 .search-hints { display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
-.search-hint { padding:5px 12px; border-radius:8px; font-size:11px; font-weight:500; background:#F5F5F2; color:var(--text-secondary); cursor:pointer; border:none; transition:all .2s; font-family:var(--sans); }
-.search-hint:hover { background:var(--accent-light); color:var(--accent); }
+.search-hint {
+  background: rgba(201,168,76,.18);
+  border: 1px solid rgba(201,168,76,.5);
+  color: #C9A84C;
+  padding: 5px 12px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: var(--sans);
+}
+.search-hint:hover {
+  background: rgba(201,168,76,.3);
+  border-color: #C9A84C;
+}
 
 /* Results Layout */
 .results { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
@@ -303,8 +317,8 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   </a>
   <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
   <div class="nav-links">
-    <a href="/index.html">홈</a>
-    <a href="/legal-ai.html" class="active">⚡ 보심 AI</a>
+    <a href="/index.html">AI 스터디</a>
+    <a href="/legal-ai.html" class="active">보심 법령 AI</a>
   </div>
   <div class="nav-badge">
     <span class="dot"></span>
@@ -390,15 +404,18 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 
   <div class="search-box">
     <div class="search-input-row">
-      <input type="text" class="search-input" id="searchInput" placeholder="예: 국가유공자 요건, 보훈보상법 부양 요건" onkeydown="if(event.key==='Enter')doSearch()">
+      <input type="text" class="search-input" id="searchInput" placeholder="보훈 법령을 자연어로 질문하세요&#10;예) 참전유공자 전상 29조 개정된 거 있나요?&#10;예) 국민연금에서도 사실혼 인정하나요?" onkeydown="if(event.key==='Enter')doSearch()">
       <button class="action-btn" id="searchBtn" onclick="doSearch()">검색</button>
     </div>
     <div class="search-hints">
-      <button class="search-hint" onclick="setQuery('국가유공자법')">국가유공자법</button>
-      <button class="search-hint" onclick="setQuery('보훈보상법')">보훈보상법</button>
-      <button class="search-hint" onclick="setQuery('공무상 상이 인정 요건')">공무상 상이 요건</button>
-      <button class="search-hint" onclick="setQuery('부양 심의 기준')">부양 심의 기준</button>
-      <button class="search-hint" onclick="setQuery('이의신청 절차')">이의신청 절차</button>
+      <button class="search-hint" onclick="setSearchAndRun('참전유공자 전상 29조 최근 개정 내용 변경사항')">참전유공자법 29조 개정</button>
+      <button class="search-hint" onclick="setSearchAndRun('국민연금 사실혼 배우자 인정 요건')">국민연금 사실혼 인정</button>
+      <button class="search-hint" onclick="setSearchAndRun('국가유공자 공상군경 요건')">공상군경 요건</button>
+      <button class="search-hint" onclick="setSearchAndRun('주로부양 자녀 판단 기준 보상금 지급순위')">주로부양 판단기준</button>
+      <button class="search-hint" onclick="setSearchAndRun('보훈보상대상자 재해부상군경 요건')">재해부상 요건</button>
+      <button class="search-hint" onclick="setSearchAndRun('이의신청 처리 절차 보훈심사위원회')">이의신청 절차</button>
+      <button class="search-hint" onclick="setSearchAndRun('독립유공자 손자녀 요건')">독립유공자 요건</button>
+      <button class="search-hint" onclick="setSearchAndRun('사실혼 배우자 보훈 유족 인정 요건')">사실혼 유족 인정</button>
     </div>
   </div>
 
@@ -775,6 +792,23 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     doSearch();
   };
 
+  window.setSearchAndRun = function(text) {
+    var input = document.getElementById('searchInput')
+      || document.querySelector('.search-input')
+      || document.querySelector('#tab-search input[type="text"]');
+    if (input) { input.value = text; input.focus(); }
+    if (typeof window.doSearch === 'function') window.doSearch();
+  };
+
+  function formatLawText(laws) {
+    if (!laws || !laws.length) return '';
+    return laws.slice(0, 5).map(function(l, i) {
+      return (i + 1) + '. ' + (l.법령명한글 || l.법령명 || '-')
+        + ' [' + (l.법령구분명 || l.법령구분 || '') + ']'
+        + ' (시행 ' + (l.시행일자 || '-') + ', 공포 ' + (l.공포일자 || '-') + ')';
+    }).join('\n');
+  }
+
   window.doSearch = async function() {
     var query = document.getElementById('searchInput').value.trim();
     if (!query) return;
@@ -785,11 +819,14 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     if (document.getElementById('lawEmpty')) document.getElementById('lawEmpty').remove();
     if (document.getElementById('aiEmpty')) document.getElementById('aiEmpty').remove();
 
-    var lawPromise = lawEnabled ? searchLawResults(query) : Promise.resolve(null);
-    var aiPromise = searchAI(query);
+    // 법령 검색 결과를 AI 프롬프트에 포함시키기 위해 먼저 실행
+    var laws = lawEnabled ? await searchLawResults(query) : null;
+    var lawText = formatLawText(laws);
+
+    var aiPromise = searchAI(query, lawText);
     var interpretPromise = interpretEnabled ? searchInterpretResults(query) : Promise.resolve(null);
 
-    await Promise.all([lawPromise, aiPromise, interpretPromise]);
+    await Promise.all([aiPromise, interpretPromise]);
     btn.disabled = false; btn.textContent = '검색';
   };
 
@@ -800,7 +837,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     var result = await window.LawApi.searchLaw(query, { display: '5' });
     if (result.disabled || result.error) {
       body.innerHTML = '<div class="law-disabled-msg">법령 API가 비활성화 상태입니다.</div>';
-      document.getElementById('lawBadge').textContent = '비활성'; return;
+      document.getElementById('lawBadge').textContent = '비활성'; return null;
     }
     var laws = [];
     if (result.LawSearch && result.LawSearch.law) {
@@ -808,7 +845,7 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     }
     if (laws.length === 0) {
       body.innerHTML = '<div class="panel-empty">검색 결과가 없습니다</div>';
-      document.getElementById('lawBadge').textContent = '0건'; return;
+      document.getElementById('lawBadge').textContent = '0건'; return null;
     }
     document.getElementById('lawBadge').textContent = laws.length + '건';
     body.innerHTML = laws.map(function(law) {
@@ -819,15 +856,36 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
           '<span>' + esc(law.시행일자 || '') + '</span>' +
         '</div></div>';
     }).join('');
+    return laws;
   }
 
-  async function searchAI(query) {
+  async function searchAI(query, lawText) {
     var body = document.getElementById('aiBody');
     var startTime = Date.now();
     try {
+      var prompt = '당신은 보훈심사위원회 법령 전문가 AI입니다.\n'
+        + '아래 질문과 법령 검색 결과를 바탕으로 답변해주세요.\n\n'
+        + '[질문] ' + query + '\n\n'
+        + '[검색된 법령 데이터]\n'
+        + (lawText || '(검색된 법령 없음)') + '\n\n'
+        + '답변 형식 (질문 유형에 따라 자동 선택):\n\n'
+        + '■ 개정·변경 질문인 경우 ("바뀐 거", "개정", "변경"):\n'
+        + '1. 현행 조항: [조문 번호와 내용]\n'
+        + '2. 주요 변경 이력: [개정일자와 변경 내용 요약]\n'
+        + '3. 실무 주의사항: [담당자가 놓치기 쉬운 점]\n\n'
+        + '■ 타법 연계 질문인 경우 ("국민연금", "건강보험", "민법" 등 보훈법 외):\n'
+        + '1. 관련 조항: [해당 법률 조문]\n'
+        + '2. 보훈 실무 적용: [보훈심사 시 관련성]\n'
+        + '3. 유사·연계 조항: [함께 참고할 조항]\n\n'
+        + '■ 일반 요건 질문인 경우:\n'
+        + '1. 핵심 요건: [조문 근거와 요건 목록]\n'
+        + '2. 판단 기준: [실무 적용 기준]\n'
+        + '3. 주의사항: [예외나 특이사항]\n\n'
+        + '반드시 조문 번호(제○조 제○항)를 명시하고,\n'
+        + '최종 법적 판단은 담당 심사관이 수행함을 안내하세요.';
       var res = await fetch('/api/gemini', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: query, systemPrompt: SYSTEM_PROMPT })
+        body: JSON.stringify({ message: prompt })
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       var data = await res.json();

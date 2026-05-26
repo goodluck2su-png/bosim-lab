@@ -238,3 +238,81 @@ footer { padding: 20px 24px !important; background: #0A1520 !important; border-t
 
 /* ── Hide nav-badge (cleaner header) ── */
 .nav-badge { display: none !important; }
+
+/* ── AI 스터디 페이지 ── */
+.about-desc { font-size:14px; color:var(--text-secondary); line-height:1.8; margin-bottom:8px; }
+.about-desc strong { color:var(--accent); font-weight:600; }
+
+.section-title {
+  font-size:16px; font-weight:700; color:var(--text);
+  margin-bottom:20px; letter-spacing:-.2px;
+}
+
+.agenda-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:40px;
+}
+.agenda-card {
+  background:rgba(255,255,255,.04); border:.5px solid rgba(255,255,255,.08);
+  border-radius:12px; padding:20px 16px;
+}
+.agenda-icon { font-size:24px; margin-bottom:10px; }
+.agenda-num {
+  font-size:10px; font-weight:700; color:var(--accent);
+  letter-spacing:.08em; text-transform:uppercase; margin-bottom:5px;
+}
+.agenda-name { font-size:14px; font-weight:600; color:var(--text); margin-bottom:6px; }
+.agenda-desc { font-size:12px; color:var(--text-secondary); line-height:1.6; }
+
+.timeline-wrap {
+  display:grid; grid-template-columns:repeat(5,1fr);
+  gap:0; margin-bottom:32px; position:relative;
+}
+.timeline-wrap::before {
+  content:''; position:absolute; top:8px; left:8px; right:8px; height:1px;
+  background:rgba(255,255,255,.1); z-index:0;
+}
+.tl-item { position:relative; padding-top:0; }
+.tl-dot {
+  width:16px; height:16px; border-radius:50%; margin-bottom:12px;
+  position:relative; z-index:1; border:2px solid;
+}
+.tl-done .tl-dot { background:var(--accent); border-color:var(--accent); }
+.tl-active .tl-dot {
+  background:var(--accent); border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(201,168,76,.25);
+}
+.tl-future .tl-dot { background:transparent; border-color:rgba(255,255,255,.2); }
+.tl-month {
+  font-size:11px; font-weight:700; margin-bottom:4px;
+}
+.tl-done .tl-month, .tl-active .tl-month { color:var(--accent); }
+.tl-future .tl-month { color:rgba(237,233,227,.35); }
+.tl-topic { font-size:12px; font-weight:600; color:var(--text); margin-bottom:3px; line-height:1.4; }
+.tl-future .tl-topic { color:rgba(237,233,227,.4); }
+.tl-sub { font-size:11px; color:var(--text-secondary); line-height:1.4; }
+.tl-future .tl-sub { color:rgba(237,233,227,.25); }
+
+.org-section { margin-bottom:24px; }
+.org-chips { display:flex; gap:8px; flex-wrap:wrap; }
+.org-chip {
+  background:rgba(255,255,255,.05); border:.5px solid rgba(255,255,255,.1);
+  border-radius:6px; padding:5px 12px; font-size:12px; color:var(--text-secondary);
+}
+
+.workshop-banner {
+  background:rgba(201,168,76,.08); border:.5px solid rgba(201,168,76,.25);
+  border-radius:12px; padding:16px 20px;
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:24px;
+}
+.ws-left { font-size:13px; font-weight:600; color:var(--accent); }
+.ws-right { font-size:12px; color:var(--text-secondary); }
+
+.bottom-cta { text-align:center; padding:8px 0 32px; }
+
+@media(max-width:600px) {
+  .agenda-grid { grid-template-columns:1fr; }
+  .timeline-wrap { grid-template-columns:1fr; }
+  .timeline-wrap::before { display:none; }
+  .workshop-banner { flex-direction:column; gap:6px; text-align:center; }
+}
