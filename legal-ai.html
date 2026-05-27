@@ -390,6 +390,10 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     📊 법령 다이어그램
     <div class="legal-tab-sub">요건·절차 자동 시각화</div>
   </div>
+  <div class="legal-tab" onclick="switchLegalTab('complete')">
+    ✍️ 문장 완성기
+    <div class="legal-tab-sub">보훈심사 문체 자동 완성</div>
+  </div>
 </div>
 
 <!-- ════ Tab 1: 법령 검색 ════ -->
@@ -574,6 +578,21 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     </div>
   </div><!-- /tab-compare -->
 
+  <!-- Tab 6: 문장 완성기 -->
+  <div id="tab-complete" class="tab-content">
+    <div class="section-header">
+      <h3>보훈심사 전용 문장 완성기</h3>
+      <p class="section-desc">심사 결정문·검토 의견서 작성 시 불완전한 문장을 입력하면 보훈심사 법령 맥락에 맞게 완성합니다.</p>
+    </div>
+    <textarea id="complete-input" placeholder="예) 법률혼이&#10;예) 공무 수행 중 상이를&#10;예) 국가유공자 요건에"
+      style="width:100%;height:100px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-size:14px;resize:vertical;font-family:var(--sans);"></textarea>
+    <button onclick="runComplete()"
+      style="margin-top:12px;padding:10px 24px;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-family:var(--sans);">
+      문장 완성하기
+    </button>
+    <div id="complete-result" style="margin-top:16px;margin-bottom:48px;"></div>
+  </div><!-- /tab-complete -->
+
 </div><!-- /top-legal -->
 
 </div><!-- /container -->
@@ -639,12 +658,47 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   /* ── Sub Tab Switching ── */
   window.switchLegalTab = function(tabId) {
     document.querySelectorAll('.legal-tab').forEach(function(t, i) {
-      var ids = ['search', 'compare', 'deidentify', 'audit', 'diagram'];
+      var ids = ['search', 'compare', 'deidentify', 'audit', 'diagram', 'complete'];
       t.classList.toggle('active', ids[i] === tabId);
     });
     document.querySelectorAll('.tab-content').forEach(function(c) {
       c.classList.toggle('active', c.id === 'tab-' + tabId);
     });
+  };
+
+  /* ── Tab 6: 문장 완성기 ── */
+  window.runComplete = async function() {
+    var input = document.getElementById('complete-input').value.trim();
+    if (!input) return;
+    var resultEl = document.getElementById('complete-result');
+    resultEl.innerHTML = '<p style="color:var(--text-secondary)">완성 중...</p>';
+
+    var systemPrompt = '당신은 보훈심사위원회 심사관의 문서 작성을 돕는 전문 AI입니다.\n'
+      + '입력된 불완전한 문장을 보훈심사 법령 맥락에 맞게 자연스럽고 정확하게 완성하세요.\n'
+      + '국가유공자법, 보훈보상대상자법, 독립유공자법 등 보훈 관련 법령 용어와 행정 문체를 사용하세요.\n'
+      + '완성된 문장만 출력하고 설명은 생략하세요.';
+
+    try {
+      var res = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: '불완전한 문장: ' + input, systemPrompt: systemPrompt })
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      var text = data.text || '오류가 발생했습니다.';
+      resultEl.innerHTML =
+        '<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;">' +
+          '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">완성된 문장</div>' +
+          '<div id="complete-output" style="line-height:1.8;">' + esc(text) + '</div>' +
+          '<button onclick="navigator.clipboard.writeText(document.getElementById(\'complete-output\').textContent)"' +
+            ' style="margin-top:12px;padding:6px 16px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-secondary);cursor:pointer;font-size:13px;font-family:var(--sans);">' +
+            '복사' +
+          '</button>' +
+        '</div>';
+    } catch (e) {
+      resultEl.innerHTML = '<p style="color:var(--coral);">오류: ' + esc(e.message) + '</p>';
+    }
   };
 
   window.runLawCompare = async function() {
@@ -802,6 +856,12 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     }).join('\n');
   }
 
+  function extractLawKeyword(query) {
+    var kw = query.replace(/\(약칭[^)]*\)/g, '').replace(/\([^)]*\)/g, '');
+    kw = kw.replace(/제\d+조.*$/g, '').replace(/에는|에서|의|을|를|이|가|있|없|는|된|한/g, '');
+    return kw.trim().slice(0, 15);
+  }
+
   window.doSearch = async function() {
     var query = document.getElementById('searchInput').value.trim();
     if (!query) return;
@@ -812,11 +872,13 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     if (document.getElementById('lawEmpty')) document.getElementById('lawEmpty').remove();
     if (document.getElementById('aiEmpty')) document.getElementById('aiEmpty').remove();
 
-    // 법령 검색 결과를 AI 프롬프트에 포함시키기 위해 먼저 실행
-    var laws = lawEnabled ? await searchLawResults(query) : null;
+    // 법령 API 호출 전 키워드 전처리(조사·조항 제거)로 검색 정확도 보정
+    var lawKeyword = extractLawKeyword(query) || query;
+    var laws = lawEnabled ? await searchLawResults(lawKeyword) : null;
     var lawText = formatLawText(laws);
+    var lawMissing = lawEnabled && !laws;
 
-    var aiPromise = searchAI(query, lawText);
+    var aiPromise = searchAI(query, lawText, lawMissing);
     var interpretPromise = interpretEnabled ? searchInterpretResults(query) : Promise.resolve(null);
 
     await Promise.all([aiPromise, interpretPromise]);
@@ -852,9 +914,12 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
     return laws;
   }
 
-  async function searchAI(query, lawText) {
+  async function searchAI(query, lawText, lawMissing) {
     var body = document.getElementById('aiBody');
     var startTime = Date.now();
+    var warningHtml = lawMissing
+      ? '<div style="background:#7B3A2A;color:#fff;padding:8px 12px;border-radius:6px;margin-bottom:12px;font-size:13px;">⚠️ 법령 데이터 미수신 — AI가 학습 데이터로만 답변 중입니다. law.go.kr에서 직접 확인하세요.</div>'
+      : '';
     try {
       var prompt = '당신은 보훈심사위원회 법령 전문가 AI입니다.\n'
         + '아래 질문과 법령 검색 결과를 바탕으로 답변해주세요.\n\n'
@@ -883,10 +948,10 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
       if (!res.ok) throw new Error('HTTP ' + res.status);
       var data = await res.json();
       var elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-      body.innerHTML = '<div class="ai-response">' + renderMarkdown(data.text || '') + '</div>' +
+      body.innerHTML = warningHtml + '<div class="ai-response">' + renderMarkdown(data.text || '') + '</div>' +
         '<div class="ai-response-meta">Gemini 2.5 Flash · ' + elapsed + '초</div>';
     } catch (err) {
-      body.innerHTML = '<div style="color:var(--coral);font-size:13px">AI 응답 오류: ' + esc(err.message) + '</div>';
+      body.innerHTML = warningHtml + '<div style="color:var(--coral);font-size:13px">AI 응답 오류: ' + esc(err.message) + '</div>';
     }
   }
 
