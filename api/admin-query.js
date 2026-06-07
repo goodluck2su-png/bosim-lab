@@ -1,5 +1,5 @@
 // Whitelisted tables, ops, and column name pattern (security-hardened)
-const ALLOWED_TABLES = ['chat_logs', 'reflections', 'cases'];
+const ALLOWED_TABLES = ['chat_logs', 'reflections', 'cases', 'page_views'];
 const ALLOWED_OPS = ['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike', 'is', 'in'];
 const COLUMN_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_,*\s().]*$/;
 

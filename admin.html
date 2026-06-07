@@ -52,7 +52,8 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .page-header p { font-size:14px; color:var(--text-secondary); margin-top:6px; }
 
 /* Metrics */
-.metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
+.metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
+.metrics-visit { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
 .metric { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; position:relative; overflow:hidden; }
 .metric::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
 .metric:nth-child(1)::before { background:var(--accent); }
@@ -66,6 +67,12 @@ nav { background: var(--surface); border-bottom: 1px solid var(--border); positi
 .m-teal .metric-value { color:var(--teal); }
 .m-blue .metric-value { color:#185FA5; }
 .m-coral .metric-value { color:var(--coral); }
+.m-amber .metric-value { color:var(--amber); }
+.m-amber::before { background:var(--amber); }
+.metrics-visit .metric:nth-child(1)::before { background:var(--accent); }
+.metrics-visit .metric:nth-child(2)::before { background:var(--teal); }
+.metrics-visit .metric:nth-child(3)::before { background:#185FA5; }
+.metrics-visit .metric:nth-child(4)::before { background:var(--coral); }
 
 /* Section */
 .section-header { display:flex; align-items:center; gap:16px; margin:40px 0 20px; }
@@ -203,6 +210,80 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   </div>
 </div>
 
+<!-- Section 1b: Visitor Metrics -->
+<div class="section-header">
+  <h2>방문자 현황</h2>
+  <div class="line"></div>
+  <span class="section-count">page_views</span>
+</div>
+<div class="metrics-visit">
+  <div class="metric m-purple">
+    <div class="metric-label">총 페이지뷰</div>
+    <div class="metric-value" id="metricPV">-</div>
+    <div class="metric-change">전체 기간</div>
+  </div>
+  <div class="metric m-teal">
+    <div class="metric-label">방문 세션 수</div>
+    <div class="metric-value" id="metricSessions">-</div>
+    <div class="metric-change">distinct session_id</div>
+  </div>
+  <div class="metric m-blue">
+    <div class="metric-label">오늘 방문</div>
+    <div class="metric-value" id="metricPVToday">-</div>
+    <div class="metric-change" id="metricPVTodayDate">-</div>
+  </div>
+  <div class="metric m-coral">
+    <div class="metric-label">최근 7일 신규세션</div>
+    <div class="metric-value" id="metric7dNew">-</div>
+    <div class="metric-change">is_new_session=true</div>
+  </div>
+</div>
+
+<!-- Section 1c: Page-by-page -->
+<div class="section-header">
+  <h2>페이지별 방문</h2>
+  <div class="line"></div>
+  <span class="section-count" id="pathCount">-</span>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>경로</th>
+        <th>총 PV</th>
+        <th>고유 세션</th>
+        <th>마지막 방문</th>
+      </tr>
+    </thead>
+    <tbody id="pathTable">
+      <tr><td colspan="4" class="loading-text">로딩 중...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Section 1d: Recent visits -->
+<div class="section-header">
+  <h2>최근 방문 로그</h2>
+  <div class="line"></div>
+  <span class="section-count">최신 50건</span>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>시간</th>
+        <th>경로</th>
+        <th>유입</th>
+        <th>세션ID</th>
+        <th>신규</th>
+      </tr>
+    </thead>
+    <tbody id="visitTable">
+      <tr><td colspan="5" class="loading-text">로딩 중...</td></tr>
+    </tbody>
+  </table>
+</div>
+
 <!-- Section 2: Nickname Stats -->
 <div class="section-header">
   <h2>닉네임별 참여 현황</h2>
@@ -256,8 +337,9 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   <div class="line"></div>
 </div>
 <div class="download-section">
-  <button class="btn-download btn-dl-primary" onclick="downloadCSV('chat_logs')">대화 로그 CSV 다운로드</button>
-  <button class="btn-download btn-dl-secondary" onclick="downloadCSV('reflections')">소감 데이터 CSV 다운로드</button>
+  <button class="btn-download btn-dl-primary" onclick="downloadCSV('chat_logs')">대화 로그 CSV</button>
+  <button class="btn-download btn-dl-secondary" onclick="downloadCSV('reflections')">소감 데이터 CSV</button>
+  <button class="btn-download btn-dl-secondary" onclick="downloadCSV('page_views')" style="background:#185FA5">방문 로그 CSV</button>
 </div>
 
 </div>
@@ -310,7 +392,99 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
 
   /* ── Load all data ── */
   async function loadDashboard() {
-    await Promise.all([loadMetrics(), loadNickStats(), loadRecentLogs()]);
+    await Promise.all([
+      loadMetrics(),
+      loadVisitorStats(),
+      loadNickStats(),
+      loadRecentLogs()
+    ]);
+  }
+
+  /* ── Visitor stats ── */
+  async function loadVisitorStats() {
+    var result;
+    try {
+      result = await query('page_views', {
+        select: 'created_at,session_id,path,referrer,is_new_session',
+        order: 'created_at.desc',
+        limit: 1000
+      });
+    } catch (e) {
+      document.getElementById('metricPV').textContent = '0';
+      document.getElementById('metricSessions').textContent = '0';
+      document.getElementById('metricPVToday').textContent = '0';
+      document.getElementById('metric7dNew').textContent = '0';
+      document.getElementById('pathTable').innerHTML = '<tr><td colspan="4" class="loading-text">테이블 미생성 (Supabase SQL 적용 필요)</td></tr>';
+      document.getElementById('visitTable').innerHTML = '<tr><td colspan="5" class="loading-text">테이블 미생성</td></tr>';
+      return;
+    }
+    var rows = result.data || [];
+
+    // Metric 1: total page views
+    document.getElementById('metricPV').textContent = result.total || rows.length;
+
+    // Metric 2: distinct sessions
+    var sessions = new Set(rows.map(function (r) { return r.session_id; }));
+    document.getElementById('metricSessions').textContent = sessions.size;
+
+    // Metric 3: today's views
+    var today = new Date().toISOString().slice(0, 10);
+    var todayCount = rows.filter(function (r) { return r.created_at && r.created_at.startsWith(today); }).length;
+    document.getElementById('metricPVToday').textContent = todayCount;
+    document.getElementById('metricPVTodayDate').textContent = today;
+
+    // Metric 4: new sessions last 7 days
+    var weekAgo = new Date(Date.now() - 7 * 86400 * 1000).toISOString();
+    var newSessions7d = rows.filter(function (r) {
+      return r.is_new_session && r.created_at && r.created_at >= weekAgo;
+    }).length;
+    document.getElementById('metric7dNew').textContent = newSessions7d;
+
+    // Path table
+    var byPath = {};
+    rows.forEach(function (r) {
+      var p = r.path || '/';
+      if (!byPath[p]) byPath[p] = { pv: 0, sessions: new Set(), last: r.created_at };
+      byPath[p].pv++;
+      byPath[p].sessions.add(r.session_id);
+      if (r.created_at > byPath[p].last) byPath[p].last = r.created_at;
+    });
+    var pathKeys = Object.keys(byPath).sort(function (a, b) { return byPath[b].pv - byPath[a].pv; });
+    document.getElementById('pathCount').textContent = pathKeys.length + '개 경로';
+    if (pathKeys.length === 0) {
+      document.getElementById('pathTable').innerHTML = '<tr><td colspan="4" class="loading-text">방문 데이터가 없습니다</td></tr>';
+    } else {
+      document.getElementById('pathTable').innerHTML = pathKeys.map(function (p) {
+        var s = byPath[p];
+        var last = new Date(s.last).toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        return '<tr>' +
+          '<td class="td-mono">' + escapeHtml(p) + '</td>' +
+          '<td class="td-mono">' + s.pv + '</td>' +
+          '<td class="td-mono">' + s.sessions.size + '</td>' +
+          '<td class="td-muted">' + last + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    // Recent visit log (top 50)
+    var recent = rows.slice(0, 50);
+    if (recent.length === 0) {
+      document.getElementById('visitTable').innerHTML = '<tr><td colspan="5" class="loading-text">데이터가 없습니다</td></tr>';
+    } else {
+      document.getElementById('visitTable').innerHTML = recent.map(function (r) {
+        var time = new Date(r.created_at).toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        var ref = r.referrer ? (r.referrer.length > 40 ? r.referrer.slice(0, 40) + '...' : r.referrer) : '직접유입';
+        var sid = (r.session_id || '').slice(0, 8);
+        var badge = r.is_new_session ? '<span style="background:var(--teal-light);color:var(--teal);padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600">신규</span>' : '<span class="td-muted">재방문</span>';
+        return '<tr>' +
+          '<td class="td-mono td-muted">' + time + '</td>' +
+          '<td class="td-mono">' + escapeHtml(r.path || '/') + '</td>' +
+          '<td class="td-mono td-muted">' + escapeHtml(ref) + '</td>' +
+          '<td class="td-mono td-muted">' + sid + '</td>' +
+          '<td>' + badge + '</td>' +
+          '</tr>';
+      }).join('');
+    }
   }
 
   /* ── Section 1: Metrics ── */
