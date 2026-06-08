@@ -1,7 +1,22 @@
+import { createClient } from '@supabase/supabase-js';
+
 const ALLOWED_ORIGINS = [
   'https://bosim-lab.vercel.app',
   'http://localhost:3000'
 ];
+
+const DAILY_LIMIT = 500;
+
+let supabase = null;
+try {
+  const SUPABASE_URL = process.env.SUPABASE_URL || 'https://dorocsjhtamcjxwhlqbl.supabase.co';
+  const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+    supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  }
+} catch (err) {
+  console.error('Supabase init failed:', err);
+}
 
 export default async function handler(req, res) {
   // CORS — restrict to allowed origins
@@ -33,6 +48,20 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Message is required' });
     }
 
+    // Daily usage limit check (fails-open on rpc error to avoid service outage)
+    if (supabase) {
+      try {
+        const { data: usageCount, error: usageErr } = await supabase.rpc('increment_api_usage');
+        if (usageErr) {
+          console.error('increment_api_usage rpc error:', usageErr);
+        } else if (usageCount > DAILY_LIMIT) {
+          return res.status(429).json({ error: '오늘 사용량 한도를 초과했습니다. 내일 다시 시도해주세요.' });
+        }
+      } catch (err) {
+        console.error('Daily limit check failed:', err);
+      }
+    }
+
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
 
     const response = await fetch(url, {
@@ -45,7 +74,7 @@ export default async function handler(req, res) {
         }],
         generationConfig: {
           temperature: 0.7,
-          maxOutputTokens: 8192,
+          maxOutputTokens: 1024,
           thinkingConfig: { thinkingBudget: 0 }
         }
       })
