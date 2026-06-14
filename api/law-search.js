@@ -27,13 +27,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { query, target = 'law', display = '5' } = req.query;
+    const { query, target = 'law', display = '5', search } = req.query;
 
     if (!query) {
       return res.status(400).json({ error: 'query is required' });
     }
 
-    const url = `http://www.law.go.kr/DRF/lawSearch.do?OC=${encodeURIComponent(OC)}&target=${encodeURIComponent(target)}&type=JSON&query=${encodeURIComponent(query)}&display=${encodeURIComponent(display)}`;
+    let url = `http://www.law.go.kr/DRF/lawSearch.do?OC=${encodeURIComponent(OC)}&target=${encodeURIComponent(target)}&type=JSON&query=${encodeURIComponent(query)}&display=${encodeURIComponent(display)}`;
+    if (search) {
+      url += `&search=${encodeURIComponent(search)}`;
+    }
 
     const response = await fetch(url);
 
