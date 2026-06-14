@@ -857,9 +857,14 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   }
 
   function extractLawKeyword(query) {
+    // 1) 괄호/약칭 제거
     var kw = query.replace(/\(약칭[^)]*\)/g, '').replace(/\([^)]*\)/g, '');
-    kw = kw.replace(/제\d+조.*$/g, '').replace(/에는|에서|의|을|를|이|가|있|없|는|된|한/g, '');
-    return kw.trim().slice(0, 15);
+    // 2) "제N조 ..." 이후 절단 (제 접두사가 있을 때만)
+    kw = kw.replace(/\s*제\d+조[\s\S]*$/g, '');
+    // 3) 어말 조사만 제거 (공백/문장끝 직전에 있을 때만 — 합성어 내부 글자는 보호)
+    kw = kw.replace(/(은|는|이|가|을|를|의|에|에서|에는|으로|로)(?=\s|$)/g, '');
+    kw = kw.replace(/\s+/g, ' ').trim();
+    return (kw.length >= 2 ? kw : query).slice(0, 30);
   }
 
   window.doSearch = async function() {
