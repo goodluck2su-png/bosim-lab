@@ -859,12 +859,19 @@ footer { text-align:center; padding:32px 0; font-size:12px; color:var(--text-ter
   function extractLawKeyword(query) {
     // 1) 괄호/약칭 제거
     var kw = query.replace(/\(약칭[^)]*\)/g, '').replace(/\([^)]*\)/g, '');
-    // 2) "제N조 ..." 이후 절단 (제 접두사가 있을 때만)
+    // 2) "제N조 ..." 이후 절단
     kw = kw.replace(/\s*제\d+조[\s\S]*$/g, '');
-    // 3) 어말 조사만 제거 (공백/문장끝 직전에 있을 때만 — 합성어 내부 글자는 보호)
-    kw = kw.replace(/(은|는|이|가|을|를|의|에|에서|에는|으로|로)(?=\s|$)/g, '');
+    // 3) 구두점을 공백으로 (자연어 질문의 ?, !, . 등)
+    kw = kw.replace(/[?!.,;:·~"'()\[\]{}]/g, ' ');
+    // 4) 의문 어미·종결 어미 제거 (자연어 → 키워드 변환의 핵심)
+    kw = kw.replace(/(하나요|되나요|있나요|없나요|일까요|인가요|입니까|합니까|되는지|하는지|있는지|되었나요|되었습니까|해야|되어|되는|하는|있는|없는|입니다|합니다|됩니다)/g, ' ');
+    // 5) 다중 글자 조사 어말 제거 (어말: 공백/문장끝 직전)
+    kw = kw.replace(/(에서도|에서는|에서|에게도|에게는|에게|에는|으로도|으로는|으로|만도|만큼|까지|부터|보다|마저|조차|에)(?=\s|$)/g, '');
+    // 6) 단일 글자 조사 어말 제거 (합성어 내부 글자는 lookahead로 보호)
+    kw = kw.replace(/(은|는|이|가|을|를|의|와|과|로|도|만)(?=\s|$)/g, '');
+    // 7) 공백 정리, 너무 짧으면 원본 반환
     kw = kw.replace(/\s+/g, ' ').trim();
-    return (kw.length >= 2 ? kw : query).slice(0, 30);
+    return (kw.length >= 2 ? kw : query).slice(0, 50);
   }
 
   window.doSearch = async function() {
